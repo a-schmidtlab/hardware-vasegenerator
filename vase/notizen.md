@@ -32,3 +32,4 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-20: Formeln `turing_flecken` und `turing_labyrinth`: Gray-Scott-Muster, gerechnet von `tools/turing_tabelle.py`, abgelegt in `vase/turing.json`.
 - 2026-10-20: Überhang der Lamellenspitzen wird gemessen. Ansicht färbt orange ab 45°, rot ab 60° (Bambu-Studio-Schwelle 30° zur Waagrechten), Generator meldet die Abschnitte, `vorschau.png` färbt die Meridiane.
 - 2026-10-20: Option `ueberhang.begrenzen`, Haken in der Ansicht: Lamellen wachsen nach oben höchstens im Grenzwinkel (45°). Standard aus, die Ausgangsform bleibt unverändert.
+- 2026-10-20: README um das Kapitel Mathematik erweitert: Geometrie, gemeinsame Bausteine, Herleitung jeder Formel, Numerik von ζ, cn und Gray-Scott, Überhang und Begrenzung. Lage der Zeta-Kerben korrigiert: jede Nullstelle erscheint zweimal, 7 Kerben im Körper.
