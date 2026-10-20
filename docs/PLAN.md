@@ -54,6 +54,8 @@ Spitze = Innenradius + Kernwand + länge
 | `super` | Superformel von Gielis, fünf Blätter, `m = 5` |
 | `ketten` | Katenoid `cosh((s−½)/a)`, eng in der Taille, weit an den Ringen |
 | `zeta` | `\|ζ(σ+it)\|` auf Ellipsen `σ = ½ + 0,45 cos θ`, `t = 12 + 24s + 2,5 sin θ` |
+| `turing_flecken` | Gray-Scott, `F = 0,0367`, `k = 0,0649`, Tabelle `vase/turing.json` |
+| `turing_labyrinth` | Gray-Scott, `F = 0,029`, `k = 0,057`, Tabelle `vase/turing.json` |
 
 Die Spitze jeder Lamelle ist ein Halbkreis mit dem Radius der halben Lamellendicke. Er endet auf dem Radius der Formel und steht nicht darüber hinaus. Das Netz hat 200 Höhenschnitte.
 
@@ -66,7 +68,11 @@ Die drei Proportionen und die Formel sind die Regler der Ansicht und die Startwe
 | `proportion.innendurchmesser_mm` | 102 | Bohrung |
 | `proportion.hoehe_mm` | 250 | Gesamthöhe, die Welle skaliert mit |
 | `proportion.lamelle_max_mm` | 25,221 | längste Lamelle |
-| `welle.funktion` | `vorlage` | eine der sechs Formeln |
+| `welle.funktion` | `vorlage` | eine der Formeln aus Abschnitt 2 |
+| `ueberhang.begrenzen` | `false` | Lamellen wachsen höchstens im Grenzwinkel |
+| `ueberhang.winkel_grad` | 45 | Grenzwinkel |
+| `drucker.ueberhang_warnung_grad` | 45 | Ansicht orange |
+| `drucker.stuetze_ab_grad` | 60 | Ansicht rot |
 | `kern.wand_mm` | 4 | Wand des Kerns |
 | `lamellen.anzahl` | 120 | |
 | `lamellen.dicke_mm` | 0,9 | |
@@ -87,6 +93,8 @@ Bambu Lab H2D, eine Düse, Düse 0,4 mm. Fläche einer Düse 325 × 320 mm. Höh
 - Boden mindestens 0,8 mm
 
 Was darüber liegt, schreibt der Generator nicht. Die Ansicht zeigt es und meldet den Überstand.
+
+Überhang der Lamellenspitzen, Material PETG: bis 45° zur Senkrechten ohne Befund, darüber orange, über 60° rot. 60° entspricht der Standardschwelle von Bambu Studio, 30° zur Waagrechten, ab der Stützen entstehen. Der Generator schreibt die STL trotzdem und meldet die Zahl der roten Abschnitte. Die Option `ueberhang.begrenzen` hält alle Spitzen beim Grenzwinkel.
 
 [Technische Daten](https://bambulab.com/en/h2d/tech-specs), [Druckbereich der Düsen](https://wiki.bambulab.com/en/h2/manual/printable-range-for-dual-nozzles).
 

@@ -51,12 +51,28 @@ Ziehen dreht, das Mausrad zoomt. Der Rahmen ist der nutzbare Bauraum des Drucker
 | Höhe | 80–320 mm | 250 mm |
 | Lamellenlänge max | 4–70 mm | 25,2 mm |
 | Wellenformel | siehe unten | Vorlage, gemessen |
+| Überhang auf 45° begrenzen | an/aus | aus |
 
-Der Knopf **Vorlage** setzt alle vier Regler auf diese Startwerte zurück. Unter den Reglern stehen Lamellenzahl, Dicke, Kernwand, der errechnete Außendurchmesser und ob das Teil auf den Drucker passt.
+Der Knopf **Vorlage** setzt alle Regler auf diese Startwerte zurück. Unter den Reglern stehen Lamellenzahl, Dicke, Kernwand, der errechnete Außendurchmesser und ob das Teil auf den Drucker passt.
 
 Die Regler ändern die Ansicht sofort. **STL speichern** lädt das gerade gezeigte Modell herunter, in Millimetern, bereit für den Slicer. Der Dateiname nennt Formel, Höhe und Innendurchmesser.
 
 Dieselbe Ausgangsform schreibt der Generator als `vase/vase.stl`, wenn `vase/config.json` die Startwerte enthält.
+
+## Überhang
+
+Kern und Lamellenseiten stehen senkrecht. Überhängen kann nur die Spitze einer Lamelle, und zwar dort, wo die Lamelle nach oben länger wird. Der Winkel zur Senkrechten zwischen zwei Höhenschnitten ist `atan(Δr / Δz)`. Wird die Lamelle nach oben kürzer, hängt nichts über.
+
+Die Ansicht färbt die Spitzen:
+
+| Farbe | Überhang | Bedeutung |
+|---|---|---|
+| orange | über 45° | druckt ohne Stützen, die Kante kann bei PETG hängen oder rau werden |
+| rot | über 60° | Bambu Studio setzt hier mit der Standardschwelle von 30° zur Waagrechten Stützen |
+
+Unter den Reglern steht der größte Winkel und wie viele Abschnitte rot und orange sind. Der Generator schreibt dieselbe Meldung in die Konsole und färbt die Meridiane in `vorschau.png` genauso. Die Schwellen stehen in `drucker.ueberhang_warnung_grad` und `drucker.stuetze_ab_grad`. Wer in Bambu Studio eine andere Schwelle einstellt, trägt hier `90° − Schwelle` ein. Quelle: [Bambu Studio, Stützeinstellungen](https://all3dp.com/2/bambu-studio-support-settings-simply-explained/).
+
+Der Haken **Überhang auf 45° begrenzen** schaltet die Begrenzung ein, in der Config `ueberhang.begrenzen`. Von Schnitt zu Schnitt darf eine Lamelle dann höchstens um `tan(45°) · Δz` länger werden. Kürzer werden darf sie beliebig schnell. Jede Wölbung bekommt dadurch unten eine 45°-Fase, oben bleibt sie, wie die Formel sie vorgibt. Die Begrenzung rechnet auf den Schnitten des Netzes, also genau auf dem, was gedruckt wird.
 
 ## Wellenformeln
 
@@ -76,6 +92,8 @@ Alle Formeln außer `vorlage` teilen sich dieselbe Hülle: auf den ersten und le
 | `super` | Superformel | fünf gerundete Blätter aus einer einzigen Formel |
 | `ketten` | Kettenlinie | enge Taille, weite Ringe, wie eine Seifenhaut |
 | `zeta` | Riemannsche Zetafunktion | wogende Bänder, eine Naht aus Kerben an den Nullstellen |
+| `turing_flecken` | Turing, Flecken | Noppenraster aus einer Reaktion-Diffusion |
+| `turing_labyrinth` | Turing, Labyrinth | mäandernde Grate aus derselben Gleichung |
 
 ### Cnoidalwelle
 
@@ -142,6 +160,21 @@ Bei `θ = ±90°` kreuzt die Ellipse die kritische Linie. Dort, wo sie eine Null
 
 `ζ` wird über die Euler-Maclaurin-Summe mit 24 Gliedern und sieben Bernoullizahlen berechnet, im Streifen auf etwa 10⁻⁷ genau.
 
+### Turing-Muster
+
+Alan Turing hat 1952 gezeigt, wie zwei Stoffe, die miteinander reagieren und verschieden schnell diffundieren, aus fast gleichmäßigem Anfang feste Muster bilden: Flecken, Streifen, Labyrinthe. So entstehen die Zeichnungen auf Fischen und Muscheln. Das Modell von Gray und Scott ist die bekannteste Form:
+
+```text
+∂u/∂t = Du·Δu − u·v² + F·(1 − u)
+∂v/∂t = Dv·Δv + u·v² − (F + k)·v
+```
+
+Mit `Du = 0,16`, `Dv = 0,08` hängt das Muster nur von `F` und `k` ab. `F = 0,0367`, `k = 0,0649` gibt Flecken, `F = 0,029`, `k = 0,057` Labyrinthe (Pearson 1993).
+
+Die Gleichung hat keine geschlossene Lösung. `tools/turing_tabelle.py` rechnet sie auf dem abgewickelten Kern, 150 × 109 Zellen, im Umfang periodisch, 25 000 Schritte, mit festem Zufallsstart. Das Ergebnis steht in `vase/turing.json`. Generator und Ansicht lesen die Tabelle wie die Vorlage: Spline in der Höhe, linear im Umfang. Eine Zelle ist bei der Ausgangsform etwa 2,3 mm, das Muster wiederholt sich etwa alle 20 mm.
+
+Mit der vollen Lamellenlänge von 25 mm hängen die Muster stark über, rot bis 74°. Zwei Wege: die Begrenzung einschalten, dann werden aus den Flecken Zähne mit 45°-Fase, oder die Lamellenlänge auf etwa 10 mm stellen, dann bleibt das Labyrinth unter 50°.
+
 ## Konfiguration
 
 `vase/config.json` ist die Quelle für STL und für die Startwerte der Ansicht.
@@ -163,7 +196,11 @@ Weitere feste Werte:
 | `lamellen.dicke_mm` | 0,9 | Dicke, die Spitze ist ein Halbkreis dieser Dicke |
 | `hohlraum.boden_dicke_mm` | 2 | geschlossener Boden |
 | `hohlraum.muendung_zugabe_mm` | 2 | die Bohrung öffnet sich an der Lippe um diesen Betrag |
-| `welle.funktion` | `vorlage` | eine der sechs Formeln |
+| `welle.funktion` | `vorlage` | eine der Formeln oben |
+| `ueberhang.begrenzen` | `false` | Lamellen wachsen nach oben höchstens im Grenzwinkel |
+| `ueberhang.winkel_grad` | 45 | Grenzwinkel zur Senkrechten |
+| `drucker.ueberhang_warnung_grad` | 45 | ab hier orange |
+| `drucker.stuetze_ab_grad` | 60 | ab hier rot, Stützen nötig |
 | `aufloesung.schnitte` | 200 | Höhenschnitte des Netzes |
 | `aufloesung.punkte_je_schnitt` | 2 | Zwischenpunkte auf dem Kern zwischen zwei Lamellen |
 
@@ -175,7 +212,7 @@ Drucker ist ein Bambu Lab H2D mit einer Düse 0,4 mm. Eine Düse erreicht 325 ×
 
 Quellen: [Technische Daten des H2D](https://bambulab.com/en/h2d/tech-specs), [Druckbereich der beiden Düsen](https://wiki.bambulab.com/en/h2/manual/printable-range-for-dual-nozzles).
 
-Die STL in den Slicer laden und aufrecht stellen. Der Boden ist geschlossen, Stützen sind für die Ausgangsform nicht vorgesehen.
+Die STL in den Slicer laden und aufrecht stellen. Der Boden ist geschlossen, Stützen sind für die Ausgangsform nicht vorgesehen. Meldet der Generator rote Abschnitte, braucht die Form Stützen oder die Überhangbegrenzung.
 
 ## Ordner
 
@@ -190,11 +227,13 @@ Die STL in den Slicer laden und aufrecht stellen. Der Boden ist geschlossen, St�
 ├── tools/
 │   ├── vase_feature.py       Formel und Körper
 │   ├── vase_generator.py     config → STL, HTML, PNG
+│   ├── turing_tabelle.py     schreibt vase/turing.json
 │   ├── analyse_referenz.py   schreibt das Schnittbild neu
 │   └── requirements.txt
 └── vase/
     ├── config.json           Parameter und Startwerte
     ├── vorlage.json          gemessene Lamellenkante
+    ├── turing.json           Gray-Scott-Muster, aus turing_tabelle.py
     ├── notizen.md            Stand und Verlauf
     ├── vorschau.html         3D-Ansicht, generiert
     ├── vorschau.png          Seitenansicht und Querschnitt, generiert
