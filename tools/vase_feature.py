@@ -115,7 +115,7 @@ class Vase:
 
 FUNKTIONEN = (
     "vorlage", "sinus", "spirale", "bluete", "kaemme", "gleich",
-    "cnoidal", "logspirale", "phyllotaxis", "super", "ketten",
+    "cnoidal", "logspirale", "phyllotaxis", "super", "ketten", "zeta",
 )
 RUNDUNG = 8
 _VORLAGE = json.loads((Path(__file__).resolve().parents[1] / "vase" / "vorlage.json").read_text(encoding="utf-8"))
@@ -387,6 +387,41 @@ def _kettenlinie(s: float) -> float:
     return form
 
 
+# Bernoullizahlen B2 bis B14 für den Rest der Euler-Maclaurin-Summe.
+_BERNOULLI = (1 / 6, -1 / 30, 1 / 42, -1 / 30, 5 / 66, -691 / 2730, 7 / 6)
+_ZETA_T0, _ZETA_T1, _ZETA_SIGMA, _ZETA_HUB, _ZETA_BODEN = 10.0, 50.0, 0.45, 3.0, -1.0
+
+
+def _zeta(s: complex, n: int = 24) -> complex:
+    """Riemannsche Zetafunktion über Euler-Maclaurin, im Streifen 0 < σ < 1 auf 1e-7 genau."""
+    summe = sum(k ** -s for k in range(1, n))
+    summe += n ** (1 - s) / (s - 1) + 0.5 * n ** -s
+    faktor = s * n ** (-s - 1)
+    fakultaet = 2.0
+    for k, b in enumerate(_BERNOULLI, start=1):
+        summe += b / fakultaet * faktor
+        faktor *= (s + 2 * k - 1) * (s + 2 * k) / (n * n)
+        fakultaet *= (2 * k + 1) * (2 * k + 2)
+    return summe
+
+
+def _zeta_log(s: float, theta: float) -> float:
+    """ln|ζ| auf einer Ellipse im kritischen Streifen. Die Höhe läuft entlang der imaginären Achse."""
+    punkt = complex(
+        0.5 + _ZETA_SIGMA * math.cos(theta),
+        _ZETA_T0 + (_ZETA_T1 - _ZETA_T0) * s + _ZETA_HUB * math.sin(theta),
+    )
+    return math.log(max(abs(_zeta(punkt)), 1e-12))
+
+
+_ZETA_MAX = max(_zeta_log(i / 80, math.tau * j / 72) for i in range(81) for j in range(72))
+
+
+def _zetaform(s: float, theta: float) -> float:
+    wert = (_zeta_log(s, theta) - _ZETA_BODEN) / (_ZETA_MAX - _ZETA_BODEN)
+    return min(1.0, max(0.0, wert))
+
+
 def formel_anteil(s: float, theta: float, funktion: str) -> float:
     """Länge als Anteil von L_max. Der Höchstwert jeder Formel ist 1.
 
@@ -414,6 +449,8 @@ def formel_anteil(s: float, theta: float, funktion: str) -> float:
         welle = _phyllotaxis_roh(s, theta) / _PHYLLO_MAX
     elif funktion == "super":
         welle = _superformel(theta)
+    elif funktion == "zeta":
+        welle = _zetaform(s, theta)
     elif funktion == "ketten":
         return rest + (1.0 - rest) * _kettenlinie(s)
     else:

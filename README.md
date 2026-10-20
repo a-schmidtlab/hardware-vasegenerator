@@ -75,6 +75,7 @@ Alle Formeln außer `vorlage` teilen sich dieselbe Hülle: auf den ersten und le
 | `phyllotaxis` | Goldener Winkel | versetzte Höcker wie bei einer Sonnenblume |
 | `super` | Superformel | fünf gerundete Blätter aus einer einzigen Formel |
 | `ketten` | Kettenlinie | enge Taille, weite Ringe, wie eine Seifenhaut |
+| `zeta` | Riemannsche Zetafunktion | wogende Bänder, eine Naht aus Kerben an den Nullstellen |
 
 ### Cnoidalwelle
 
@@ -124,6 +125,22 @@ f(s) = ( cosh((s−½)/a) − 1 ) / ( cosh(1/(2a)) − 1 )
 ```
 
 mit `a = 0,62`. Die Taille bleibt beim kurzen Rest, Fuß und Lippe tragen die längsten Lamellen. Diese Formel benutzt die Ein- und Ausblendung der anderen Wellen nicht, sonst würde die Seifenhaut an den Ringen wieder verschwinden.
+
+### Riemannsche Zetafunktion
+
+`ζ(s) = Σ 1/nˢ`, fortgesetzt auf die ganze komplexe Ebene. Die Riemannsche Vermutung sagt, dass alle nichttrivialen Nullstellen auf der kritischen Linie `σ = ½` liegen. Die ersten liegen bei `t` = 14,13, 21,02, 25,01, 30,42, 32,94, 37,59, 40,92, 43,33, 48,01, 49,77.
+
+Die Vase ist ein Stück des kritischen Streifens. Die Höhe läuft die imaginäre Achse von `t = 10` bis `50` hinauf. Jeder Höhenschnitt ist eine Ellipse um den Punkt `½ + it`:
+
+```text
+σ(θ) = ½ + 0,45 · cos θ
+t(s, θ) = 10 + 40 · s + 3 · sin θ
+f = (ln|ζ(σ + it)| + 1) / (ln|ζ|max + 1), auf 0…1 begrenzt
+```
+
+Bei `θ = ±90°` kreuzt die Ellipse die kritische Linie. Dort, wo sie eine Nullstelle trifft, fällt `ln|ζ|` steil ab und die Lamellen werden kurz: eine senkrechte Reihe von Kerben, eine je Nullstelle. Zwischen den Nullstellen wölbt sich `|ζ|` zu Bändern, die durch den Hub in `t` schräg um die Vase laufen. Der Logarithmus macht die Nullstellen zu Trichtern statt zu flachen Mulden.
+
+`ζ` wird über die Euler-Maclaurin-Summe mit 24 Gliedern und sieben Bernoullizahlen berechnet, im Streifen auf etwa 10⁻⁷ genau.
 
 ## Konfiguration
 

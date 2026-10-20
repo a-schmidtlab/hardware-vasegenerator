@@ -27,3 +27,4 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-20: README, `docs/PLAN.md` und `CLAUDE.md` auf den Lamellengenerator umgeschrieben.
 - 2026-10-20: STL ist die Druckdatei. Der Generator schreibt `vase.stl`, die Ansicht lädt die aktuelle Reglerstellung herunter.
 - 2026-10-20: Fünf weitere Formeln: Cnoidalwelle, logarithmische Spirale, goldener Winkel, Superformel, Kettenlinie. Hintergrund in `README.md`.
+- 2026-10-20: Formel `zeta`: ln|ζ| der Riemannschen Zetafunktion auf Ellipsen im kritischen Streifen. Nullstellen als Kerbenreihe. Python und Ansicht stimmen auf 1e-14 überein.
