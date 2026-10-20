@@ -16,7 +16,9 @@
     "z_mm": 320,
     "rand_mm": 5,
     "wand_min_mm": 1.2,
-    "boden_min_mm": 0.8
+    "boden_min_mm": 0.8,
+    "ueberhang_warnung_grad": 45,
+    "stuetze_ab_grad": 60
   },
   "proportion": {
     "innendurchmesser_mm": 102,
@@ -48,6 +50,10 @@
     "oberwelle_loben": 6,
     "oberwelle_anteil": 0.25,
     "potenz": 1.0
+  },
+  "ueberhang": {
+    "begrenzen": false,
+    "winkel_grad": 45
   },
   "aufloesung": {
     "schnitte": 200,

@@ -29,3 +29,6 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-20: Fünf weitere Formeln: Cnoidalwelle, logarithmische Spirale, goldener Winkel, Superformel, Kettenlinie. Hintergrund in `README.md`.
 - 2026-10-20: Formel `zeta`: |ζ| der Riemannschen Zetafunktion auf Ellipsen im kritischen Streifen. Nullstellen als Kerbenreihe. Python und Ansicht stimmen auf 1e-14 überein.
 - 2026-10-20: Überhang der Lamellenkanten gemessen. Erste Fassung von `zeta` (ln|ζ|, t 10–50) hing bis 79° über, jetzt |ζ| linear, t 12–36: höchstens 43°. Offen: `phyllotaxis` bis 62°, `kaemme` bis 75°.
+- 2026-10-20: Formeln `turing_flecken` und `turing_labyrinth`: Gray-Scott-Muster, gerechnet von `tools/turing_tabelle.py`, abgelegt in `vase/turing.json`.
+- 2026-10-20: Überhang der Lamellenspitzen wird gemessen. Ansicht färbt orange ab 45°, rot ab 60° (Bambu-Studio-Schwelle 30° zur Waagrechten), Generator meldet die Abschnitte, `vorschau.png` färbt die Meridiane.
+- 2026-10-20: Option `ueberhang.begrenzen`, Haken in der Ansicht: Lamellen wachsen nach oben höchstens im Grenzwinkel (45°). Standard aus, die Ausgangsform bleibt unverändert.

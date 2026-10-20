@@ -33,10 +33,12 @@ python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt
 ├── tools/
 │   ├── analyse_referenz.py   Schnittbild der Referenz
 │   ├── vase_feature.py       Formel und Körper
+│   ├── turing_tabelle.py     Gray-Scott → vase/turing.json
 │   └── vase_generator.py     config → STL, HTML, PNG
 └── vase/
     ├── config.json           Parameter, Startwerte der Regler
     ├── vorlage.json          gemessene Kante der Formel vorlage
+    ├── turing.json           gerechnete Muster der Formeln turing_*
     ├── notizen.md
     ├── vorschau.html         generiert, Regler rechnen im Browser
     ├── vorschau.png          generiert
@@ -58,7 +60,7 @@ Erledigt. Änderungen an der Formel zuerst in `docs/PLAN.md` festlegen.
 1. `python tools/vase_generator.py vase/config.json` schreibt STL, `vorschau.html` und `vorschau.png`.
 2. Dieselbe Längenformel steht in `vase_feature.py` und im Skript der HTML-Datei. Wer eine Seite ändert, ändert die andere mit.
 3. `vorlage.json` ist die gemessene Kante. Neue Messungen ersetzen die Tabelle, sie erfinden keine Wellen.
-4. Maße über dem H2D-Bauraum weist der Generator ab.
+4. Maße über dem H2D-Bauraum weist der Generator ab. Überhang über `drucker.stuetze_ab_grad` meldet er, die Ansicht färbt ihn rot.
 5. Die Ansicht ist prüfbar. Die STL aus der Ansicht oder aus dem Generator ist die Druckdatei.
 
 ### Phase 3
