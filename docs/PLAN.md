@@ -53,6 +53,7 @@ Spitze = Innenradius + Kernwand + länge
 | `phyllotaxis` | Höcker auf dem Gitter des goldenen Winkels `2π/φ²` |
 | `super` | Superformel von Gielis, fünf Blätter, `m = 5` |
 | `ketten` | Katenoid `cosh((s−½)/a)`, eng in der Taille, weit an den Ringen |
+| `zeta` | `ln\|ζ(σ+it)\|` auf Ellipsen `σ = ½ + 0,45 cos θ`, `t = 10 + 40s + 3 sin θ` |
 
 Die Spitze jeder Lamelle ist ein Halbkreis mit dem Radius der halben Lamellendicke. Er endet auf dem Radius der Formel und steht nicht darüber hinaus. Das Netz hat 200 Höhenschnitte.
 

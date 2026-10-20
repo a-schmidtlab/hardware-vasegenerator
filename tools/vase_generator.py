@@ -19,7 +19,7 @@ from PIL import Image, ImageDraw
 
 from vase_feature import (
     Vase, VaseFehler, aussen_polygon, aussen_radius, bett_linien, koerper, massen, wasserdicht,
-    _CNOIDAL_M, _CNOIDAL_K, _PHYLLO_MAX, _SUPER_MIN, _SUPER_MAX, _KETTEN_A,
+    _CNOIDAL_M, _CNOIDAL_K, _PHYLLO_MAX, _SUPER_MIN, _SUPER_MAX, _KETTEN_A, _ZETA_MAX,
 )
 
 
@@ -144,6 +144,7 @@ def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
         "superMin": _SUPER_MIN,
         "superMax": _SUPER_MAX,
         "kettenA": _KETTEN_A,
+        "zetaMax": _ZETA_MAX,
     }
     roh = json.dumps(daten, separators=(",", ":")).replace("<", "\\u003c")
     pfad.write_text(_HTML.replace("__DATEN__", roh), encoding="utf-8")
@@ -187,6 +188,7 @@ _HTML = """<!DOCTYPE html>
       <option value="phyllotaxis">Goldener Winkel</option>
       <option value="super">Superformel</option>
       <option value="ketten">Kettenlinie</option>
+      <option value="zeta">Riemannsche Zetafunktion</option>
     </select>
   </label>
   <button id="zurueck" type="button">Vorlage</button>
@@ -337,6 +339,7 @@ function formelAnteil(s, theta, funktion) {
   if (funktion === "phyllotaxis") return rest + (1 - rest) * h * (phyllotaxis(s, theta) / daten.phylloMax);
   if (funktion === "super") return rest + (1 - rest) * h * superformel(theta);
   if (funktion === "ketten") return rest + (1 - rest) * kettenlinie(s);
+  if (funktion === "zeta") return rest + (1 - rest) * h * zetaform(s, theta);
   return rest + (1 - rest) * Math.sin(Math.PI * s) ** 1.15;
 }
 function jacobiCn(u, m) {
@@ -391,6 +394,43 @@ function superformel(theta) {
 function kettenlinie(s) {
   const rand = Math.cosh(0.5 / daten.kettenA);
   return (Math.cosh((s - 0.5) / daten.kettenA) - 1) / (rand - 1);
+}
+const BERNOULLI = [1 / 6, -1 / 30, 1 / 42, -1 / 30, 5 / 66, -691 / 2730, 7 / 6];
+function cmul(a, b) { return [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]]; }
+function cdiv(a, b) {
+  const n = b[0] * b[0] + b[1] * b[1];
+  return [(a[0] * b[0] + a[1] * b[1]) / n, (a[1] * b[0] - a[0] * b[1]) / n];
+}
+function cpot(k, s) {
+  // k^s für reelles k > 0
+  const l = Math.log(k), r = Math.exp(s[0] * l);
+  return [r * Math.cos(s[1] * l), r * Math.sin(s[1] * l)];
+}
+function zeta(s) {
+  const n = 24;
+  let summe = [0, 0];
+  for (let k = 1; k < n; k++) {
+    const w = cpot(k, [-s[0], -s[1]]);
+    summe = [summe[0] + w[0], summe[1] + w[1]];
+  }
+  const ende = cdiv(cpot(n, [1 - s[0], -s[1]]), [s[0] - 1, s[1]]);
+  const halb = cpot(n, [-s[0], -s[1]]);
+  summe = [summe[0] + ende[0] + 0.5 * halb[0], summe[1] + ende[1] + 0.5 * halb[1]];
+  let faktor = cmul(s, cpot(n, [-s[0] - 1, -s[1]]));
+  let fakultaet = 2;
+  for (let k = 1; k <= BERNOULLI.length; k++) {
+    const b = BERNOULLI[k - 1] / fakultaet;
+    summe = [summe[0] + b * faktor[0], summe[1] + b * faktor[1]];
+    const m = cmul([s[0] + 2 * k - 1, s[1]], [s[0] + 2 * k, s[1]]);
+    faktor = cmul(faktor, [m[0] / (n * n), m[1] / (n * n)]);
+    fakultaet *= (2 * k + 1) * (2 * k + 2);
+  }
+  return summe;
+}
+function zetaform(s, theta) {
+  const w = zeta([0.5 + 0.45 * Math.cos(theta), 10 + 40 * s + 3 * Math.sin(theta)]);
+  const log = Math.log(Math.max(Math.hypot(w[0], w[1]), 1e-12));
+  return Math.min(1, Math.max(0, (log + 1) / (daten.zetaMax + 1)));
 }
 function laengenanteil(z, theta, p) {
   const s = z / p.hoehe;
