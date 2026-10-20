@@ -428,9 +428,8 @@ function zeta(s) {
   return summe;
 }
 function zetaform(s, theta) {
-  const w = zeta([0.5 + 0.45 * Math.cos(theta), 10 + 40 * s + 3 * Math.sin(theta)]);
-  const log = Math.log(Math.max(Math.hypot(w[0], w[1]), 1e-12));
-  return Math.min(1, Math.max(0, (log + 1) / (daten.zetaMax + 1)));
+  const w = zeta([0.5 + 0.45 * Math.cos(theta), 12 + 24 * s + 2.5 * Math.sin(theta)]);
+  return Math.min(1, Math.hypot(w[0], w[1]) / daten.zetaMax);
 }
 function laengenanteil(z, theta, p) {
   const s = z / p.hoehe;
