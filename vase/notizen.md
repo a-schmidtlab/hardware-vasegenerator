@@ -26,3 +26,4 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-20: Kleine Unterwellen waren Dreiecksrauschen. Tiefpass lässt nur die großen Wellen, Fuß und Lippe bleiben bei etwa 4 mm.
 - 2026-10-20: README, `docs/PLAN.md` und `CLAUDE.md` auf den Lamellengenerator umgeschrieben.
 - 2026-10-20: STL ist die Druckdatei. Der Generator schreibt `vase.stl`, die Ansicht lädt die aktuelle Reglerstellung herunter.
+- 2026-10-20: Fünf weitere Formeln: Cnoidalwelle, logarithmische Spirale, goldener Winkel, Superformel, Kettenlinie. Hintergrund in `README.md`.

@@ -48,6 +48,11 @@ Spitze = Innenradius + Kernwand + länge
 | `bluete` | fünf Blätter, `\|cos(5θ)\|^0,45`, ohne Drehung |
 | `kaemme` | zwei breite Kämme, `\|cos\| ^ 0,55`, 90° Drehung von 32 % bis 68 % der Höhe |
 | `gleich` | alle Lamellen gleich, Bauch `sin(πs)^1,15` |
+| `cnoidal` | `cn(u, k)²` mit `k² = 0,85`, die periodische Flachwasserwelle |
+| `logspirale` | zwei Arme `φ = 0,9·ln(s+0,08)`, seitlich eine Gaußglocke |
+| `phyllotaxis` | Höcker auf dem Gitter des goldenen Winkels `2π/φ²` |
+| `super` | Superformel von Gielis, fünf Blätter, `m = 5` |
+| `ketten` | Katenoid `cosh((s−½)/a)`, eng in der Taille, weit an den Ringen |
 
 Die Spitze jeder Lamelle ist ein Halbkreis mit dem Radius der halben Lamellendicke. Er endet auf dem Radius der Formel und steht nicht darüber hinaus. Das Netz hat 200 Höhenschnitte.
 

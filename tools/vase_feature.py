@@ -113,7 +113,10 @@ class Vase:
         )
 
 
-FUNKTIONEN = ("vorlage", "sinus", "spirale", "bluete", "kaemme", "gleich")
+FUNKTIONEN = (
+    "vorlage", "sinus", "spirale", "bluete", "kaemme", "gleich",
+    "cnoidal", "logspirale", "phyllotaxis", "super", "ketten",
+)
 RUNDUNG = 8
 _VORLAGE = json.loads((Path(__file__).resolve().parents[1] / "vase" / "vorlage.json").read_text(encoding="utf-8"))
 
@@ -276,6 +279,114 @@ def _huelle(s: float) -> float:
     return smoothstep(s / 0.16) * smoothstep((1.0 - s) / 0.16)
 
 
+def _elliptisches_k(m: float) -> float:
+    """Vollständiges elliptisches Integral K(k), m = k², über das arithmetisch-geometrische Mittel."""
+    a, b = 1.0, math.sqrt(max(0.0, 1.0 - m))
+    for _ in range(40):
+        a, b = 0.5 * (a + b), math.sqrt(a * b)
+        if abs(a - b) < 1e-15:
+            break
+    return math.pi / (2.0 * a)
+
+
+def _jacobi_cn(u: float, m: float) -> float:
+    """Jacobische elliptische Funktion cn(u, k), m = k². Für m = 0 ist das der Kosinus."""
+    if m <= 0.0:
+        return math.cos(u)
+    if m >= 1.0:
+        return 1.0 / math.cosh(u)
+    a = [1.0]
+    b = [math.sqrt(1.0 - m)]
+    c = [math.sqrt(m)]
+    while abs(c[-1]) > 1e-14 and len(a) < 32:
+        a.append(0.5 * (a[-1] + b[-1]))
+        b.append(math.sqrt(a[-2] * b[-1]))
+        c.append(0.5 * (a[-2] - b[-2]))
+    stufe = len(a) - 1
+    phi = (2.0 ** stufe) * a[stufe] * u
+    for i in range(stufe, 0, -1):
+        sinus = max(-1.0, min(1.0, c[i] * math.sin(phi) / a[i]))
+        phi = 0.5 * (phi + math.asin(sinus))
+    return math.cos(phi)
+
+
+# Modul der Cnoidalwelle: breite Kämme, schmale Täler, noch keine einzelnen Solitonen.
+_CNOIDAL_M = 0.85
+_CNOIDAL_K = _elliptisches_k(_CNOIDAL_M)
+_GOLDENER_WINKEL = 2.0 * math.pi / ((1.0 + math.sqrt(5.0)) / 2.0) ** 2
+_PHYLLO_ANZAHL = 42
+_SUPER_M, _SUPER_N1, _SUPER_N2, _SUPER_N3 = 5.0, 0.9, 1.5, 1.5
+_KETTEN_A = 0.62
+
+
+def _cnoidal(s: float, theta: float) -> float:
+    # Zwei Kämme auf dem Umfang: θ um π schiebt das Argument um 2K, eine Periode von cn².
+    argument = (2.0 * _CNOIDAL_K / math.pi) * (theta + 0.45 * s)
+    wert = _jacobi_cn(argument, _CNOIDAL_M)
+    return wert * wert
+
+
+def _logspirale(s: float, theta: float) -> float:
+    """Zwei Arme einer logarithmischen Spirale, seitlich als Gaußglocke abfallend."""
+    winkel = 0.9 * math.log(s + 0.08)
+
+    def abstand(ziel: float) -> float:
+        return abs((theta - ziel + math.pi) % math.tau - math.pi)
+
+    naehe = min(abstand(winkel), abstand(winkel + math.pi))
+    sigma = 0.42
+    return math.exp(-0.5 * (naehe / sigma) ** 2)
+
+
+def _phyllotaxis_roh(s: float, theta: float) -> float:
+    """Summe von Gaußglocken auf dem Gitter des goldenen Winkels."""
+    sigma_s, sigma_theta = 0.030, 0.22
+    summe = 0.0
+    for n in range(_PHYLLO_ANZAHL):
+        hoehe = (n + 0.5) / _PHYLLO_ANZAHL
+        winkel = n * _GOLDENER_WINKEL
+        ds = (s - hoehe) / sigma_s
+        d_theta = ((theta - winkel + math.pi) % math.tau - math.pi) / sigma_theta
+        summe += math.exp(-0.5 * (ds * ds + d_theta * d_theta))
+    return summe
+
+
+def _phyllotaxis_max() -> float:
+    groesste = 0.0
+    for n in range(8, _PHYLLO_ANZAHL - 8):
+        s = (n + 0.5) / _PHYLLO_ANZAHL
+        theta = n * _GOLDENER_WINKEL
+        groesste = max(groesste, _phyllotaxis_roh(s, theta))
+    return groesste
+
+
+_PHYLLO_MAX = _phyllotaxis_max()
+
+
+def _super_rho(theta: float) -> float:
+    t = _SUPER_M * theta / 4.0
+    cosinus = abs(math.cos(t)) ** _SUPER_N2
+    sinus = abs(math.sin(t)) ** _SUPER_N3
+    return (cosinus + sinus) ** (-1.0 / _SUPER_N1)
+
+
+_SUPER_WERTE = [_super_rho(i / 720.0 * math.tau) for i in range(720)]
+_SUPER_MIN = min(_SUPER_WERTE)
+_SUPER_MAX = max(_SUPER_WERTE)
+
+
+def _superformel(theta: float) -> float:
+    rho = _super_rho(theta)
+    return (rho - _SUPER_MIN) / (_SUPER_MAX - _SUPER_MIN)
+
+
+def _kettenlinie(s: float) -> float:
+    """Katenoid: engste Stelle in der Mitte, weit an den beiden Ringen."""
+    rand = math.cosh(0.5 / _KETTEN_A)
+    form = (math.cosh((s - 0.5) / _KETTEN_A) - 1.0) / (rand - 1.0)
+    return form
+
+
 def formel_anteil(s: float, theta: float, funktion: str) -> float:
     """Länge als Anteil von L_max. Der Höchstwert jeder Formel ist 1.
 
@@ -295,6 +406,16 @@ def formel_anteil(s: float, theta: float, funktion: str) -> float:
         dreh = smoothstep((s - 0.32) / 0.36) * math.radians(90.0)
         kosinus = math.cos(2.0 * (theta + dreh))
         welle = _normiert(math.copysign(abs(kosinus) ** 0.55, kosinus))
+    elif funktion == "cnoidal":
+        welle = _cnoidal(s, theta)
+    elif funktion == "logspirale":
+        welle = _logspirale(s, theta)
+    elif funktion == "phyllotaxis":
+        welle = _phyllotaxis_roh(s, theta) / _PHYLLO_MAX
+    elif funktion == "super":
+        welle = _superformel(theta)
+    elif funktion == "ketten":
+        return rest + (1.0 - rest) * _kettenlinie(s)
     else:
         return rest + (1.0 - rest) * math.sin(math.pi * s) ** 1.15
     return rest + (1.0 - rest) * huelle * welle

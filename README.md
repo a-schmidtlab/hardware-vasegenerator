@@ -70,6 +70,60 @@ Alle Formeln außer `vorlage` teilen sich dieselbe Hülle: auf den ersten und le
 | `bluete` | Blüte, fünf Blätter | fünf breite Blätter, ohne Drehung |
 | `kaemme` | Breite Kämme | zwei breite Kämme, 90° Drehung in der oberen Hälfte |
 | `gleich` | Gleich lang | alle Lamellen gleich, nur ein Bauch über die Höhe |
+| `cnoidal` | Cnoidalwelle | breite Wasserwellen-Kämme, schmale Täler |
+| `logspirale` | Logarithmische Spirale | zwei Bänder, die sich selbstähnlich nach oben winden |
+| `phyllotaxis` | Goldener Winkel | versetzte Höcker wie bei einer Sonnenblume |
+| `super` | Superformel | fünf gerundete Blätter aus einer einzigen Formel |
+| `ketten` | Kettenlinie | enge Taille, weite Ringe, wie eine Seifenhaut |
+
+### Cnoidalwelle
+
+Flache Wasserwellen gehorchen der Gleichung von Korteweg und de Vries. Ihre periodische Lösung ist keine Sinuswelle, sondern eine cnoidal wave: das Quadrat der Jacobischen elliptischen Funktion `cn(u, k)`.
+
+`cn` verallgemeinert den Kosinus. Der Modul `k` steuert die Form. Bei `k = 0` ist `cn(u, 0) = cos(u)`, die Welle ist sinusförmig. Geht `k` gegen 1, bleiben die Kämme lang oben und die Übergänge in die Täler werden schmal. Im Grenzfall bleibt ein einzelner Soliton, eine Welle, die ihre Form behält. Hier ist `k² = 0,85`: die Kämme sind breit und rund, die Täler deutlich schmaler, die Welle ist noch periodisch.
+
+Das vollständige elliptische Integral `K(k)` ist die Viertelperiode. Es wird über das arithmetisch-geometrische Mittel berechnet, `K = π / (2 · agm(1, √(1−k²)))`. Zwei Kämme auf dem Umfang entstehen, indem der Winkel `θ` so gestreckt wird, dass ein halber Umlauf genau eine Periode von `cn²` ist:
+
+```text
+u = (2K / π) · (θ + 0,45 · s)
+f = cn(u, k)²
+```
+
+`cn²` liegt von selbst zwischen 0 und 1.
+
+### Logarithmische Spirale
+
+Die logarithmische Spirale, von Jakob Bernoulli *spira mirabilis* genannt, ist die Kurve, die bei jeder Vergrößerung dieselbe Gestalt behält: `r = a · e^(bφ)`. Der Winkel des Kamms auf der Vase folgt derselben Beziehung, mit der Höhe als Maßstab:
+
+```text
+φ(s) = 0,9 · ln(s + 0,08)
+```
+
+Zwei Arme liegen sich gegenüber. Die Lamellenlänge fällt seitlich als Gaußglocke mit der Breite `σ = 0,42` im Bogenmaß ab. Ein Band langer Lamellen windet sich nach oben und wird dabei weiter, ohne seine Form zu ändern.
+
+### Goldener Winkel
+
+Der goldene Schnitt `φ = (1+√5)/2` liefert den Winkel `2π/φ² ≈ 137,5°`. Dreht man jeden nächsten Punkt um genau diesen Winkel, füllt sich der Kreis so gleichmäßig, dass sich das Muster nie wiederholt. Das ist die Anordnung der Sonnenblume und der Tannenzapfen (Phyllotaxis). Auf der Vase sitzt der Höcker `n` bei der Höhe `(n+½)/42` und dem Winkel `n · 137,5°`. Jeder Höcker ist eine Gaußglocke in Höhe und Winkel. Die langen Lamellen bilden die schrägen Spiralen, die man an der Blüte sieht, und keine senkrechten Streifen.
+
+### Superformel
+
+Johan Gielis hat 2003 die Superellipse von Lamé zu einer Formel erweitert, die viele Umrisse aus der Botanik mit denselben vier Zahlen beschreibt:
+
+```text
+ρ(θ) = ( |cos(mθ/4)|^n₂ + |sin(mθ/4)|^n₃ )^(−1/n₁)
+```
+
+`m` ist die Zahl der Symmetrien. Die Exponenten runden oder schärfen die Ecken. Hier ist `m = 5`, `n₁ = 0,9`, `n₂ = n₃ = 1,5`: fünf weiche Blätter. `ρ` wird auf den Bereich 0…1 gezogen, damit die längste Lamelle bei `L_max` liegt. Andere Zahlen in derselben Formel geben Sterne, Schalen oder Quadrate.
+
+### Kettenlinie
+
+Ein frei hängendes Seil folgt `y = a · cosh(x/a)`, der Kettenlinie. Dreht man sie um die senkrechte Achse, entsteht das Katenoid. Es ist die einzige rotationssymmetrische Minimalfläche: die Form einer Seifenhaut zwischen zwei Ringen. Die Lamellenlänge ist dieses Profil, normiert auf 0 in der Taille und 1 an den beiden Ringen:
+
+```text
+f(s) = ( cosh((s−½)/a) − 1 ) / ( cosh(1/(2a)) − 1 )
+```
+
+mit `a = 0,62`. Die Taille bleibt beim kurzen Rest, Fuß und Lippe tragen die längsten Lamellen. Diese Formel benutzt die Ein- und Ausblendung der anderen Wellen nicht, sonst würde die Seifenhaut an den Ringen wieder verschwinden.
 
 ## Konfiguration
 

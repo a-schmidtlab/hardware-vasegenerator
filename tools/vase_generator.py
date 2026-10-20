@@ -17,7 +17,10 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-from vase_feature import Vase, VaseFehler, aussen_polygon, aussen_radius, bett_linien, koerper, massen, wasserdicht
+from vase_feature import (
+    Vase, VaseFehler, aussen_polygon, aussen_radius, bett_linien, koerper, massen, wasserdicht,
+    _CNOIDAL_M, _CNOIDAL_K, _PHYLLO_MAX, _SUPER_MIN, _SUPER_MAX, _KETTEN_A,
+)
 
 
 def stl_schreiben(pfad: Path, netz: dict) -> None:
@@ -135,6 +138,12 @@ def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
         },
         "grenzeDurchmesser": info["durchmesser_grenze"],
         "grenzeHoehe": info["hoehe_grenze"],
+        "cnoidalM": _CNOIDAL_M,
+        "cnoidalK": _CNOIDAL_K,
+        "phylloMax": _PHYLLO_MAX,
+        "superMin": _SUPER_MIN,
+        "superMax": _SUPER_MAX,
+        "kettenA": _KETTEN_A,
     }
     roh = json.dumps(daten, separators=(",", ":")).replace("<", "\\u003c")
     pfad.write_text(_HTML.replace("__DATEN__", roh), encoding="utf-8")
@@ -173,6 +182,11 @@ _HTML = """<!DOCTYPE html>
       <option value="bluete">Bluete, fuenf Blaetter</option>
       <option value="kaemme">Breite Kaemme</option>
       <option value="gleich">Gleich lang</option>
+      <option value="cnoidal">Cnoidalwelle</option>
+      <option value="logspirale">Logarithmische Spirale</option>
+      <option value="phyllotaxis">Goldener Winkel</option>
+      <option value="super">Superformel</option>
+      <option value="ketten">Kettenlinie</option>
     </select>
   </label>
   <button id="zurueck" type="button">Vorlage</button>
@@ -318,7 +332,65 @@ function formelAnteil(s, theta, funktion) {
     const w = normiert(Math.sign(c) * Math.abs(c) ** 0.55);
     return rest + (1 - rest) * h * w;
   }
+  if (funktion === "cnoidal") return rest + (1 - rest) * h * cnoidal(s, theta);
+  if (funktion === "logspirale") return rest + (1 - rest) * h * logspirale(s, theta);
+  if (funktion === "phyllotaxis") return rest + (1 - rest) * h * (phyllotaxis(s, theta) / daten.phylloMax);
+  if (funktion === "super") return rest + (1 - rest) * h * superformel(theta);
+  if (funktion === "ketten") return rest + (1 - rest) * kettenlinie(s);
   return rest + (1 - rest) * Math.sin(Math.PI * s) ** 1.15;
+}
+function jacobiCn(u, m) {
+  if (m <= 0) return Math.cos(u);
+  if (m >= 1) return 1 / Math.cosh(u);
+  const a = [1], b = [Math.sqrt(1 - m)], c = [Math.sqrt(m)];
+  while (Math.abs(c[c.length - 1]) > 1e-14 && a.length < 32) {
+    a.push(0.5 * (a[a.length - 1] + b[b.length - 1]));
+    b.push(Math.sqrt(a[a.length - 2] * b[b.length - 1]));
+    c.push(0.5 * (a[a.length - 2] - b[b.length - 2]));
+  }
+  const stufe = a.length - 1;
+  let phi = (2 ** stufe) * a[stufe] * u;
+  for (let i = stufe; i > 0; i--) {
+    const sinus = Math.max(-1, Math.min(1, c[i] * Math.sin(phi) / a[i]));
+    phi = 0.5 * (phi + Math.asin(sinus));
+  }
+  return Math.cos(phi);
+}
+function cnoidal(s, theta) {
+  const wert = jacobiCn((2 * daten.cnoidalK / Math.PI) * (theta + 0.45 * s), daten.cnoidalM);
+  return wert * wert;
+}
+function winkelAbstand(a, b) {
+  let d = (a - b + Math.PI) % TAU;
+  if (d < 0) d += TAU;
+  return Math.abs(d - Math.PI);
+}
+function logspirale(s, theta) {
+  const winkel = 0.9 * Math.log(s + 0.08);
+  const nahe = Math.min(winkelAbstand(theta, winkel), winkelAbstand(theta, winkel + Math.PI));
+  return Math.exp(-0.5 * (nahe / 0.42) ** 2);
+}
+function phyllotaxis(s, theta) {
+  const gold = TAU / ((1 + Math.sqrt(5)) / 2) ** 2;
+  const sigmaS = 0.030, sigmaT = 0.22, anzahl = 42;
+  let summe = 0;
+  for (let n = 0; n < anzahl; n++) {
+    const ds = (s - (n + 0.5) / anzahl) / sigmaS;
+    const dt = winkelAbstand(theta, n * gold) / sigmaT;
+    summe += Math.exp(-0.5 * (ds * ds + dt * dt));
+  }
+  return summe;
+}
+function superRho(theta) {
+  const t = 5 * theta / 4;
+  return (Math.abs(Math.cos(t)) ** 1.5 + Math.abs(Math.sin(t)) ** 1.5) ** (-1 / 0.9);
+}
+function superformel(theta) {
+  return (superRho(theta) - daten.superMin) / (daten.superMax - daten.superMin);
+}
+function kettenlinie(s) {
+  const rand = Math.cosh(0.5 / daten.kettenA);
+  return (Math.cosh((s - 0.5) / daten.kettenA) - 1) / (rand - 1);
 }
 function laengenanteil(z, theta, p) {
   const s = z / p.hoehe;
