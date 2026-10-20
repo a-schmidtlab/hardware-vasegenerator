@@ -194,7 +194,7 @@ f(s, \theta) = \rho + (1 - \rho)\, h(s)\, w(s, \theta), \qquad w \in [0, 1] .
 
 $w$ ist die eigentliche Welle. Ausnahmen sind `vorlage` (Messung), `gleich` und `ketten` (ohne Hülle).
 
-**Hilfsfunktionen.** $N(x) = \tfrac12\,(\operatorname{clamp}(x, -1, 1) + 1)$ bildet $[-1, 1]$ auf $[0, 1]$ ab. Die Vorzeichenpotenz $\operatorname{sgn}(c)\,|c|^p$ ändert die Form einer Kosinuswelle, ohne ihre Nullstellen zu verschieben. Mit $p < 1$ werden Kämme und Täler breit und flach, die Übergänge steil, die Welle nähert sich einer Rechteckwelle. Bei $c = 0$ hat $|c|^p$ dann eine senkrechte Tangente. Mit $p > 1$ werden Kämme und Täler spitz. Der Winkelabstand
+**Hilfsfunktionen.** $N(x) = \tfrac12\,(\operatorname{clamp}(x, -1, 1) + 1)$ bildet $[-1, 1]$ auf $[0, 1]$ ab. Die Vorzeichenpotenz $\operatorname{sgn}(c)\,|c|^p$ ändert die Form einer Kosinuswelle, ohne ihre Nullstellen zu verschieben. Mit $p \lt 1$ werden Kämme und Täler breit und flach, die Übergänge steil, die Welle nähert sich einer Rechteckwelle. Bei $c = 0$ hat $|c|^p$ dann eine senkrechte Tangente. Mit $p \gt 1$ werden Kämme und Täler spitz. Der Winkelabstand
 
 ```math
 d(\theta, \varphi) = \bigl|\, ((\theta - \varphi + \pi) \bmod 2\pi) - \pi \,\bigr| \in [0, \pi]
@@ -368,7 +368,7 @@ mit $a = 0{,}62$, als Bruchteil der Höhe gemessen. Diese Formel hat keine Hüll
 
 #### `zeta`: die Riemannsche Zetafunktion
 
-Für $\operatorname{Re} s > 1$ ist
+Für $\operatorname{Re} s \gt 1$ ist
 
 ```math
 \zeta(s) = \sum_{n=1}^{\infty} \frac{1}{n^s} = \prod_{p \text{ prim}} \frac{1}{1 - p^{-s}} .
@@ -380,7 +380,7 @@ Das Produkt nach Euler verbindet $\zeta$ mit den Primzahlen. Die Reihe lässt si
 \zeta(s) = \chi(s)\, \zeta(1 - s), \qquad |\chi(\sigma + it)| \approx \left(\frac{t}{2\pi}\right)^{1/2 - \sigma} .
 ```
 
-Die nichttrivialen Nullstellen liegen im kritischen Streifen $0 < \sigma < 1$. Die **Riemannsche Vermutung** sagt, dass sie alle auf der kritischen Linie $\sigma = \tfrac12$ liegen. Die ersten fünf sind $\tfrac12 + i\gamma$ mit $\gamma$ = 14,135, 21,022, 25,011, 30,425, 32,935.
+Die nichttrivialen Nullstellen liegen im kritischen Streifen $0 \lt \sigma \lt 1$. Die **Riemannsche Vermutung** sagt, dass sie alle auf der kritischen Linie $\sigma = \tfrac12$ liegen. Die ersten fünf sind $\tfrac12 + i\gamma$ mit $\gamma$ = 14,135, 21,022, 25,011, 30,425, 32,935.
 
 **Abbildung auf die Vase.** Die Höhe läuft auf der imaginären Achse von $t = 12$ bis 36. Jeder Höhenschnitt ist eine Ellipse um den Punkt $\tfrac12 + it$:
 
@@ -490,7 +490,7 @@ Am steilsten ist die äußerste Kante der Kappe, $\varphi = 0$, mit $\tan\beta =
 
 Nur eine wachsende Lamelle hängt über. Wird sie kürzer, liegt jede Schicht auf der vorigen.
 
-**Schwellen.** Bambu Studio setzt Stützen unter Flächen, die flacher als die Schwelle $\alpha_B$ zur Waagrechten liegen, Standard $\alpha_B = 30°$. Zur Senkrechten gemessen heißt das $\beta > 90° - \alpha_B = 60°$. Darüber färbt die Ansicht rot. Ab 45° färbt sie orange: Das druckt ohne Stützen, die 0,9 mm dünne Spitze kann aber hängen.
+**Schwellen.** Bambu Studio setzt Stützen unter Flächen, die flacher als die Schwelle $\alpha_B$ zur Waagrechten liegen, Standard $\alpha_B = 30°$. Zur Senkrechten gemessen heißt das $\beta \gt 90° - \alpha_B = 60°$. Darüber färbt die Ansicht rot. Ab 45° färbt sie orange: Das druckt ohne Stützen, die 0,9 mm dünne Spitze kann aber hängen.
 
 **Begrenzung.** Mit `ueberhang.begrenzen` wird jede Lamelle von unten nach oben durchgegangen:
 
@@ -526,7 +526,7 @@ Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ans
 
 | Prüfung | Ergebnis |
 |---|---|
-| `zeta`, Python gegen Ansicht | Abweichung $< 10^{-14}$ |
+| `zeta`, Python gegen Ansicht | Abweichung $\lt 10^{-14}$ |
 | Netzpunkte, Python gegen Ansicht | höchstens 0,02 mm |
 | größter Überhangwinkel | gleich auf 0,02° |
 | Zahl der roten Abschnitte | gleich |
