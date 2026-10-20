@@ -1,0 +1,56 @@
+{
+  "name": "vase",
+  "referenz": "references/referenz.stl",
+  "fs_version": null,
+  "onshape": {
+    "url": "https://cad.onshape.com/documents/fc5d7bf85de49888a0286a88/w/73e14840134df70a3d37bbf5/e/e28b7ed0523b5e766cbadb1d",
+    "document_id": "fc5d7bf85de49888a0286a88",
+    "workspace_id": "73e14840134df70a3d37bbf5",
+    "element_id": "e28b7ed0523b5e766cbadb1d"
+  },
+  "drucker": {
+    "modell": "Bambu Lab H2D",
+    "modus": "eine_duese",
+    "x_mm": 325,
+    "y_mm": 320,
+    "z_mm": 320,
+    "rand_mm": 5,
+    "wand_min_mm": 1.2,
+    "boden_min_mm": 0.8
+  },
+  "proportion": {
+    "innendurchmesser_mm": 102,
+    "hoehe_mm": 250,
+    "lamelle_max_mm": 25.221
+  },
+  "kern": {
+    "wand_mm": 4
+  },
+  "lamellen": {
+    "anzahl": 120,
+    "dicke_mm": 0.9
+  },
+  "hohlraum": {
+    "bohrung_radius_mm": 51,
+    "boden_dicke_mm": 2,
+    "muendung_zugabe_mm": 2,
+    "bodenloch_radius_mm": 0
+  },
+  "welle": {
+    "funktion": "vorlage",
+    "loben": 2,
+    "amplitude_mm": 21,
+    "drehung_grad": 90,
+    "drehung_von": 0.45,
+    "drehung_bis": 0.7,
+    "einblendung_unten_mm": 25,
+    "einblendung_oben_mm": 30,
+    "oberwelle_loben": 6,
+    "oberwelle_anteil": 0.25,
+    "potenz": 1.0
+  },
+  "aufloesung": {
+    "schnitte": 200,
+    "punkte_je_schnitt": 2
+  }
+}
