@@ -389,7 +389,8 @@ def _kettenlinie(s: float) -> float:
 
 # Bernoullizahlen B2 bis B14 für den Rest der Euler-Maclaurin-Summe.
 _BERNOULLI = (1 / 6, -1 / 30, 1 / 42, -1 / 30, 5 / 66, -691 / 2730, 7 / 6)
-_ZETA_T0, _ZETA_T1, _ZETA_SIGMA, _ZETA_HUB, _ZETA_BODEN = 10.0, 50.0, 0.45, 3.0, -1.0
+# t-Bereich und Hub so gewählt, dass keine Lamellenkante steiler als 45° überhängt.
+_ZETA_T0, _ZETA_T1, _ZETA_SIGMA, _ZETA_HUB = 12.0, 36.0, 0.45, 2.5
 
 
 def _zeta(s: complex, n: int = 24) -> complex:
@@ -405,21 +406,20 @@ def _zeta(s: complex, n: int = 24) -> complex:
     return summe
 
 
-def _zeta_log(s: float, theta: float) -> float:
-    """ln|ζ| auf einer Ellipse im kritischen Streifen. Die Höhe läuft entlang der imaginären Achse."""
+def _zeta_betrag(s: float, theta: float) -> float:
+    """|ζ| auf einer Ellipse im kritischen Streifen. Die Höhe läuft entlang der imaginären Achse."""
     punkt = complex(
         0.5 + _ZETA_SIGMA * math.cos(theta),
         _ZETA_T0 + (_ZETA_T1 - _ZETA_T0) * s + _ZETA_HUB * math.sin(theta),
     )
-    return math.log(max(abs(_zeta(punkt)), 1e-12))
+    return abs(_zeta(punkt))
 
 
-_ZETA_MAX = max(_zeta_log(i / 80, math.tau * j / 72) for i in range(81) for j in range(72))
+_ZETA_MAX = max(_zeta_betrag(i / 80, math.tau * j / 72) for i in range(81) for j in range(72))
 
 
 def _zetaform(s: float, theta: float) -> float:
-    wert = (_zeta_log(s, theta) - _ZETA_BODEN) / (_ZETA_MAX - _ZETA_BODEN)
-    return min(1.0, max(0.0, wert))
+    return min(1.0, _zeta_betrag(s, theta) / _ZETA_MAX)
 
 
 def formel_anteil(s: float, theta: float, funktion: str) -> float:
