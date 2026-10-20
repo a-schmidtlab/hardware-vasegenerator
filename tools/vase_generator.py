@@ -18,8 +18,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from vase_feature import (
-    Vase, VaseFehler, aussen_polygon, aussen_radius, bett_linien, koerper, massen, wasserdicht,
-    _CNOIDAL_M, _CNOIDAL_K, _PHYLLO_MAX, _SUPER_MIN, _SUPER_MAX, _KETTEN_A, _ZETA_MAX,
+    Vase, VaseFehler, aussen_polygon, bett_linien, koerper, massen, schnitt_hoehen, ueberhaenge, wasserdicht,
+    _CNOIDAL_M, _CNOIDAL_K, _PHYLLO_MAX, _SUPER_MIN, _SUPER_MAX, _KETTEN_A, _ZETA_MAX, _TURING,
 )
 
 
@@ -47,7 +47,11 @@ def stl_schreiben(pfad: Path, netz: dict) -> None:
             ))
 
 
-def vorschau_png(pfad: Path, vase: Vase, info: dict) -> None:
+UEBERHANG_ORANGE = (235, 150, 40)
+UEBERHANG_ROT = (210, 40, 30)
+
+
+def vorschau_png(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
     bild = Image.new("RGB", (1100, 780), (250, 248, 242))
     stift = ImageDraw.Draw(bild)
     stift.rounded_rectangle([24, 24, 620, 740], radius=12, fill=(255, 255, 255), outline=(220, 214, 204))
@@ -66,20 +70,28 @@ def vorschau_png(pfad: Path, vase: Vase, info: dict) -> None:
 
     stift.rectangle([sx(-vase.bett_x * 0.5), sy(vase.bett_z), sx(vase.bett_x * 0.5), sy(0)], outline=(210, 206, 198))
     stift.line([(sx(0), oben), (sx(0), unten)], fill=(230, 230, 230))
-    farben = [(20, 90, 160), (200, 90, 40), (30, 130, 80), (140, 50, 140)]
-    schritte = 80
+    farben = [(20, 90, 160), (20, 150, 160), (30, 130, 80), (140, 50, 140)]
+    zs = schnitt_hoehen(vase)
+    radien = netz["radien"]
+    winkel = ueberhaenge(vase, radien)
     for nummer, farbe in enumerate(farben):
-        theta = nummer * 3.14159265 / 4
-        kurve = []
-        for i in range(schritte + 1):
-            z = vase.hoehe * i / schritte
-            radius = aussen_radius(z, theta, vase)
-            kurve.append((sx(radius), sy(z)))
-        stift.line(kurve, fill=farbe, width=2)
-        kurve_links = [(sx(-aussen_radius(vase.hoehe * i / schritte, theta, vase)), sy(vase.hoehe * i / schritte)) for i in range(schritte + 1)]
-        stift.line(kurve_links, fill=farbe, width=2)
+        # Meridian bei nummer · 45° und gegenüber, jeweils die Lamelle auf diesem Winkel.
+        for seite, lamelle in ((1, round(nummer * vase.lamellen / 8)), (-1, round((nummer + 4) * vase.lamellen / 8))):
+            lamelle %= vase.lamellen
+            for k in range(len(zs) - 1):
+                grad = winkel[k][lamelle]
+                stueck = UEBERHANG_ROT if grad > vase.stuetze_grad else UEBERHANG_ORANGE if grad > vase.warnung_grad else farbe
+                stift.line(
+                    [(sx(seite * radien[k][lamelle]), sy(zs[k])), (sx(seite * radien[k + 1][lamelle]), sy(zs[k + 1]))],
+                    fill=stueck, width=3 if stueck != farbe else 2,
+                )
     stift.line([(sx(vase.bohrung), sy(vase.boden)), (sx(vase.bohrung), sy(vase.hoehe)), (sx(-vase.bohrung), sy(vase.hoehe)), (sx(-vase.bohrung), sy(vase.boden)), (sx(vase.bohrung), sy(vase.boden))], fill=(150, 150, 150), width=2)
     stift.text((80, 710), "Grau: H2D-Bauraum und Bohrung. Farbe: vier Meridiane.", fill=(90, 90, 90))
+    stift.text(
+        (80, 724),
+        f"Orange: Ueberhang ueber {vase.warnung_grad:.0f} Grad. Rot: ueber {vase.stuetze_grad:.0f} Grad, braucht Stuetzen.",
+        fill=(90, 90, 90),
+    )
 
     mitte_x, mitte_y, massstab = 860, 400, 280 / radius_achse
     stift.ellipse(
@@ -87,8 +99,8 @@ def vorschau_png(pfad: Path, vase: Vase, info: dict) -> None:
          mitte_x + vase.bett_y * 0.5 * massstab, mitte_y + vase.bett_x * 0.5 * massstab],
         outline=(210, 206, 198),
     )
-    z = vase.hoehe * 0.5
-    kontur = aussen_polygon(z, vase)
+    mitte = (len(zs) - 1) // 2
+    kontur = aussen_polygon(zs[mitte], vase, radien[mitte])
     punkte = [(mitte_x + x * massstab, mitte_y - y * massstab) for x, y in kontur]
     punkte.append(punkte[0])
     stift.line(punkte, fill=(20, 90, 160), width=1)
@@ -135,6 +147,7 @@ def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
             "hoehe": vase.hoehe,
             "lamelleMax": vase.lamelle_max,
             "funktion": vase.funktion,
+            "begrenzen": vase.begrenzen,
         },
         "grenzeDurchmesser": info["durchmesser_grenze"],
         "grenzeHoehe": info["hoehe_grenze"],
@@ -145,6 +158,10 @@ def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
         "superMax": _SUPER_MAX,
         "kettenA": _KETTEN_A,
         "zetaMax": _ZETA_MAX,
+        "turing": _TURING["muster"],
+        "begrenzungGrad": vase.begrenzung_grad,
+        "warnungGrad": vase.warnung_grad,
+        "stuetzeGrad": vase.stuetze_grad,
     }
     roh = json.dumps(daten, separators=(",", ":")).replace("<", "\\u003c")
     pfad.write_text(_HTML.replace("__DATEN__", roh), encoding="utf-8")
@@ -163,8 +180,11 @@ _HTML = """<!DOCTYPE html>
   #regler label { display: block; margin: 8px 0 2px; font-size: 14px; }
   #regler input[type=range] { width: 100%; }
   #regler select, #regler button { width: 100%; margin-top: 8px; }
+  #regler label.haken { margin-top: 10px; }
+  #regler .rot { color: #b8281c; }
   #regler button { padding: 6px 8px; }
-  #status { margin: 8px 0 0; font-size: 13px; color: #444; }
+  #status, #ueberhang { margin: 8px 0 0; font-size: 13px; color: #444; }
+  #ueberhang.rot { color: #b8281c; }
   #hinweis { position: fixed; left: 20px; bottom: 16px; color: #6d675f; font-size: 14px; }
 </style>
 </head>
@@ -189,11 +209,15 @@ _HTML = """<!DOCTYPE html>
       <option value="super">Superformel</option>
       <option value="ketten">Kettenlinie</option>
       <option value="zeta">Riemannsche Zetafunktion</option>
+      <option value="turing_flecken">Turing, Flecken</option>
+      <option value="turing_labyrinth">Turing, Labyrinth</option>
     </select>
   </label>
+  <label class="haken"><input id="begrenzen" type="checkbox"> Ueberhang auf <span id="oB"></span> Grad begrenzen</label>
   <button id="zurueck" type="button">Vorlage</button>
   <button id="stl" type="button">STL speichern</button>
   <p id="status"></p>
+  <p id="ueberhang"></p>
 </div>
 <div id="hinweis">Ziehen dreht, Scrollen zoomt. Der Rahmen ist der Bauraum der H2D, eine Duese.</div>
 <script id="daten" type="application/json">__DATEN__</script>
@@ -204,6 +228,8 @@ document.getElementById("d").value = daten.start.innendurchmesser;
 document.getElementById("h").value = daten.start.hoehe;
 document.getElementById("l").value = daten.start.lamelleMax;
 document.getElementById("formel").value = daten.start.funktion;
+document.getElementById("begrenzen").checked = daten.start.begrenzen;
+document.getElementById("oB").textContent = daten.begrenzungGrad.toFixed(0);
 
 const canvas = document.getElementById("bild");
 const gl = canvas.getContext("webgl", { antialias: true });
@@ -215,19 +241,25 @@ if (!gl) {
 const vs = `
 attribute vec3 aPos;
 attribute vec3 aNrm;
+attribute float aGrad;
 uniform mat4 uMvp;
 varying vec3 vN;
 varying vec3 vPos;
+varying float vGrad;
 void main() {
   vPos = aPos;
   vN = aNrm;
+  vGrad = aGrad;
   gl_Position = uMvp * vec4(aPos, 1.0);
 }`;
 const fs = `
 precision mediump float;
 varying vec3 vN;
 varying vec3 vPos;
+varying float vGrad;
 uniform vec3 uEye;
+uniform float uWarnung;
+uniform float uStuetze;
 void main() {
   vec3 n = normalize(vN);
   vec3 licht = normalize(vec3(0.35, -0.45, 0.75));
@@ -238,6 +270,8 @@ void main() {
   float glanz = pow(max(dot(n, normalize(licht + blick)), 0.0), 48.0);
   vec3 farbe = vec3(0.93, 0.89, 0.82);
   vec3 innen = vec3(0.78, 0.74, 0.68);
+  if (vGrad > uWarnung + 0.01) farbe = vec3(0.95, 0.62, 0.22);
+  if (vGrad > uStuetze + 0.01) farbe = vec3(0.86, 0.17, 0.12);
   vec3 grund = gl_FrontFacing ? farbe : innen;
   vec3 farb = grund * (0.46 + 0.5 * diffus + 0.16 * weich) + vec3(glanz) * 0.12;
   gl_FragColor = vec4(farb, 1.0);
@@ -340,6 +374,7 @@ function formelAnteil(s, theta, funktion) {
   if (funktion === "super") return rest + (1 - rest) * h * superformel(theta);
   if (funktion === "ketten") return rest + (1 - rest) * kettenlinie(s);
   if (funktion === "zeta") return rest + (1 - rest) * h * zetaform(s, theta);
+  if (funktion.startsWith("turing_")) return rest + (1 - rest) * h * turing(s, theta, funktion.slice(7));
   return rest + (1 - rest) * Math.sin(Math.PI * s) ** 1.15;
 }
 function jacobiCn(u, m) {
@@ -431,6 +466,20 @@ function zetaform(s, theta) {
   const w = zeta([0.5 + 0.45 * Math.cos(theta), 12 + 24 * s + 2.5 * Math.sin(theta)]);
   return Math.min(1, Math.hypot(w[0], w[1]) / daten.zetaMax);
 }
+function turing(s, theta, name) {
+  const tafel = daten.turing[name], zeilen = tafel.length, breite = tafel[0].length;
+  const lage = Math.min(1, Math.max(0, s)) * (zeilen - 1);
+  const unten = Math.min(zeilen - 2, Math.floor(lage)), bruch = lage - unten;
+  let spalte = (theta % TAU) / TAU * breite;
+  if (spalte < 0) spalte += breite;
+  const links = Math.floor(spalte) % breite, rechts = (links + 1) % breite, kante = spalte - Math.floor(spalte);
+  const zeile = (i) => {
+    const reihe = tafel[Math.max(0, Math.min(zeilen - 1, i))];
+    return reihe[links] * (1 - kante) + reihe[rechts] * kante;
+  };
+  const wert = catmull(zeile(unten - 1), zeile(unten), zeile(unten + 1), zeile(unten + 2), bruch);
+  return Math.min(1, Math.max(0, wert));
+}
 function laengenanteil(z, theta, p) {
   const s = z / p.hoehe;
   if (p.funktion === "vorlage") return anteilVorlage(s, theta);
@@ -442,22 +491,42 @@ function netzAus(p) {
   const kern = p.innendurchmesser / 2 + daten.wand;
   const halb = daten.dicke / 2;
   const n = daten.lamellen;
-  const polygon = (z) => {
+  const zs = [];
+  for (let i = 0; i < daten.schnitte; i++) zs.push(p.hoehe * i / (daten.schnitte - 1));
+  // Spitzenradius je Schnitt und Lamelle, wahlweise auf den Grenzwinkel begrenzt.
+  const radien = zs.map((z) => {
+    const reihe = [];
+    for (let i = 0; i < n; i++) reihe.push(kern + p.lamelleMax * laengenanteil(z, TAU * i / n, p));
+    return reihe;
+  });
+  if (p.begrenzen) {
+    const steigung = Math.tan(daten.begrenzungGrad * Math.PI / 180);
+    for (let k = 1; k < zs.length; k++) {
+      const erlaubt = steigung * (zs[k] - zs[k - 1]);
+      for (let i = 0; i < n; i++) radien[k][i] = Math.min(radien[k][i], radien[k - 1][i] + erlaubt);
+    }
+  }
+  // Überhang der Spitze zwischen zwei Schnitten, Grad zur Senkrechten.
+  const winkel = [];
+  for (let k = 0; k < zs.length - 1; k++) {
+    winkel.push(radien[k].map((r, i) => Math.atan2(Math.max(0, radien[k + 1][i] - r), zs[k + 1] - zs[k]) * 180 / Math.PI));
+  }
+  const polygon = (k) => {
     const ecken = [];
     for (let i = 0; i < n; i++) {
       const theta = TAU * i / n;
       const cos = Math.cos(theta), sin = Math.sin(theta);
       const tx = -sin, ty = cos;
-      const spitze = kern + p.lamelleMax * laengenanteil(z, theta, p);
+      const spitze = radien[k][i];
       const kappe = Math.min(halb, Math.max(0, spitze - kern));
-      const innenVor = [kern * cos - kappe * tx, kern * sin - kappe * ty];
-      const innenNach = [kern * cos + kappe * tx, kern * sin + kappe * ty];
+      const innenVor = [kern * cos - kappe * tx, kern * sin - kappe * ty, -1];
+      const innenNach = [kern * cos + kappe * tx, kern * sin + kappe * ty, -1];
       const mitteR = Math.max(kern, spitze - kappe);
       const mitte = [mitteR * cos, mitteR * sin];
       const bogen = [];
       for (let k = 0; k <= 8; k++) {
         const phi = theta - Math.PI / 2 + k / 8 * Math.PI;
-        bogen.push([mitte[0] + kappe * Math.cos(phi), mitte[1] + kappe * Math.sin(phi)]);
+        bogen.push([mitte[0] + kappe * Math.cos(phi), mitte[1] + kappe * Math.sin(phi), i]);
       }
       ecken.push([innenVor, bogen, innenNach]);
     }
@@ -470,18 +539,28 @@ function netzAus(p) {
       let delta = (w1 - w0) % TAU; if (delta < 0) delta += TAU;
       for (let schritt = 1; schritt <= daten.bogen; schritt++) {
         const w = w0 + delta * schritt / (daten.bogen + 1);
-        punkte.push([kern * Math.cos(w), kern * Math.sin(w)]);
+        punkte.push([kern * Math.cos(w), kern * Math.sin(w), -1]);
       }
       punkte.push(eintritt, ...ecken[i][1], ecken[i][2]);
     }
     return punkte;
   };
-  const zs = [];
-  for (let i = 0; i < daten.schnitte; i++) zs.push(p.hoehe * i / (daten.schnitte - 1));
   const innenZ = [daten.boden].concat(zs.filter((z) => z > daten.boden + 1e-6));
   if (Math.abs(innenZ[innenZ.length - 1] - p.hoehe) > 1e-6) innenZ.push(p.hoehe);
   const innenTeil = Math.max(n * 2, 180);
-  const aussen = zs.map((z) => polygon(z).map(([x, y]) => hinzu(x, y, z)));
+  const grad = [];
+  const aussen = zs.map((z, k) => polygon(k).map(([x, y, i]) => {
+    const id = hinzu(x, y, z);
+    // Ecke der Spitze: der steilere der beiden angrenzenden Abschnitte.
+    grad[id] = i < 0 ? 0 : Math.max(k > 0 ? winkel[k - 1][i] : 0, k < winkel.length ? winkel[k][i] : 0);
+    return id;
+  }));
+  let ueberhangMax = 0, stuetze = 0, warnung = 0;
+  for (const reihe of winkel) for (const w of reihe) {
+    ueberhangMax = Math.max(ueberhangMax, w);
+    if (w > daten.stuetzeGrad + 1e-6) stuetze++;
+    else if (w > daten.warnungGrad + 1e-6) warnung++;
+  }
   const innenR = (z) => {
     const laenge = Math.min(30, p.hoehe - daten.boden);
     if (z <= p.hoehe - laenge) return p.innendurchmesser / 2;
@@ -542,9 +621,11 @@ function netzAus(p) {
   }
   let radius = 0;
   for (let i = 0; i < positionen.length; i += 3) radius = Math.max(radius, Math.hypot(positionen[i], positionen[i+1]));
-  return { positionen, normalen, dreiecke, radius };
+  const grade = new Float32Array(positionen.length / 3);
+  for (let i = 0; i < grade.length; i++) grade[i] = grad[i] || 0;
+  return { positionen, normalen, dreiecke, radius, grade, ueberhangMax, stuetze, warnung };
 }
-let netz = null, pos, nrm, idx, anzahl = 0, indexTyp = gl.UNSIGNED_SHORT, indexKlasse = Uint16Array;
+let netz = null, pos, nrm, grd, idx, anzahl = 0, indexTyp = gl.UNSIGNED_SHORT, indexKlasse = Uint16Array;
 if (gl.getExtension("OES_element_index_uint")) { indexTyp = gl.UNSIGNED_INT; indexKlasse = Uint32Array; }
 const lin = puffer(gl.ARRAY_BUFFER, daten.linien, Float32Array);
 const linienAnzahl = daten.linien.length / 3;
@@ -552,6 +633,7 @@ function zeige(p) {
   netz = netzAus(p);
   pos = puffer(gl.ARRAY_BUFFER, netz.positionen, Float32Array);
   nrm = puffer(gl.ARRAY_BUFFER, netz.normalen, Float32Array);
+  grd = puffer(gl.ARRAY_BUFFER, netz.grade, Float32Array);
   idx = puffer(gl.ELEMENT_ARRAY_BUFFER, netz.dreiecke, indexKlasse);
   anzahl = netz.dreiecke.length;
   const durchmesser = 2 * netz.radius;
@@ -563,6 +645,14 @@ function zeige(p) {
     daten.lamellen + " Lamellen, " + daten.dicke + " mm, Kernwand " + daten.wand
     + " mm. Aussendurchmesser " + durchmesser.toFixed(0) + " mm. "
     + (passt ? "Passt auf den H2D." : "Groesser als der H2D.");
+  const ueber = document.getElementById("ueberhang");
+  ueber.className = netz.stuetze ? "rot" : "";
+  ueber.textContent = "Ueberhang bis " + netz.ueberhangMax.toFixed(0) + " Grad. "
+    + (netz.stuetze
+      ? netz.stuetze + " Abschnitte ueber " + daten.stuetzeGrad + " Grad brauchen Stuetzen (rot)."
+      : netz.warnung
+        ? "Ohne Stuetzen druckbar, " + netz.warnung + " Abschnitte ueber " + daten.warnungGrad + " Grad (orange) koennen haengen."
+        : "Ohne Stuetzen druckbar.");
 }
 function parameter() {
   return {
@@ -570,6 +660,7 @@ function parameter() {
     hoehe: Number(document.getElementById("h").value),
     lamelleMax: Number(document.getElementById("l").value),
     funktion: document.getElementById("formel").value,
+    begrenzen: document.getElementById("begrenzen").checked,
   };
 }
 let geplant = false;
@@ -580,11 +671,13 @@ function planen() {
 }
 zeige(parameter());
 for (const id of ["d", "h", "l", "formel"]) document.getElementById(id).addEventListener("input", planen);
+document.getElementById("begrenzen").addEventListener("change", planen);
 document.getElementById("zurueck").addEventListener("click", () => {
   document.getElementById("d").value = daten.start.innendurchmesser;
   document.getElementById("h").value = daten.start.hoehe;
   document.getElementById("l").value = daten.start.lamelleMax;
   document.getElementById("formel").value = "vorlage";
+  document.getElementById("begrenzen").checked = daten.start.begrenzen;
   zeige(parameter());
 });
 function stlSpeichern() {
@@ -719,6 +812,12 @@ function rahmen() {
   const aNrm = gl.getAttribLocation(material, "aNrm");
   gl.enableVertexAttribArray(aNrm);
   gl.vertexAttribPointer(aNrm, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, grd);
+  const aGrad = gl.getAttribLocation(material, "aGrad");
+  gl.enableVertexAttribArray(aGrad);
+  gl.vertexAttribPointer(aGrad, 1, gl.FLOAT, false, 0, 0);
+  gl.uniform1f(gl.getUniformLocation(material, "uWarnung"), daten.warnungGrad);
+  gl.uniform1f(gl.getUniformLocation(material, "uStuetze"), daten.stuetzeGrad);
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idx);
   gl.drawElements(gl.TRIANGLES, anzahl, indexTyp, 0);
 
@@ -747,6 +846,8 @@ def erzeugen(config_pfad: Path) -> dict:
         raise VaseFehler(["Das erzeugte Netz ist nicht geschlossen oder die Normalen zeigen nach innen."])
     info = massen(netz, vase)
     info["volumen_cm3"] = volumen / 1000.0
+    info["warnung_grad"] = vase.warnung_grad
+    info["stuetze_grad"] = vase.stuetze_grad
     if info["hoehe"] > vase.bett_z + 0.05 or info["durchmesser"] > info["durchmesser_grenze"] + 0.05:
         raise VaseFehler([
             f"Die Vase misst {info['durchmesser']:.1f} x {info['hoehe']:.1f} mm und passt nicht "
@@ -755,7 +856,7 @@ def erzeugen(config_pfad: Path) -> dict:
         ])
     ziel = config_pfad.parent
     stl_schreiben(ziel / "vase.stl", netz)
-    vorschau_png(ziel / "vorschau.png", vase, info)
+    vorschau_png(ziel / "vorschau.png", vase, netz, info)
     html_schreiben(ziel / "vorschau.html", vase, netz, info)
     info["wasserdicht"] = True
     return info
@@ -778,6 +879,18 @@ def main() -> None:
         f"{info['hoehe_grenze']:.0f} mm Hoehe. Druckbar."
     )
     print(f"Netz geschlossen, {info['dreiecke']} Dreiecke.")
+    if info["ueberhang_stuetze"]:
+        print(
+            f"Ueberhang bis {info['ueberhang_max']:.0f} Grad. {info['ueberhang_stuetze']} Abschnitte der Lamellenkanten "
+            f"liegen ueber {info['stuetze_grad']:.0f} Grad und brauchen Stuetzen."
+        )
+    elif info["ueberhang_warnung"]:
+        print(
+            f"Ueberhang bis {info['ueberhang_max']:.0f} Grad. Ohne Stuetzen druckbar, "
+            f"{info['ueberhang_warnung']} Abschnitte ueber {info['warnung_grad']:.0f} Grad koennen haengen."
+        )
+    else:
+        print(f"Ueberhang bis {info['ueberhang_max']:.0f} Grad. Ohne Stuetzen druckbar.")
     print("Geschrieben: vase.stl, vorschau.html, vorschau.png")
 
 
