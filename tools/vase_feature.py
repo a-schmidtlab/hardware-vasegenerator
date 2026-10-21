@@ -1,3 +1,5 @@
+# Required Notice: Copyright 2026 Axel Schmidt (axel@schmidtlab.net)
+# PolyForm Noncommercial 1.0.0, siehe LICENSE.md. Kommerzielle Nutzung nur mit schriftlicher Genehmigung.
 """Formeln und Körper der Vase.
 
 Die Vase ist ein Zylinder. Die Form machen radiale Lamellen, deren Länge

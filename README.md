@@ -6,7 +6,7 @@ Der Generator (`tools/vase_generator.py`) schreibt aus einer Konfigurationsdatei
 
 <p align="center"><img src="docs/bilder/titel.png" width="420" alt="Vase nach der Riemannschen Zetafunktion"></p>
 
-**Inhalt:** [Die Grundform](#die-grundform) · [Die Formen](#die-formen) · [Schnellstart](#schnellstart) · [3D-Ansicht](#3d-ansicht) · [Druck und Überhang](#druck-und-überhang) · [Konfiguration](#konfiguration) · [Mathematik](#mathematik) · [Ordner](#ordner)
+**Inhalt:** [Die Grundform](#die-grundform) · [Die Formen](#die-formen) · [Schnellstart](#schnellstart) · [3D-Ansicht](#3d-ansicht) · [Druck und Überhang](#druck-und-überhang) · [Konfiguration](#konfiguration) · [Mathematik](#mathematik) · [Ordner](#ordner) · [Lizenz](#lizenz)
 
 ## Die Grundform
 
@@ -554,6 +554,8 @@ Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ans
 
 ```
 ├── README.md                 diese Anleitung
+├── LICENSE.md                Lizenz für den Code: PolyForm Noncommercial 1.0.0
+├── LICENSE-CONTENT.txt       Lizenz für Inhalte: CC BY-NC-SA 4.0
 ├── CLAUDE.md                 Arbeitsanweisung für den Agenten
 ├── docs/
 │   ├── PLAN.md               Form, Formeln, Druckgrenzen, Phasen
@@ -571,3 +573,18 @@ Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ans
     ├── vorschau.png          Seitenansicht und Querschnitt, generiert
     └── vase.stl              Drucknetz, generiert
 ```
+
+## Lizenz
+
+© 2026 Axel Schmidt. Das Projekt ist frei für nicht-kommerzielle Nutzung. **Kommerzielle Nutzung ist nur mit schriftlicher Genehmigung erlaubt**, das gilt auch für den Verkauf gedruckter Vasen. Anfragen an [axel@schmidtlab.net](mailto:axel@schmidtlab.net).
+
+| Teil | Lizenz | Datei |
+|---|---|---|
+| Programmcode in `tools/` und die 3D-Ansicht `vase/vorschau.html` | [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) | [`LICENSE.md`](LICENSE.md) |
+| Dokumentation, Bilder, 3D-Modelle (STL), Konfigurations- und Datendateien | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | [`LICENSE-CONTENT.txt`](LICENSE-CONTENT.txt) |
+
+Erlaubt sind ohne Nachfrage zum Beispiel: Vasen für sich selbst drucken, verschenken, den Code lesen, ändern und für eigene Projekte, Unterricht oder Forschung verwenden. Wer Code oder Modelle weitergibt, muss die Lizenz und den Hinweis auf den Urheber mitgeben. Bearbeitete Modelle müssen unter derselben Lizenz stehen.
+
+Nicht ohne Genehmigung erlaubt sind zum Beispiel: gedruckte Vasen oder STL-Dateien verkaufen, den Generator in einem kommerziellen Produkt oder Dienst einsetzen, ihn im Auftrag eines Unternehmens nutzen.
+
+Die mathematischen Funktionen selbst sind nicht geschützt. Die Lizenz betrifft diesen Code, diese Texte, Bilder und Dateien.

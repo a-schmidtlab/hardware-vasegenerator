@@ -41,3 +41,4 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-21: 3D-Ansicht neu gestaltet: Kacheln für die Formen, Kopf mit Idee und Formel, Kennzahlen mit Ampel, Bodenschatten, langsames Drehen, Pinch-Zoom, Dunkelmodus, Handy-Layout. Bedienung und Rechnung unverändert.
 - 2026-10-21: Einführung im README und Kurzbeschreibungen der Ansicht sachlicher formuliert.
 - 2026-10-21: Kapitel Mathematik um Absätze zur Geschichte jeder Funktion und eine Quellenliste ergänzt.
+- 2026-10-21: Lizenzen: Code unter PolyForm Noncommercial 1.0.0 (`LICENSE.md`), Inhalte unter CC BY-NC-SA 4.0 (`LICENSE-CONTENT.txt`). Hinweis im Kopf der Code-Dateien, in der Ansicht und im STL-Kopf. Kommerzielle Nutzung nur mit schriftlicher Genehmigung von Axel Schmidt.
