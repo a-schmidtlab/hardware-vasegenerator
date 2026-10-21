@@ -23,7 +23,7 @@ python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt
 ## 3. Ordner
 
 ```
-├── CLAUDE.md
+├── plan.md
 ├── README.md                 Anleitung
 ├── LICENSE.md                Code: PolyForm Noncommercial 1.0.0
 ├── LICENSE-CONTENT.txt       Inhalte: CC BY-NC-SA 4.0

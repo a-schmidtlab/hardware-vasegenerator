@@ -575,7 +575,7 @@ Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ans
 ├── README.md                 diese Anleitung
 ├── LICENSE.md                Lizenz für den Code: PolyForm Noncommercial 1.0.0
 ├── LICENSE-CONTENT.txt       Lizenz für Inhalte: CC BY-NC-SA 4.0
-├── CLAUDE.md                 Arbeitsanweisung für den Agenten
+├── plan.md                   Arbeitsanweisung für den Agenten
 ├── docs/
 │   ├── PLAN.md               Form, Formeln, Druckgrenzen, Phasen
 │   └── bilder/               Bilder für diese Anleitung
