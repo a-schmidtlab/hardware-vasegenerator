@@ -125,7 +125,8 @@ def math_sin(wert: float) -> float:
     return math.sin(wert)
 
 
-def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
+def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict, about: str | None = None) -> None:
+    """Schreibt die 3D-Ansicht. `about` ist das Ziel des About-Links, ohne ihn fehlt der Link."""
     daten = {
         "name": vase.name,
         "lamellen": vase.lamellen,
@@ -162,7 +163,8 @@ def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
         "stuetzeGrad": vase.stuetze_grad,
     }
     roh = json.dumps(daten, separators=(",", ":")).replace("<", "\\u003c")
-    pfad.write_text(_HTML.replace("__DATEN__", roh), encoding="utf-8")
+    link = f'<a href="{about}">About</a>' if about else ""
+    pfad.write_text(_HTML.replace("__DATEN__", roh).replace("__ABOUT__", link), encoding="utf-8")
 
 
 _HTML = """<!DOCTYPE html>
@@ -180,7 +182,7 @@ Kommerzielle Nutzung, auch der Verkauf gedruckter Vasen, nur mit schriftlicher G
 <style>
   :root {
     --hg-1: #f7f5f0; --hg-2: #e7e2d7;
-    --flaeche: rgba(255, 255, 255, 0.78); --rand: rgba(30, 28, 24, 0.08);
+    --flaeche: rgba(255, 255, 255, 0.78); --fest: #fbfaf7; --rand: rgba(30, 28, 24, 0.08);
     --text: #1d1c1a; --text-2: #6b665d; --text-3: #9a948a;
     --akzent: #2c6e6a; --akzent-text: #ffffff; --chip: rgba(30, 28, 24, 0.05);
     --gut: #3f8f5a; --warn: #e0912f; --rot: #c8352a;
@@ -189,7 +191,7 @@ Kommerzielle Nutzung, auch der Verkauf gedruckter Vasen, nur mit schriftlicher G
   @media (prefers-color-scheme: dark) {
     :root {
       --hg-1: #24262a; --hg-2: #121315;
-      --flaeche: rgba(30, 31, 35, 0.82); --rand: rgba(255, 255, 255, 0.08);
+      --flaeche: rgba(30, 31, 35, 0.82); --fest: #1f2024; --rand: rgba(255, 255, 255, 0.08);
       --text: #f1efe9; --text-2: #b0aaa0; --text-3: #7c776f;
       --akzent: #5fb3ac; --akzent-text: #0e1a19; --chip: rgba(255, 255, 255, 0.06);
       --schatten: 0 1px 2px rgba(0,0,0,0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
@@ -208,6 +210,10 @@ Kommerzielle Nutzung, auch der Verkauf gedruckter Vasen, nur mit schriftlicher G
   canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
   canvas:active { cursor: grabbing; }
   .kopf { padding: 28px 32px 0; max-width: 720px; }
+  .nav { position: absolute; top: 24px; right: 28px; z-index: 2; }
+  .nav a { display: inline-block; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--rand); background: var(--flaeche);
+    color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .nav a:hover { border-color: var(--akzent); color: var(--akzent); }
   .marke { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); font-weight: 600; }
   .kopf h1 { margin: 6px 0 6px; font-size: 30px; line-height: 1.15; font-weight: 650; letter-spacing: -0.02em; }
   .kopf p { margin: 0 0 10px; color: var(--text-2); }
@@ -265,7 +271,7 @@ Kommerzielle Nutzung, auch der Verkauf gedruckter Vasen, nur mit schriftlicher G
   .legende { display: flex; gap: 14px; margin: 10px 0 0; padding: 0; list-style: none; font-size: 12px; color: var(--text-3); }
   .legende li { display: flex; align-items: center; gap: 6px; }
   .knoepfe { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; position: sticky; bottom: 0; margin: auto -20px 0;
-    padding: 14px 20px 20px; background: linear-gradient(to bottom, transparent, var(--flaeche) 30%); }
+    padding: 14px 20px 20px; background: var(--fest); border-top: 1px solid var(--rand); }
   .knoepfe button { border-radius: 12px; padding: 11px 12px; font: inherit; font-weight: 600; cursor: pointer; border: 1px solid var(--rand);
     background: transparent; color: var(--text); }
   .knoepfe button.primaer { background: var(--text); color: var(--hg-1); border-color: transparent; }
@@ -276,11 +282,12 @@ Kommerzielle Nutzung, auch der Verkauf gedruckter Vasen, nur mit schriftlicher G
     .buehne { height: auto; }
     .flaeche3d { height: 52svh; flex: none; }
     .kopf { padding: 18px 18px 0; }
+    .nav { top: 14px; right: 14px; }
     .kopf h1 { font-size: 22px; }
     .kopf p { font-size: 13px; }
     .leiste { left: 14px; bottom: 12px; }
     #hinweis { display: none; }
-    .knoepfe { position: static; margin: 0; padding: 16px 0 0; background: none; }
+    .knoepfe { position: static; margin: 0; padding: 16px 0 0; background: none; border-top: 0; }
     #regler { height: auto; border-left: 0; border-top: 1px solid var(--rand); border-radius: 20px 20px 0 0; margin-top: -16px;
       position: relative; box-shadow: var(--schatten); padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
   }
@@ -288,6 +295,7 @@ Kommerzielle Nutzung, auch der Verkauf gedruckter Vasen, nur mit schriftlicher G
 </head>
 <body>
 <main class="buehne">
+  <nav class="nav">__ABOUT__</nav>
   <header class="kopf">
     <div class="marke">Mathematische Vasen</div>
     <h1 id="name"></h1>

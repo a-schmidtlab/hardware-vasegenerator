@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<!--
+Required Notice: Copyright 2026 Axel Schmidt (axel@schmidtlab.net)
+Text und Bilder: CC BY-NC-SA 4.0, https://creativecommons.org/licenses/by-nc-sa/4.0/
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>About · Mathematische Vasen</title>
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] }, chtml: { scale: 1.0 } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+<style>
+  :root {
+    --hg: #f7f5f0; --flaeche: #ffffff; --rand: rgba(30, 28, 24, 0.10); --chip: rgba(30, 28, 24, 0.045);
+    --text: #1d1c1a; --text-2: #55514a; --text-3: #8f897f; --akzent: #2c6e6a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --hg: #161719; --flaeche: #1e1f23; --rand: rgba(255, 255, 255, 0.10); --chip: rgba(255, 255, 255, 0.06);
+      --text: #f1efe9; --text-2: #c4beb4; --text-3: #8a857c; --akzent: #5fb3ac; }
+    img { filter: brightness(0.92); }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+  body { margin: 0; background: var(--hg); color: var(--text);
+    font: 16.5px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; -webkit-font-smoothing: antialiased; }
+  .leiste { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 14px 24px; background: color-mix(in srgb, var(--hg) 82%, transparent); border-bottom: 1px solid var(--rand);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+  .marke { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); font-weight: 600; }
+  .leiste a.knopf { padding: 7px 14px; border-radius: 999px; background: var(--text); color: var(--hg); text-decoration: none;
+    font-size: 13px; font-weight: 600; white-space: nowrap; }
+  main { max-width: 820px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1.titel { font-size: 40px; line-height: 1.1; letter-spacing: -0.025em; margin: 8px 0 18px; }
+  h2 { font-size: 27px; letter-spacing: -0.015em; margin: 64px 0 16px; padding-top: 24px; border-top: 1px solid var(--rand); }
+  h3 { font-size: 21px; margin: 44px 0 12px; }
+  h4 { font-size: 17px; margin: 36px 0 10px; }
+  h2 a, h3 a, h4 a { color: inherit; }
+  p, li { color: var(--text-2); }
+  strong { color: var(--text); }
+  a { color: var(--akzent); text-underline-offset: 3px; }
+  img { max-width: 100%; height: auto; border-radius: 14px; }
+  code { font: 0.86em/1.4 ui-monospace, "SF Mono", Menlo, Consolas, monospace; background: var(--chip); padding: 2px 6px; border-radius: 6px; }
+  pre { background: var(--flaeche); border: 1px solid var(--rand); border-radius: 12px; padding: 14px 16px; overflow-x: auto; }
+  pre code { background: none; padding: 0; font-size: 13.5px; }
+  .tabelle { overflow-x: auto; margin: 18px 0; border: 1px solid var(--rand); border-radius: 12px; background: var(--flaeche); }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--rand); }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  td { color: var(--text-2); }
+  .formel { overflow-x: auto; overflow-y: hidden; margin: 18px 0; padding: 6px 0; }
+  mjx-container[display="true"] { margin: 0 !important; }
+  blockquote { margin: 18px 0; padding: 4px 18px; border-left: 3px solid var(--akzent); color: var(--text-2); }
+  hr { border: 0; border-top: 1px solid var(--rand); }
+  footer { max-width: 820px; margin: 0 auto; padding: 24px; font-size: 13px; color: var(--text-3); border-top: 1px solid var(--rand); }
+  footer a { color: inherit; }
+  @media (max-width: 640px) {
+    body { font-size: 15.5px; }
+    main { padding: 28px 18px 60px; }
+    h1.titel { font-size: 30px; }
+    h2 { font-size: 23px; margin-top: 48px; }
+    .leiste { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="leiste">
+  <span class="marke">Mathematische Vasen</span>
+  <a class="knopf" href="index.html">Zur 3D-Ansicht</a>
+</div>
+<main>
+<h1 class="titel">Mathematische Vasen</h1>
+<p>Parametrischer Generator für 3D-gedruckte Vasen. Die Außenform wird durch eine Funktion \(f(s, \theta)\) über Höhe und Umfangswinkel beschrieben. Sie legt die Länge von 120 radialen Lamellen fest, die auf einem zylindrischen Kern stehen. Implementiert sind 13 Funktionen, unter anderem die Riemannsche Zetafunktion, eine Anordnung nach dem goldenen Winkel und Reaktions-Diffusions-Muster nach Gray und Scott.</p>
+<p>Der Generator (<code>tools/vase_generator.py</code>) schreibt aus einer Konfigurationsdatei ein geschlossenes STL-Netz für den Slicer. Eine 3D-Ansicht im Browser rechnet dieselben Funktionen und erlaubt, Maße und Form interaktiv zu ändern.</p>
+<p align="center"><img src="bilder/titel.png" width="420" alt="Vase nach der Riemannschen Zetafunktion"></p>
+
+<p><strong>Inhalt:</strong> <a href="#die-grundform">Die Grundform</a> · <a href="#die-formen">Die Formen</a> · <a href="#schnellstart">Schnellstart</a> · <a href="#3d-ansicht">3D-Ansicht</a> · <a href="#webseite">Webseite</a> · <a href="#druck-und-überhang">Druck und Überhang</a> · <a href="#konfiguration">Konfiguration</a> · <a href="#mathematik">Mathematik</a> · <a href="#ordner">Ordner</a> · <a href="#lizenz">Lizenz</a></p>
+<h2 id="die-grundform">Die Grundform</h2>
+<p>Alle Vasen haben denselben Aufbau aus drei Teilen:</p>
+<ul>
+<li><strong>Kern:</strong> zylindrisches Rohr mit 4 mm Wand und geschlossenem, 2 mm dickem Boden. Der Kern ist das wasserführende Bauteil. Innendurchmesser 102 mm, zur Mündung hin auf 106 mm erweitert.</li>
+<li><strong>Lamellen:</strong> 120 radiale Wände von 0,9 mm Dicke im Abstand von 3°. Ihre Außenkanten bilden die sichtbare Form.</li>
+<li><strong>Funktion:</strong> \(f(s, \theta) \in [0, 1]\) mit der relativen Höhe \(s = z/H\) und dem Winkel \(\theta\). Die Lamellenlänge ist \(L_{\max} \cdot f\), mindestens jedoch 15,8 % von \(L_{\max}\). Bei \(L_{\max} = 25\) mm liegt sie damit zwischen knapp 4 und 25 mm.</li>
+</ul>
+<p><img alt="Querschnitt und Halbschnitt der Grundform" src="bilder/grundform.png" /></p>
+<p>Links der Querschnitt mit Bohrung, Kern und Lamellen. Rechts ein Halbschnitt durch die Achse. Die orange Linie ist die Außenkante einer Lamelle über die Höhe.</p>
+<p>Bei den meisten Funktionen wird die Welle auf den unteren und oberen 16 % der Höhe ausgeblendet, sodass Fuß und Mündung gleichmäßig auslaufen. Einstellbar sind Innendurchmesser, Höhe und \(L_{\max}\). Die Startwerte ergeben eine Vase von 250 mm Höhe und 160 mm Außendurchmesser.</p>
+<h2 id="die-formen">Die Formen</h2>
+<p><img alt="Sechs Vasen aus verschiedenen Formeln" src="bilder/galerie.png" /></p>
+<p>Die Spalte „Überhang“ gibt den größten Winkel an, mit dem eine Lamellenspitze bei den Startwerten nach außen wächst, gemessen zur Senkrechten. Bis 45° ist die Form ohne Stützen druckbar, ab 60° setzt der Slicer Stützen (siehe <a href="#druck-und-überhang">Druck und Überhang</a>).</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>Formel</th>
+<th>Beschreibung</th>
+<th>Überhang</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zeta</code></td>
+<td>Betrag der <strong>Riemannschen Zetafunktion</strong> auf Ellipsen im kritischen Streifen. Nullstellen erscheinen als Einkerbungen, dazwischen verlaufen schräge Bänder. Startform.</td>
+<td>42°</td>
+</tr>
+<tr>
+<td><code>cnoidal</code></td>
+<td><strong>Cnoidalwelle</strong>, die periodische Lösung der Korteweg-de-Vries-Gleichung für Flachwasserwellen: breite Kämme, schmale Täler.</td>
+<td>38°</td>
+</tr>
+<tr>
+<td><code>logspirale</code></td>
+<td>Zwei Bänder entlang einer <strong>logarithmischen Spirale</strong>. Unten drehen sie sich schnell um die Achse, nach oben zunehmend langsamer.</td>
+<td>44°</td>
+</tr>
+<tr>
+<td><code>phyllotaxis</code></td>
+<td>Erhebungen im <strong>goldenen Winkel</strong> von 137,5° (Phyllotaxis).</td>
+<td>61°</td>
+</tr>
+<tr>
+<td><code>super</code></td>
+<td>Fünfzähliger Querschnitt nach der <strong>Superformel</strong> von Gielis.</td>
+<td>38°</td>
+</tr>
+<tr>
+<td><code>ketten</code></td>
+<td>Rotationssymmetrisches Profil nach der <strong>Kettenlinie</strong> (cosh), mit Taille in der Mitte.</td>
+<td>19°</td>
+</tr>
+<tr>
+<td><code>turing_flecken</code></td>
+<td><strong>Turing-Muster</strong> aus dem Gray-Scott-Modell, Parameter für Flecken.</td>
+<td>74°</td>
+</tr>
+<tr>
+<td><code>turing_labyrinth</code></td>
+<td>Gray-Scott-Modell, Parameter für <strong>labyrinthartige</strong> Streifen.</td>
+<td>72°</td>
+</tr>
+<tr>
+<td><code>sinus</code></td>
+<td>Zwei Ausbuchtungen, um 100° über die Höhe verdreht.</td>
+<td>38°</td>
+</tr>
+<tr>
+<td><code>spirale</code></td>
+<td>Dreigängige Schraubenwelle.</td>
+<td>40°</td>
+</tr>
+<tr>
+<td><code>bluete</code></td>
+<td>Fünf breite Segmente mit steilen Übergängen, ohne Verdrehung.</td>
+<td>38°</td>
+</tr>
+<tr>
+<td><code>kaemme</code></td>
+<td>Zwei breite Kämme, die sich zwischen 32 % und 68 % der Höhe um 90° drehen.</td>
+<td>69°</td>
+</tr>
+<tr>
+<td><code>gleich</code></td>
+<td>Rotationssymmetrisch, eine Ausbauchung in halber Höhe.</td>
+<td>14°</td>
+</tr>
+</tbody>
+</table></div>
+<p>Formen über 45° lassen sich mit der <strong>Überhangbegrenzung</strong> oder mit kürzeren Lamellen ohne Stützen drucken. Bei den Turing-Mustern genügen 10 mm. Herleitung und Parameter aller Funktionen stehen im Kapitel <a href="#mathematik">Mathematik</a>.</p>
+<h2 id="schnellstart">Schnellstart</h2>
+<pre><code class="language-bash">python3 -m venv .venv
+.venv/bin/pip install -r tools/requirements.txt
+.venv/bin/python tools/vase_generator.py vase/config.json
+</code></pre>
+<p>Danach <code>vase/vorschau.html</code> im Browser öffnen. Daneben liegen <code>vase/vase.stl</code> für den Slicer und <code>vase/vorschau.png</code> mit Seitenansicht und Querschnitt.</p>
+<p>Python 3 reicht, mit den Paketen aus <code>tools/requirements.txt</code> (numpy, pillow, markdown). Die 3D-Ansicht rechnet im Browser und braucht kein Python.</p>
+<h2 id="3d-ansicht">3D-Ansicht</h2>
+<p><code>vase/vorschau.html</code> zeigt die Vase im Browser, auf dem Rechner wie auf dem Handy. Die Datei braucht keinen Server und kein Internet, ein Doppelklick genügt.</p>
+<p><img alt="3D-Ansicht im Browser" src="bilder/ansicht.png" /></p>
+<ul>
+<li><strong>Form:</strong> Eine Kachel je Formel. Oben links stehen Name, Idee und Formel der gewählten Form.</li>
+<li><strong>Maße:</strong> Schieberegler für Innendurchmesser (40–180 mm), Höhe (80–320 mm) und größte Lamellenlänge (4–70 mm). Die Ansicht rechnet sofort neu.</li>
+<li><strong>Druck:</strong> Schalter für die Überhangbegrenzung, dazu Außendurchmesser, größter Überhang mit Ampelfarbe und ob die Vase auf den H2D passt. Zu steile Lamellenspitzen sind in der Vase orange oder rot eingefärbt.</li>
+<li><strong>Bewegen:</strong> Die Ansicht rotiert langsam, bis sie bedient wird. Ziehen dreht, Mausrad oder zwei Finger zoomen, der Knopf <strong>Drehen</strong> startet die Drehung wieder. Der Rahmen ist der Bauraum des Druckers.</li>
+<li><strong>STL herunterladen</strong> speichert das gerade gezeigte Modell in Millimetern, bereit für den Slicer. Der Dateiname nennt Formel, Höhe und Innendurchmesser. <strong>Startwerte</strong> setzt alles auf die Werte aus <code>vase/config.json</code> zurück.</li>
+</ul>
+<p>Die Ansicht folgt dem hellen oder dunklen Modus des Systems.</p>
+<h2 id="webseite">Webseite</h2>
+<p>Der Ordner <code>web/</code> ist eine fertige Webseite für einen gewöhnlichen Webserver, zum Beispiel ein Hosting-Paket bei All-Inkl. Auf dem Server braucht es weder Python noch PHP oder eine Datenbank, nur statische Dateien.</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>Datei</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web/index.html</code></td>
+<td>die 3D-Ansicht, mit Link <strong>About</strong></td>
+</tr>
+<tr>
+<td><code>web/about.html</code></td>
+<td>diese Anleitung als Webseite, Formeln mit MathJax</td>
+</tr>
+<tr>
+<td><code>web/bilder/</code></td>
+<td>Bilder der Anleitung</td>
+</tr>
+<tr>
+<td><code>web/LICENSE.md</code>, <code>web/LICENSE-CONTENT.txt</code></td>
+<td>Lizenztexte</td>
+</tr>
+</tbody>
+</table></div>
+<p>Neu bauen, zum Beispiel nach einer Änderung an Formeln, Startwerten oder dieser Anleitung:</p>
+<pre><code class="language-bash">.venv/bin/python tools/web_bauen.py
+</code></pre>
+<p>Danach den Inhalt von <code>web/</code> per FTP oder über den Dateimanager in das Verzeichnis der Domain laden. Die About-Seite lädt MathJax 3.2.2 von cdn.jsdelivr.net, alles andere liegt im Ordner selbst. Soll die Seite nicht öffentlich sein, lässt sich das Verzeichnis beim Hoster mit einem Passwort schützen, bei All-Inkl unter „Tools → Verzeichnisschutz“.</p>
+<h2 id="druck-und-überhang">Druck und Überhang</h2>
+<p>Drucker ist ein Bambu Lab H2D mit einer 0,4-mm-Düse, gedruckt wird mit einer Düse. Sie erreicht 325 × 320 mm in der Fläche, die linke Düse 320 mm in der Höhe, die rechte 325 mm. Der Generator nimmt den kleineren Wert, damit das Teil auf beiden Düsen liegt: höchstens 310 mm Durchmesser (320 mm Bettiefe abzüglich 5 mm Rand) und 320 mm Höhe. Ist die Vase größer, schreibt der Generator keine Dateien, und die Ansicht meldet es. Die Kernwand muss mindestens 1,2 mm haben, der Boden mindestens 0,8 mm. Quellen: <a href="https://bambulab.com/en/h2d/tech-specs">Technische Daten des H2D</a>, <a href="https://wiki.bambulab.com/en/h2/manual/printable-range-for-dual-nozzles">Druckbereich der beiden Düsen</a>.</p>
+<p>Die STL in den Slicer laden und aufrecht stellen. Der Boden ist geschlossen.</p>
+<p><strong>Überhang.</strong> Kern und Lamellenseiten stehen senkrecht. Überhängen kann nur die Spitze einer Lamelle, und zwar dort, wo die Lamelle nach oben länger wird. Dann muss jede neue Schicht etwas weiter hinausragen als die darunter. Wird die Lamelle nach oben kürzer, liegt jede Schicht sicher auf der vorigen.</p>
+<p>Die Ansicht färbt zu steile Lamellenspitzen ein:</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>Farbe</th>
+<th>Überhang zur Senkrechten</th>
+<th>Bedeutung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>orange</td>
+<td>über 45°</td>
+<td>druckt ohne Stützen, die dünne Kante kann bei PETG aber hängen oder rau werden</td>
+</tr>
+<tr>
+<td>rot</td>
+<td>über 60°</td>
+<td>Bambu Studio setzt hier mit der Standardschwelle von 30° zur Waagrechten Stützen</td>
+</tr>
+</tbody>
+</table></div>
+<p>Der Generator schreibt dieselbe Meldung in die Konsole und färbt die Linien in <code>vorschau.png</code> genauso. Die Schwellen stehen in <code>drucker.ueberhang_warnung_grad</code> und <code>drucker.stuetze_ab_grad</code>. Wer in Bambu Studio eine andere Schwelle einstellt, trägt hier 90° minus diese Schwelle ein. Quelle: <a href="https://all3dp.com/2/bambu-studio-support-settings-simply-explained/">Bambu Studio, Stützeinstellungen</a>.</p>
+<p><strong>Überhangbegrenzung.</strong> Der Haken <strong>Überhang auf 45° begrenzen</strong>, in der Config <code>ueberhang.begrenzen</code>, lässt jede Lamelle nach oben höchstens im 45°-Winkel wachsen. Kürzer werden darf sie beliebig schnell. Jede Wölbung bekommt dadurch unten eine schräge Fase, die fallende Flanke oben bleibt, wie die Formel sie vorgibt. Ist ein Höcker schmaler als seine Fase, wird seine Spitze gekappt. Die Höcker der Phyllotaxis- und Turing-Vasen werden so zu Zähnen, siehe Galerie. Die Begrenzung rechnet auf denselben Schnitten, aus denen die STL entsteht, also genau auf dem, was gedruckt wird. Herleitung: <a href="#4-überhang">Mathematik, Überhang</a>.</p>
+<h2 id="konfiguration">Konfiguration</h2>
+<p><code>vase/config.json</code> ist die Quelle für die STL und für die Startwerte der Ansicht.</p>
+<pre><code class="language-json">&quot;proportion&quot;: {
+  &quot;innendurchmesser_mm&quot;: 102,
+  &quot;hoehe_mm&quot;: 250,
+  &quot;lamelle_max_mm&quot;: 25
+},
+&quot;welle&quot;: { &quot;funktion&quot;: &quot;zeta&quot; }
+</code></pre>
+<p>Weitere Werte:</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>Schlüssel</th>
+<th>Wert</th>
+<th>Wirkung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kern.wand_mm</code></td>
+<td>4</td>
+<td>Wandstärke des Kerns</td>
+</tr>
+<tr>
+<td><code>lamellen.anzahl</code></td>
+<td>120</td>
+<td>Zahl der Lamellen</td>
+</tr>
+<tr>
+<td><code>lamellen.dicke_mm</code></td>
+<td>0,9</td>
+<td>Dicke, die Spitze ist ein Halbkreis dieser Dicke</td>
+</tr>
+<tr>
+<td><code>hohlraum.boden_dicke_mm</code></td>
+<td>2</td>
+<td>geschlossener Boden</td>
+</tr>
+<tr>
+<td><code>hohlraum.muendung_zugabe_mm</code></td>
+<td>2</td>
+<td>die Bohrung öffnet sich an der Lippe um diesen Betrag im Radius</td>
+</tr>
+<tr>
+<td><code>welle.funktion</code></td>
+<td><code>zeta</code></td>
+<td>eine der 13 Formeln</td>
+</tr>
+<tr>
+<td><code>ueberhang.begrenzen</code></td>
+<td><code>false</code></td>
+<td>Lamellen wachsen nach oben höchstens im Grenzwinkel</td>
+</tr>
+<tr>
+<td><code>ueberhang.winkel_grad</code></td>
+<td>45</td>
+<td>Grenzwinkel zur Senkrechten</td>
+</tr>
+<tr>
+<td><code>drucker.ueberhang_warnung_grad</code></td>
+<td>45</td>
+<td>ab hier orange</td>
+</tr>
+<tr>
+<td><code>drucker.stuetze_ab_grad</code></td>
+<td>60</td>
+<td>ab hier rot, Stützen nötig</td>
+</tr>
+<tr>
+<td><code>aufloesung.schnitte</code></td>
+<td>200</td>
+<td>Höhenschnitte des Netzes</td>
+</tr>
+<tr>
+<td><code>aufloesung.punkte_je_schnitt</code></td>
+<td>2</td>
+<td>Zwischenpunkte auf dem Kern zwischen zwei Lamellen</td>
+</tr>
+</tbody>
+</table></div>
+<p>Eine weitere Vase bekommt einen eigenen Ordner neben <code>vase/</code> mit eigener <code>config.json</code>, zum Beispiel <code>phyllotaxis/config.json</code>. Der Generator schreibt STL, Ansicht und Bild in diesen Ordner.</p>
+<h2 id="mathematik">Mathematik</h2>
+<p>Dieses Kapitel leitet jede Formel her und nennt die Zahlen, die im Code stehen. Python (<code>tools/vase_feature.py</code>) und die Ansicht (<code>vase/vorschau.html</code>) rechnen dieselben Formeln. Zu jeder Funktion gehört ein Absatz <strong>Geschichte</strong>: wer die Mathematik gefunden hat, aus welchem Anlass, und was aus ihr wurde. Die Quellen stehen in <a href="#6-quellen-zur-geschichte">Abschnitt 6</a>.</p>
+<h3 id="1-koordinaten-und-grundgleichung">1. Koordinaten und Grundgleichung</h3>
+<p>Die Vase steht in Zylinderkoordinaten \((r, \theta, z)\), das Druckbett ist \(z = 0\). Die Höhe wird auf \(s = z / H \in [0, 1]\) normiert. Die \(N = 120\) Lamellen stehen auf den Strahlen</p>
+<div class="formel">\[\theta_i = \frac{2\pi i}{N}, \qquad i = 0, \dots, N-1,\]</div>
+<p>also alle 3°. Der Kern hat den Außenradius \(r_K = D_i/2 + w\) mit dem Innendurchmesser \(D_i\) und der Kernwand \(w\). Die Spitze der Lamelle \(i\) liegt auf der Höhe \(z\) bei</p>
+<div class="formel">\[r_i(z) = r_K + L_{\max}\, f(s, \theta_i), \qquad 0 \le f \le 1, \quad \max f = 1 .\]</div>
+<p><code>f</code> ist die Wellenformel. Weil ihr Höchstwert 1 ist, ist \(L_{\max}\) genau die längste Lamelle. Mit den Startwerten ist \(r_K = 51 + 4 = 55\) mm und der größte Radius \(55 + 25 = 80\) mm, Durchmesser 160 mm.</p>
+<p><strong>Querschnitt.</strong> Eine Lamelle ist ein Streifen der Dicke \(d = 0,\!9\) mm entlang ihres Strahls. Die Spitze ist ein Halbkreis mit Radius \(\kappa = \min(d/2,\; r_i - r_K)\) um den Punkt bei \(r_i - \kappa\), der Bogen endet also genau auf \(r_i\) und steht nicht darüber. Zwischen zwei Lamellen läuft der Kern als Kreisbogen mit <code>punkte_je_schnitt</code> Zwischenpunkten.</p>
+<p><strong>Netz.</strong> Der Querschnitt wird auf \(K = 200\) Höhen gerechnet,</p>
+<div class="formel">\[z_k = \frac{k\,H}{K-1}, \qquad \Delta z = \frac{H}{K-1} = 1,\!256 \text{ mm bei } H = 250 \text{ mm},\]</div>
+<p>und Schnitt für Schnitt mit Dreiecken verbunden. Die Bohrung ist ein Zylinder mit Radius \(D_i/2\), der sich in den oberen 30 mm mit einem Smoothstep (siehe unten) im Radius um 2 mm weitet, auf Ø 106 mm. Der Boden ist 2 mm dick und geschlossen.</p>
+<h3 id="2-gemeinsame-bausteine">2. Gemeinsame Bausteine</h3>
+<p><strong>Smoothstep.</strong> Für weiche Übergänge ohne Knick:</p>
+<div class="formel">\[S(t) = 3t^2 - 2t^3 \quad \text{für } t \in [0,1], \qquad S = 0 \text{ links}, \; S = 1 \text{ rechts} .\]</div>
+<p>\(S(0) = 0\), \(S(1) = 1\), und die Ableitung ist an beiden Enden null. Wo \(S\) etwas ein- oder ausblendet, bleibt die Kante stetig differenzierbar.</p>
+<p><strong>Hülle.</strong> Fuß und Lippe sollen ruhig bleiben:</p>
+<div class="formel">\[h(s) = S\!\left(\frac{s}{0,\!16}\right) \cdot S\!\left(\frac{1-s}{0,\!16}\right) .\]</div>
+<p>\(h\) ist 0 am Boden und an der Lippe und 1 zwischen 16 % und 84 % der Höhe. Bei 250 mm sind das je 40 mm Ein- und Ausblendung.</p>
+<p><strong>Rest.</strong> Auch wo die Welle null ist, sollen die Lamellen nicht ganz verschwinden. Ein Rest von \(\rho = 0,\!158\) bleibt immer stehen, bei \(L_{\max} = 25\) mm sind das knapp 4 mm. Fast alle Formeln haben deshalb die Form</p>
+<div class="formel">\[f(s, \theta) = \rho + (1 - \rho)\, h(s)\, w(s, \theta), \qquad w \in [0, 1] .\]</div>
+<p>\(w\) ist die eigentliche Welle. Ausnahmen sind <code>gleich</code> und <code>ketten</code>, sie haben keine Hülle.</p>
+<p><strong>Hilfsfunktionen.</strong> \(N(x) = \tfrac12\,(\mathrm{clamp}(x, -1, 1) + 1)\) bildet \([-1, 1]\) auf \([0, 1]\) ab. Die Vorzeichenpotenz \(\mathrm{sgn}(c)\,|c|^p\) ändert die Form einer Kosinuswelle, ohne ihre Nullstellen zu verschieben. Mit \(p \lt 1\) werden Kämme und Täler breit und flach, die Übergänge steil, die Welle nähert sich einer Rechteckwelle. Bei \(c = 0\) hat \(|c|^p\) dann eine senkrechte Tangente. Mit \(p \gt 1\) werden Kämme und Täler spitz. Der Winkelabstand</p>
+<div class="formel">\[d(\theta, \varphi) = \bigl|\, ((\theta - \varphi + \pi) \bmod 2\pi) - \pi \,\bigr| \in [0, \pi]\]</div>
+<p>misst den kürzeren Weg um den Kreis.</p>
+<h3 id="3-die-formeln">3. Die Formeln</h3>
+<p><strong>Geschichte: Fourier.</strong> Die ersten fünf Formeln sind Kosinus- und Sinuswellen, teils verzerrt. Dass sich mit solchen Wellen fast jede Form beschreiben lässt, behauptete Joseph Fourier 1807 in einer Arbeit über die Wärmeleitung für die Pariser Akademie: Jede Funktion lasse sich als Summe von Sinus- und Kosinuswellen schreiben. Joseph-Louis Lagrange, einer der Gutachter, hielt das für falsch, und die Arbeit blieb lange ungedruckt. Fourier veröffentlichte seine Theorie 1822 in der <em>Théorie analytique de la chaleur</em>. Unter welchen Bedingungen seine Reihen tatsächlich konvergieren, klärte Peter Gustav Lejeune Dirichlet 1829. Heute stecken Kosinustransformationen in jeder JPEG- und MP3-Datei.</p>
+<h4 id="sinus"><code>sinus</code></h4>
+<div class="formel">\[w = \tfrac12 + \tfrac12 \cos\bigl(2\,(\theta + s \cdot 100^\circ)\bigr)\]</div>
+<p>Der Faktor 2 gibt zwei gegenüberliegende Bäuche. Die Phase wächst linear mit der Höhe, die Bäuche drehen sich dadurch auf einer Schraubenlinie um 100° von unten nach oben.</p>
+<h4 id="spirale"><code>spirale</code></h4>
+<div class="formel">\[w = \tfrac12 + \tfrac12 \sin\bigl(2\pi \cdot 1,\!25\, s + 3\theta\bigr)\]</div>
+<p>Linien gleicher Phase erfüllen \(3\theta + 2,\!5\pi s = \text{konst.}\) Das sind drei Schraubenlinien, die sich über die ganze Höhe um \(2,\!5\pi / 3\) rad = 150° drehen. In der Höhe laufen 1,25 Perioden.</p>
+<h4 id="bluete"><code>bluete</code></h4>
+<div class="formel">\[c = \cos 5\theta, \qquad w = N\!\left(\mathrm{sgn}(c)\,|c|^{0,\!45}\right)\]</div>
+<p>Fünf Maxima bei \(\theta = k \cdot 72^\circ\). Der Exponent 0,45 macht Blätter und Lücken gleichermaßen breit und flach, dazwischen fällt die Länge steil ab. Die Formel hängt nicht von \(s\) ab, die Blüte steht senkrecht und hängt nicht über.</p>
+<h4 id="kaemme"><code>kaemme</code></h4>
+<div class="formel">\[\delta(s) = 90^\circ \cdot S\!\left(\frac{s - 0,\!32}{0,\!36}\right), \qquad c = \cos\bigl(2(\theta + \delta)\bigr), \qquad w = N\!\left(\mathrm{sgn}(c)\,|c|^{0,\!55}\right)\]</div>
+<p>Zwei breite Kämme stehen bis 32 % der Höhe senkrecht, drehen sich zwischen 32 % und 68 % weich um 90° und stehen darüber wieder senkrecht. Wegen \(p = 0,\!55\) ist der Übergang zwischen Kamm und Tal im Umfang sehr steil, bei \(c = 0\) sogar senkrecht. Während der Drehung wandert dieser Übergang über die Lamellen, und eine Lamelle wächst dabei schnell. Zwischen 36 % und 64 % der Höhe hängt die Formel deshalb über 45° über, auf dem Netz bis 69° (Abschnitt 4). Je feiner man in der Höhe abtastet, desto größer wird der Wert, bei 0,5 mm sind es 75°.</p>
+<h4 id="gleich"><code>gleich</code></h4>
+<div class="formel">\[f = \rho + (1 - \rho)\,\sin(\pi s)^{1,\!15}\]</div>
+<p>Unabhängig von \(\theta\), also ein Rotationskörper. Ein Bauch auf halber Höhe, der Exponent 1,15 macht ihn etwas schlanker als einen Sinusbogen. Keine Hülle, der Sinus geht an beiden Enden von selbst auf null.</p>
+<h4 id="cnoidal-die-cnoidalwelle"><code>cnoidal</code>: die Cnoidalwelle</h4>
+<p><strong>Geschichte.</strong> Im August 1834 sah der schottische Ingenieur John Scott Russell am Union Canal bei Edinburgh, wie ein von Pferden gezogener Kahn plötzlich anhielt und eine einzelne, glatte Wasserwelle vor sich herschob. Er folgte ihr zu Pferd über ein bis zwei Meilen. Sie behielt Form und Geschwindigkeit, bis er sie in den Windungen des Kanals verlor. Russell nannte sie „great wave of translation“ und baute Wellenkanäle, um sie zu untersuchen. George Airy und George Stokes, die führenden Fachleute der Zeit, bezweifelten, dass es eine solche Welle dauerhaft geben könne. Erst 1895 leiteten Diederik Korteweg und sein Doktorand Gustav de Vries in Amsterdam die Gleichung her, die sie beschreibt. Neben der Einzelwelle fanden sie periodische Lösungen und nannten sie nach der Funktion cn <em>cnoidal waves</em>. 1965 lösten Norman Zabusky und Martin Kruskal die Gleichung am Computer. Sie sahen, wie Einzelwellen durcheinander hindurchlaufen und unbeschadet wieder auftauchen, und prägten dafür das Wort <em>Soliton</em>.</p>
+<p>Flache Wasserwellen gehorchen der <strong>Korteweg-de-Vries-Gleichung</strong>, in Normalform</p>
+<div class="formel">\[u_t + 6\,u\,u_x + u_{xxx} = 0 .\]</div>
+<p>Ihre periodischen Wanderwellen sind keine Sinuswellen. Es sind Cnoidalwellen, das Quadrat der Jacobischen elliptischen Funktion \(\mathrm{cn}(u \mid m)\) mit dem Parameter \(m = k^2\):</p>
+<div class="formel">\[u(x, t) \;\propto\; \mathrm{cn}^2\!\bigl(\,\cdot \mid m\bigr) .\]</div>
+<p><code>cn</code> verallgemeinert den Kosinus. Bei \(m = 0\) ist \(\mathrm{cn}(u \mid 0) = \cos u\). Geht \(m\) gegen 1, bleiben die Kämme lang oben und die Täler werden schmal. Im Grenzfall \(m = 1\) ist \(\mathrm{cn}(u \mid 1) = \mathrm{sech} u\), und \(\mathrm{sech}^2\) ist die Form eines einzelnen Solitons. Hier ist \(m = 0,\!85\): breite, runde Kämme, schmale Täler, noch periodisch.</p>
+<p>Die Periode von \(\mathrm{cn}^2\) ist \(2K\), mit dem vollständigen elliptischen Integral erster Art</p>
+<div class="formel">\[K(m) = \int_0^{\pi/2} \frac{d\varphi}{\sqrt{1 - m \sin^2\varphi}} = \frac{\pi}{2\,\mathrm{agm}\!\left(1, \sqrt{1-m}\right)} = 2,\!389 \quad (m = 0,\!85) .\]</div>
+<p>\(\mathrm{agm}\) ist das arithmetisch-geometrische Mittel: \(a_{n+1} = (a_n + b_n)/2\), \(b_{n+1} = \sqrt{a_n b_n}\), bis beide gleich sind. Es konvergiert quadratisch, nach fünf Schritten auf Maschinengenauigkeit. Die Welle auf der Vase ist</p>
+<div class="formel">\[u = \frac{2K}{\pi}\,\bigl(\theta + 0,\!45\, s\bigr), \qquad w = \mathrm{cn}^2(u \mid m) .\]</div>
+<p>Ein halber Umlauf, \(\theta \to \theta + \pi\), verschiebt \(u\) um \(2K\), eine volle Periode von \(\mathrm{cn}^2\). Auf dem Umfang liegen also zwei Kämme. Der Term \(0,\!45\,s\) dreht sie über die Höhe um 0,45 rad ≈ 26°. \(\mathrm{cn}^2\) liegt von selbst zwischen 0 und 1.</p>
+<p><strong>Geschichte der Werkzeuge.</strong> Elliptische Integrale tauchten im 18. Jahrhundert bei der Bogenlänge der Ellipse und beim Pendel auf. Am 30. Mai 1799 notierte der 22-jährige Carl Friedrich Gauß in seinem Tagebuch, das arithmetisch-geometrische Mittel von 1 und \(\sqrt2\) stimme auf elf Stellen mit einer Konstanten der Lemniskate überein. Damit, schrieb er, eröffne sich ein ganz neues Feld der Analysis. Die Landen-Transformation stammt von John Landen (1775), der als Gutsverwalter arbeitete und Mathematik nebenher betrieb. Niels Henrik Abel und Carl Gustav Jacobi kehrten die elliptischen Integrale 1827 bis 1829 unabhängig voneinander um. So entstanden die elliptischen Funktionen, die Jacobi 1829 in den <em>Fundamenta nova</em> zusammenfasste. Die Kurzschreibweisen sn, cn und dn führte Christoph Gudermann 1838 ein.</p>
+<p><code>cn</code> wird mit der absteigenden Landen-Transformation berechnet (Abramowitz und Stegun, 16.4). Man startet mit \(a_0 = 1\), \(b_0 = \sqrt{1-m}\), \(c_0 = \sqrt{m}\) und iteriert \(a_{n+1} = (a_n + b_n)/2\), \(b_{n+1} = \sqrt{a_n b_n}\), \(c_{n+1} = (a_n - b_n)/2\), bis \(c_N \approx 0\). Dann setzt man \(\varphi_N = 2^N a_N u\) und läuft zurück mit</p>
+<div class="formel">\[\varphi_{n-1} = \tfrac12\left(\varphi_n + \arcsin\!\left(\frac{c_n}{a_n} \sin\varphi_n\right)\right), \qquad \mathrm{cn}(u \mid m) = \cos\varphi_0 .\]</div>
+<h4 id="logspirale-die-logarithmische-spirale"><code>logspirale</code>: die logarithmische Spirale</h4>
+<p><strong>Geschichte.</strong> René Descartes beschrieb die Kurve 1638 in einem Brief an Marin Mersenne als die Spirale, die jeden Strahl aus ihrem Zentrum unter demselben Winkel schneidet. Jakob Bernoulli war von ihrer Selbstähnlichkeit so angetan, dass er sie <em>spira mirabilis</em> nannte und sie sich für seinen Grabstein wünschte, mit dem Spruch „Eadem mutata resurgo“, verändert erstehe ich als dieselbe. Der Steinmetz im Basler Münster meißelte nach Bernoullis Tod 1705 allerdings eine archimedische Spirale ein, deren Windungen gleich weit voneinander liegen. Sie ist dort bis heute zu sehen.</p>
+<p>Die logarithmische Spirale \(r = a\, e^{b\varphi}\), bei Jakob Bernoulli <em>spira mirabilis</em>, ist selbstähnlich. Eine Drehung um \(\Delta\varphi\) ist dasselbe wie eine Streckung um \(e^{b\,\Delta\varphi}\). Auf der Vase übernimmt die Höhe die Rolle des Radius. Der Kamm liegt bei</p>
+<div class="formel">\[\varphi(s) = 0,\!9 \cdot \ln(s + 0,\!08), \qquad\text{also}\qquad s + 0,\!08 = e^{\varphi / 0,\!9} .\]</div>
+<p>Jede weitere Drehung um \(\Delta\varphi\) streckt \(s + 0,\!08\) um den Faktor \(e^{\Delta\varphi/0,\!9}\). Unten windet sich der Kamm schnell, oben langsam. Über die ganze Höhe dreht er sich um \(0,\!9 \ln(1,\!08/0,\!08)\) = 2,34 rad = 134°, davon 57° allein in den unteren 16 %. Zwei Arme liegen sich gegenüber. Die Länge fällt seitlich als Gaußglocke ab:</p>
+<div class="formel">\[w = \exp\!\left(-\frac12 \left(\frac{\min\bigl(d(\theta, \varphi),\; d(\theta, \varphi + \pi)\bigr)}{\sigma}\right)^{\!2}\right), \qquad \sigma = 0,\!42 \text{ rad} \approx 24^\circ .\]</div>
+<h4 id="phyllotaxis-der-goldene-winkel"><code>phyllotaxis</code>: der goldene Winkel</h4>
+<p><strong>Geschichte.</strong> Leonardo von Pisa, genannt Fibonacci, stellte 1202 im <em>Liber Abaci</em> eine Aufgabe über die Vermehrung von Kaninchenpaaren. Ihre Lösung ist die Folge 1, 1, 2, 3, 5, 8, 13, …, in der jede Zahl die Summe der beiden vorigen ist. Dass dieselben Zahlen in Pflanzen stecken, beschrieben die Brüder Louis und Auguste Bravais 1837. Sie maßen den Winkel zwischen aufeinanderfolgenden Blättern und fanden immer wieder etwa 137,5°. Helmut Vogel gab 1979 das einfache Modell an, das heute in fast jedem Lehrbuch steht. Auch Alan Turing beschäftigte sich in seinen letzten Lebensjahren mit den Fibonacci-Zahlen der Sonnenblume, die Arbeit blieb unvollendet. Zu seinem hundertsten Geburtstag 2012 ließ das Museum of Science and Industry in Manchester Freiwillige Sonnenblumen ziehen und die Spiralen auszählen. Die meisten Köpfe folgten Fibonacci-Zahlen, etwa jeder fünfte nicht genau.</p>
+<p>Mit dem goldenen Schnitt \(\phi = (1 + \sqrt5)/2\) ist der goldene Winkel</p>
+<div class="formel">\[\psi = \frac{2\pi}{\phi^2} = 137,\!508^\circ .\]</div>
+<p>Setzt man jeden neuen Punkt um \(\psi\) weiter, wiederholt sich das Muster nie, denn \(\psi / 360° = 1/\phi^2\) ist irrational. Mehr noch: \(\phi\) hat die Kettenbruchentwicklung \([1; 1, 1, 1, \dots]\) und lässt sich deshalb, zusammen mit den zu ihr äquivalenten Zahlen, am schlechtesten durch Brüche annähern (Satz von Hurwitz). Vielfache von \(\psi\) kommen Vielfachen von 360° nie besonders nahe, es bilden sich keine radialen Speichen, und die Punkte füllen den Kreis gleichmäßig. So stehen die Kerne einer Sonnenblume und die Schuppen eines Tannenzapfens (Vogel 1979: \(r_n = c\sqrt n\), \(\theta_n = n\psi\)).</p>
+<p>Auf der Vase sitzen 42 Höcker:</p>
+<div class="formel">\[s_n = \frac{n + \frac12}{42}, \qquad \theta_n = n\,\psi, \qquad
+w = \frac{1}{M} \sum_{n=0}^{41} \exp\!\left(-\frac12\left[\left(\frac{s - s_n}{\sigma_s}\right)^{\!2} + \left(\frac{d(\theta, \theta_n)}{\sigma_\theta}\right)^{\!2}\right]\right)\]</div>
+<p>mit \(\sigma_s = 0,\!030\) (7,5 mm bei 250 mm) und \(\sigma_\theta = 0,\!22\) rad (12,6°). \(M\) ist der größte Wert der Summe auf den Höckern \(n = 8, \dots, 33\). Gemessen ist \(\max w = 1,\!000\).</p>
+<p>Welche Höcker sich nahe kommen, entscheiden die Fibonacci-Zahlen. Der Abstand von Höcker \(n\) zu \(n + k\), auf \(\pm 180^\circ\) gefaltet:</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>\(k\)</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>5</th>
+<th>8</th>
+<th>13</th>
+<th>21</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\(\Delta\theta\)</td>
+<td>137,5°</td>
+<td>−85,0°</td>
+<td>52,5°</td>
+<td>−32,5°</td>
+<td>20,1°</td>
+<td>−12,4°</td>
+<td>7,7°</td>
+</tr>
+<tr>
+<td>\(\Delta z\) (mm)</td>
+<td>6,0</td>
+<td>11,9</td>
+<td>17,9</td>
+<td>29,8</td>
+<td>47,6</td>
+<td>77,4</td>
+<td>125,0</td>
+</tr>
+</tbody>
+</table></div>
+<p>Je größer die Fibonacci-Zahl, desto kleiner der Winkel und desto größer der Höhenabstand. Auf der Oberfläche liegen die nächsten Nachbarn eines Höckers deshalb bei \(k = 3\), 5 und 8: Ihr Abstand auf dem Kern ist 54, 43 und 51 mm, alle anderen sind weiter weg. Entlang dieser Abstände reihen sich die Höcker zu schrägen Spiralen, den Parastichen. Weil \(\Delta\theta\) bei \(k = 5\) negativ und bei \(k = 3\) und 8 positiv ist, laufen sie in beiden Drehrichtungen, wie an der Blüte.</p>
+<h4 id="super-die-superformel"><code>super</code>: die Superformel</h4>
+<p><strong>Geschichte.</strong> Gabriel Lamé untersuchte 1818 die Kurven \(|x/a|^n + |y/b|^n = 1\), heute Superellipsen genannt. Bekannt wurden sie durch den dänischen Dichter und Designer Piet Hein. Er schlug 1959 für den Platz Sergels torg in Stockholm eine Superellipse mit \(n = 2,\!5\) vor, als Mittelweg zwischen Kreis und Rechteck, und entwarf später Tische in derselben Form. Der belgische Pflanzenbiologe Johan Gielis verallgemeinerte Lamés Gleichung auf Polarkoordinaten mit mehreren Exponenten und veröffentlichte sie 2003 im <em>American Journal of Botany</em> als Superformel, mit Beispielen von Blättern, Blüten und Seesternen.</p>
+<p>Johan Gielis hat 2003 die Superellipse von Lamé verallgemeinert:</p>
+<div class="formel">\[\rho(\theta) = \left( \left|\cos\frac{m\theta}{4}\right|^{n_2} + \left|\sin\frac{m\theta}{4}\right|^{n_3} \right)^{-1/n_1} .\]</div>
+<p>Bei \(n_2 = n_3\) hat die Klammer im Argument die Periode \(\pi/2\), denn eine Verschiebung um \(\pi/2\) vertauscht nur \(|\cos|\) und \(|\sin|\). In \(\theta\) ist das die Periode \(2\pi/m\), \(m\) ist also die Zahl der Symmetrien. \(n_1\) bläht oder schnürt die Form, \(n_2\) und \(n_3\) runden oder schärfen die Ecken. Hier ist \(m = 5\), \(n_1 = 0,\!9\), \(n_2 = n_3 = 1,\!5\): fünf weiche Blätter. \(\rho\) läuft zwischen 0,825 und 1 und wird linear auf \([0, 1]\) gestreckt:</p>
+<div class="formel">\[w = \frac{\rho(\theta) - \rho_{\min}}{\rho_{\max} - \rho_{\min}} .\]</div>
+<h4 id="ketten-kettenlinie-und-katenoid"><code>ketten</code>: Kettenlinie und Katenoid</h4>
+<p><strong>Geschichte.</strong> Galileo Galilei beschrieb die hängende Kette 1638 in den <em>Discorsi</em> als annähernd parabelförmig. Dass sie keine Parabel ist, zeigte Joachim Jungius, veröffentlicht 1669 nach seinem Tod. 1690 stellte Jakob Bernoulli in den <em>Acta Eruditorum</em> öffentlich die Frage nach der genauen Kurve. Ein Jahr später erschienen drei Lösungen: von Gottfried Wilhelm Leibniz, von Christiaan Huygens und von Jakobs jüngerem Bruder Johann. Johann erinnerte noch Jahrzehnte später daran, dass er in einer Nacht gelöst habe, woran sein Bruder vergeblich gearbeitet hatte. Robert Hooke hatte schon 1675 ein Anagramm veröffentlicht. Entschlüsselt lautet es: Wie das biegsame Seil hängt, so steht umgekehrt der starre Bogen. Eine umgedrehte Kettenlinie trägt nur Druck und keine Biegung. Antoni Gaudí plante danach die Bögen der Krypta der Colònia Güell, mit Hängemodellen aus Schnüren und kleinen Sandsäcken.</p>
+<p>Eine Kette mit konstantem Gewicht je Länge hat überall dieselbe waagrechte Zugkraft \(H_0\). Das Kräftegleichgewicht an einem Stück der Kette ergibt</p>
+<div class="formel">\[y'' = \frac{1}{a}\sqrt{1 + y'^2}, \qquad a = \frac{H_0}{\mu g}, \qquad y = a \cosh\frac{x}{a} .\]</div>
+<p>Das ist die Kettenlinie. Die Lamellenlänge folgt ihrem Profil, normiert auf 0 in der Taille und 1 an Fuß und Lippe:</p>
+<div class="formel">\[f(s) = \rho + (1-\rho)\,\frac{\cosh\bigl((s - \tfrac12)/a\bigr) - 1}{\cosh\bigl(1/(2a)\bigr) - 1}\]</div>
+<p>mit \(a = 0,\!62\), als Bruchteil der Höhe gemessen. Diese Formel hat keine Hülle, sonst verschwänden die langen Lamellen an Fuß und Lippe wieder.</p>
+<p><strong>Kein Katenoid.</strong> Dreht man eine Kettenlinie \(r = c \cosh((z - z_0)/c)\) um die senkrechte Achse, entsteht das Katenoid (Euler 1744). Es ist neben der Ebene die einzige rotationssymmetrische Minimalfläche, die Form einer Seifenhaut zwischen zwei Ringen. Die Vase ist trotzdem keines. Beim Katenoid ist der Taillenradius \(c\) zugleich die Längeneinheit im cosh. Hier ist die Taille 59 mm und die Längeneinheit \(0,\!62 \cdot 250 = 155\) mm, die Kurve ist in \(r\) gestaucht. Ein echtes Katenoid gäbe es zwischen zwei Ringen mit Radius \(R\) auch nur, solange ihr Abstand höchstens \(1,\!3255\,R\) beträgt (Goldschmidt). Bei der Vase sind es \(250 / 80,\!2 = 3,\!1\), eine Seifenhaut würde reißen. Die Formel übernimmt also die Kurve der hängenden Kette, nicht die Minimalfläche.</p>
+<h4 id="zeta-die-riemannsche-zetafunktion"><code>zeta</code>: die Riemannsche Zetafunktion</h4>
+<p><strong>Geschichte.</strong> 1735 fand der 28-jährige Leonhard Euler den Wert der Reihe \(1 + \tfrac14 + \tfrac19 + \tfrac1{16} + \dots = \pi^2/6\). An diesem „Basler Problem“ hatten sich seit Pietro Mengoli 1650 die besten Mathematiker vergeblich versucht. 1737 bewies Euler die Darstellung als Produkt über die Primzahlen. Bernhard Riemann schrieb 1859 zu seiner Aufnahme in die Berliner Akademie eine Arbeit von kaum zehn Seiten, <em>Über die Anzahl der Primzahlen unter einer gegebenen Grösse</em>. Darin setzt er \(\zeta\) auf die komplexe Ebene fort, beweist die Funktionalgleichung und verbindet die Nullstellen mit der Verteilung der Primzahlen. Über die Nullstellen heißt es dort: „Es ist sehr wahrscheinlich, dass alle Wurzeln reell sind. Hiervon wäre allerdings ein strenger Beweis zu wünschen; ich habe indess die Aufsuchung desselben nach einigen flüchtigen vergeblichen Versuchen vorläufig bei Seite gelassen.“ Riemanns Wurzeln sind die Werte \(t\); reell heißt hier, dass die Nullstellen auf der kritischen Linie liegen. David Hilbert nahm die Vermutung 1900 in seine Liste der 23 Probleme auf, das Clay Mathematics Institute im Jahr 2000 in die Liste der Millennium-Probleme, mit einer Million Dollar Preisgeld. Sie ist bis heute unbewiesen.</p>
+<p>Für \(\mathrm{Re}\, s \gt 1\) ist</p>
+<div class="formel">\[\zeta(s) = \sum_{n=1}^{\infty} \frac{1}{n^s} = \prod_{p \text{ prim}} \frac{1}{1 - p^{-s}} .\]</div>
+<p>Das Produkt nach Euler verbindet \(\zeta\) mit den Primzahlen. Die Reihe lässt sich eindeutig auf die ganze Ebene außer \(s = 1\) fortsetzen. Dort gilt die <strong>Funktionalgleichung</strong></p>
+<div class="formel">\[\zeta(s) = \chi(s)\, \zeta(1 - s), \qquad |\chi(\sigma + it)| \approx \left(\frac{t}{2\pi}\right)^{1/2 - \sigma} .\]</div>
+<p>Die nichttrivialen Nullstellen liegen im kritischen Streifen \(0 \lt \sigma \lt 1\). Die <strong>Riemannsche Vermutung</strong> sagt, dass sie alle auf der kritischen Linie \(\sigma = \tfrac12\) liegen. Die ersten fünf sind \(\tfrac12 + i\gamma\) mit \(\gamma\) = 14,135, 21,022, 25,011, 30,425, 32,935.</p>
+<p><strong>Abbildung auf die Vase.</strong> Die Höhe läuft auf der imaginären Achse von \(t = 12\) bis 36. Jeder Höhenschnitt ist eine Ellipse um den Punkt \(\tfrac12 + it\):</p>
+<div class="formel">\[\sigma(\theta) = \tfrac12 + 0,\!45 \cos\theta, \qquad
+t(s, \theta) = 12 + 24\,s + 2,\!5 \sin\theta, \qquad
+w = \min\!\left(1, \frac{|\zeta(\sigma + it)|}{|\zeta|_{\max}}\right),\]</div>
+<p>mit \(|\zeta|_{\max} = 4,\!574\), abgetastet auf 81 × 72 Punkten. Was man auf der Vase sieht, folgt aus drei Eigenschaften:</p>
+<ol>
+<li><strong>Kerben.</strong> Bei \(\theta = \pm 90°\) kreuzt die Ellipse die kritische Linie. Trifft sie dort eine Nullstelle, fällt \(|\zeta|\) auf null und die Lamelle ist kurz. Die Nullstelle \(\gamma\) erscheint bei \(\theta = +90°\) auf der Höhe \(s = (\gamma - 14,\!5)/24\) und bei \(\theta = -90°\) auf \(s = (\gamma - 9,\!5)/24\). Jede Nullstelle gibt also zwei Kerben auf gegenüberliegenden Seiten, 52 mm in der Höhe versetzt:</li>
+</ol>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>\(\gamma\)</th>
+<th>bei +90°</th>
+<th>bei −90°</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>14,135</td>
+<td>unter dem Boden</td>
+<td>48 mm</td>
+</tr>
+<tr>
+<td>21,022</td>
+<td>68 mm</td>
+<td>120 mm</td>
+</tr>
+<tr>
+<td>25,011</td>
+<td>109 mm</td>
+<td>162 mm</td>
+</tr>
+<tr>
+<td>30,425</td>
+<td>166 mm</td>
+<td>218 mm (Ausblendung)</td>
+</tr>
+<tr>
+<td>32,935</td>
+<td>192 mm</td>
+<td>244 mm (Ausblendung)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Bei 250 mm Höhe liegen 7 Kerben im Körper, 2 in der Ausblendung.</p>
+<ol>
+<li>
+<p><strong>Schräge Bänder.</strong> Zwischen den Nullstellen wölbt sich \(|\zeta|\) zu Rücken. Eine Linie gleichen \(t\) liegt auf \(s = (t - 12 - 2,\!5\sin\theta)/24\). Sie schwingt um ±0,104 in \(s\), also ±26 mm, einmal um die Vase. Ohne den Hub in \(t\) wären die Bänder waagrechte Ringe.</p>
+</li>
+<li>
+<p><strong>Zwei Seiten.</strong> Nach der Funktionalgleichung ist \(|\zeta(\tfrac12 - \delta + it)| \approx (t/2\pi)^{\delta}\,|\zeta(\tfrac12 + \delta + it)|\). Bei \(\theta = 180°\) (\(\sigma = 0,\!05\)) sind die Werte um den Faktor \((t/2\pi)^{0,\!45}\) größer als bei \(\theta = 0°\) (\(\sigma = 0,\!95\)): 1,68 bei \(t = 20\), 2,02 bei \(t = 30\). Nachgerechnet stimmt das auf drei Stellen. Die Seite bei 180° trägt die langen Lamellen, die Seite bei 0° bleibt ruhig.</p>
+</li>
+</ol>
+<p><strong>Numerik.</strong> \(\zeta\) wird mit der <strong>Euler-Maclaurin-Summe</strong> berechnet. Sie setzt die Reihe in den Streifen fort:</p>
+<div class="formel">\[\zeta(s) = \sum_{n=1}^{N-1} n^{-s} + \frac{N^{1-s}}{s-1} + \frac{N^{-s}}{2}
++ \sum_{k=1}^{7} \frac{B_{2k}}{(2k)!}\; s(s+1)\cdots(s+2k-2)\; N^{-s-2k+1} + R_7 ,\]</div>
+<p>mit \(N = 24\) und den Bernoullizahlen \(B_2, \dots, B_{14}\) = 1/6, −1/30, 1/42, −1/30, 5/66, −691/2730, 7/6. Gegen <code>mpmath</code> geprüft, an Stichproben mit \(\sigma \in \{0,\!05;\, 0,\!5;\, 0,\!95\}\) und \(t\) bis 55, ist der Fehler kleiner als \(10^{-7}\). Die Ansicht rechnet dieselbe Summe mit eigener komplexer Arithmetik, Python und Ansicht stimmen auf \(10^{-14}\) überein.</p>
+<p><strong>Geschichte der Rechnung.</strong> Riemann hatte offenbar selbst Nullstellen berechnet. Carl Ludwig Siegel fand 1932 in Riemanns Göttinger Nachlass die Formel, mit der er es getan hatte. Sie heißt seitdem Riemann-Siegel-Formel. Alan Turing plante 1939 eine Maschine aus Zahnrädern, um Nullstellen zu berechnen, und prüfte 1950 auf dem Manchester Mark 1 alle Nullstellen bis \(t = 1540\). Heute sind mehr als \(10^{13}\) Nullstellen geprüft, alle liegen auf der kritischen Linie. 1972 erzählte Hugh Montgomery beim Nachmittagstee am Institute for Advanced Study in Princeton Freeman Dyson von seiner Formel für die Abstände der Nullstellen. Dyson erkannte darin die Formel für die Abstände der Energieniveaus schwerer Atomkerne aus der Theorie der Zufallsmatrizen. Warum sich die Nullstellen wie ein Quantensystem verhalten, ist bis heute nicht verstanden.</p>
+<p>Die Euler-Maclaurin-Summe fanden Euler um 1735 und Colin Maclaurin 1742 unabhängig voneinander. Die Bernoullizahlen darin stammen aus Jakob Bernoullis <em>Ars Conjectandi</em> von 1713. Bernoulli rühmte sich, mit ihnen die Summe der zehnten Potenzen der Zahlen 1 bis 1000 in einer halben Viertelstunde ausgerechnet zu haben. 1843 beschrieb Ada Lovelace Schritt für Schritt, wie Charles Babbages Analytical Engine die Bernoullizahlen berechnen könnte. Das gilt als das erste veröffentlichte Computerprogramm.</p>
+<p><strong>Warum \(|\zeta|\) linear und nicht \(\ln|\zeta|\).</strong> Der Logarithmus macht die Nullstellen zu tiefen Trichtern und sieht dramatischer aus. In der ersten Fassung, \(\ln|\zeta|\) mit \(t\) von 10 bis 50, hingen die Lamellenkanten aber bis 77° über (Abschnitt 4). Mit \(|\zeta|\) linear und \(t\) von 12 bis 36 bleibt der Überhang unter 43°.</p>
+<h4 id="turing_flecken-turing_labyrinth-reaktion-und-diffusion"><code>turing_flecken</code>, <code>turing_labyrinth</code>: Reaktion und Diffusion</h4>
+<p><strong>Geschichte.</strong> Alan Turing ist vor allem durch die Turingmaschine (1936) und die Entschlüsselung der Enigma in Bletchley Park bekannt. 1952 veröffentlichte er <em>The Chemical Basis of Morphogenesis</em>, seine einzige zu Lebzeiten erschienene biologische Arbeit. Er fragte darin, wie aus einer gleichförmigen Kugel von Zellen ein gegliederter Organismus wird, und rechnete seine Antwort, Reaktion und Diffusion, auf dem Computer in Manchester nach. Turing starb 1954. Experimentell bestätigt wurde der Mechanismus erst 1990: Patrick De Kepper und seine Gruppe in Bordeaux erzeugten in einem Gel mit der CIMA-Reaktion stehende Turing-Muster. 1995 zeigten Shigeru Kondo und Rihito Asai, dass sich die Streifen des Kaiserfischs <em>Pomacanthus</em> beim Wachsen so verschieben und verzweigen, wie Turings Gleichungen es vorhersagen. Das Gray-Scott-Modell stammt aus Arbeiten von Peter Gray und Stephen Scott von 1983 bis 1985 über autokatalytische Reaktionen. John Pearson zeigte 1993 in <em>Complex Patterns in a Simple System</em>, wie viele Mustertypen dieses kleine Modell hervorbringt.</p>
+<p>Alan Turing hat 1952 in <em>The Chemical Basis of Morphogenesis</em> gezeigt, dass Diffusion ein Gleichgewicht instabil machen kann, das ohne Diffusion stabil wäre. Zwei Stoffe reagieren miteinander und breiten sich verschieden schnell aus. Ein Band von Wellenlängen wächst dann aus kleinsten Störungen an, alle anderen klingen ab. Was bleibt, ist ein Muster mit einer festen Größe: Flecken, Streifen, Labyrinthe, wie auf dem Fell eines Leoparden oder der Haut eines Kugelfischs.</p>
+<p>Das <strong>Gray-Scott-Modell</strong> beschreibt die Reaktion \(U + 2V \to 3V\). \(V\) katalysiert sich selbst und verbraucht dabei \(U\). \(U\) wird mit der Rate \(F\) nachgefüllt, \(V\) mit der Rate \(F + k\) entfernt:</p>
+<div class="formel">\[\frac{\partial u}{\partial t} = D_u\,\Delta u - u v^2 + F\,(1 - u), \qquad
+\frac{\partial v}{\partial t} = D_v\,\Delta v + u v^2 - (F + k)\,v .\]</div>
+<p>Mit \(D_u = 0,\!16\) und \(D_v = 0,\!08\) diffundiert der Nährstoff doppelt so schnell wie der Katalysator. Der Zustand \((u, v) = (1, 0)\) ist stabil. Ein Muster entsteht erst aus örtlichen Keimen und breitet sich von dort aus. Welche Art Muster entsteht, hängt dann von \(F\) und \(k\) ab. Pearson hat 1993 die \((F, k)\)-Ebene nach Mustertypen kartiert. Die beiden Wertepaare hier sind gebräuchliche Beispiele aus dieser Karte:</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>Formel</th>
+<th>\(F\)</th>
+<th>\(k\)</th>
+<th>Muster</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>turing_flecken</code></td>
+<td>0,0367</td>
+<td>0,0649</td>
+<td>Flecken, die sich teilen, bis sie den Raum gleichmäßig füllen</td>
+</tr>
+<tr>
+<td><code>turing_labyrinth</code></td>
+<td>0,029</td>
+<td>0,057</td>
+<td>Streifen, die sich zu einem Labyrinth verzweigen</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Diskretisierung.</strong> <code>tools/turing_tabelle.py</code> rechnet auf einem Gitter mit \(\Delta x = 1\) und dem expliziten Euler-Verfahren mit \(\Delta t = 1\). Der Laplace-Operator ist der Fünf-Punkte-Stern:</p>
+<div class="formel">\[(\Delta_h u)_{ij} = u_{i+1,j} + u_{i-1,j} + u_{i,j+1} + u_{i,j-1} - 4\,u_{ij},
+\qquad
+u^{n+1}_{ij} = u^n_{ij} + D_u (\Delta_h u^n)_{ij} - u^n_{ij} (v^n_{ij})^2 + F (1 - u^n_{ij}) .\]</div>
+<p>\(v\) entsprechend. Das explizite Verfahren ist für die Diffusion stabil, solange \(D\,\Delta t / \Delta x^2 \le \tfrac14\), hier \(0,\!16\). Im Umfang ist das Gitter periodisch. Oben und unten fließt nichts über den Rand (Neumann-Rand: die Randzeile wird als Geisterzeile wiederholt, der Gradient über den Rand ist null). Start: \(u = 1\), \(v = 0\), dazu 40 Keime von 5 × 5 Zellen mit \(u = 0,\!5\), \(v = 0,\!25\) und 2 % Rauschen, Zufallsstart 7. Nach 25 000 Schritten ist das Muster weitgehend ausgebildet. Ganz still steht es nicht, gespeichert wird dieser Stand. \(v\) wird auf \([0, 1]\) normiert und als Tafel \(T\) in <code>vase/turing.json</code> gespeichert.</p>
+<p><strong>Maßstab.</strong> Das Gitter liegt auf dem abgewickelten Kern. 150 Zellen im Umfang \(2\pi \cdot 55\) mm ergeben 2,30 mm je Zelle. \(\mathrm{round}(150 \cdot 250 / 345,\!6) = 109\) Zeilen machen die Zellen bei den Startwerten quadratisch, das Muster ist nicht verzerrt. Die stärkste Wellenlänge im Fourierspektrum liegt bei etwa 12 Zellen, rund 27 mm, bei beiden Mustern. Höhe und Durchmesser in der Ansicht strecken die feste Tafel mit.</p>
+<p><strong>Abtastung.</strong> Die Tafel hat nur 109 Zeilen, das Netz 200 Schnitte. Zwischen den Zeilen läuft deshalb in der Höhe ein <strong>Catmull-Rom-Spline</strong>. Die Stelle \(s\) liegt bei Zeile \(s \cdot 108\). Zwischen den Zeilen \(j\) und \(j+1\), mit \(t \in [0, 1]\) und den Werten \(p_0, \dots, p_3\) der Zeilen \(j-1, \dots, j+2\), ist</p>
+<div class="formel">\[T(t) = \tfrac12 \Bigl[\, 2p_1 + (p_2 - p_0)\,t + (2p_0 - 5p_1 + 4p_2 - p_3)\,t^2 + (-p_0 + 3p_1 - 3p_2 + p_3)\,t^3 \Bigr] .\]</div>
+<p>Der Spline geht exakt durch die Tafelwerte, \(T(0) = p_1\) und \(T(1) = p_2\). Seine Steigung an jeder Stützstelle ist der zentrale Differenzenquotient \((p_2 - p_0)/2\). Damit ist die Kante stetig differenzierbar und hat keine Knicke an den Zeilen. Edwin Catmull und Raphael Rom stellten diesen Spline 1974 für die Computergrafik vor. Catmull gründete später Pixar mit. Im Umfang wird linear und periodisch bei \(\theta / 2\pi \cdot 150\) gemittelt, danach wird auf \([0, 1]\) begrenzt. Es ist \(f = \rho + (1-\rho)\,h(s)\,T(s, \theta)\).</p>
+<p><strong>Grenze durch den Druck.</strong> Eine Welle mit Amplitude \(A\) und Wellenlänge \(\lambda\), \(\tfrac{A}{2}\,(1 + \sin(2\pi z / \lambda))\), steigt höchstens mit \(\pi A / \lambda\). Für höchstens 45° Überhang muss also \(\lambda \ge \pi A\) sein. Mit \(A = (1 - \rho)\,L_{\max}\) = 21,1 mm heißt das \(\lambda \ge 66\) mm. Die Turing-Muster sind mit 27 mm zweieinhalbmal feiner. Gemessen auf dem Netz:</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>Formel</th>
+<th>\(L_{\max}\) 25 mm</th>
+<th>\(L_{\max}\) 10 mm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>turing_flecken</code></td>
+<td>bis 74°, 1392 Abschnitte rot</td>
+<td>bis 54°, keiner rot</td>
+</tr>
+<tr>
+<td><code>turing_labyrinth</code></td>
+<td>bis 72°, 1234 Abschnitte rot</td>
+<td>bis 50°, keiner rot</td>
+</tr>
+</tbody>
+</table></div>
+<p>Zwei Auswege: die Überhangbegrenzung einschalten oder \(L_{\max}\) auf etwa 10 mm senken.</p>
+<h3 id="4-überhang">4. Überhang</h3>
+<p><strong>Welche Fläche hängt über.</strong> Kern und Bohrung stehen senkrecht. Die Bohrung weitet sich oben höchstens mit 5,7°, und zwar nach außen, sie hängt also nicht über. Die Seiten einer Lamelle sind senkrechte Ebenen mit waagrechter Normale. Überhängen kann nur die Spitze. Für eine glatte Fläche \(X(\theta, z) = (r\cos\theta,\; r\sin\theta,\; z)\) ist die Normale</p>
+<div class="formel">\[X_\theta \times X_z = \bigl(r_\theta \sin\theta + r\cos\theta,\;\; r\sin\theta - r_\theta\cos\theta,\;\; -r\, r_z\bigr),\]</div>
+<p>und der Winkel \(\beta\) der Fläche zur Senkrechten erfüllt</p>
+<div class="formel">\[\tan\beta = \frac{r\, r_z}{\sqrt{r^2 + r_\theta^2}} \;\le\; r_z .\]</div>
+<p>Eine Lamelle ist aber kein Stück dieser Fläche. Ihre Kappe ist ein Halbzylinder mit Radius \(\kappa\), dessen Achse sich mit \(z\) nur radial verschiebt, um \(c(z) = r(z) - \kappa\). In Koordinaten radial, tangential und senkrecht ist sie \(X(\varphi, z) = \bigl(c(z) + \kappa\cos\varphi,\; \kappa\sin\varphi,\; z\bigr)\) mit \(\varphi \in [-\tfrac\pi2, \tfrac\pi2]\). Dann ist</p>
+<div class="formel">\[X_\varphi \times X_z = \bigl(\kappa\cos\varphi,\;\; \kappa\sin\varphi,\;\; -\kappa\, c'(z) \cos\varphi\bigr),
+\qquad
+\tan\beta = c'(z)\cos\varphi \;\le\; \frac{\partial r}{\partial z} .\]</div>
+<p>Am steilsten ist die äußerste Kante der Kappe, \(\varphi = 0\), mit \(\tan\beta = \partial r / \partial z\). Sie entscheidet, ob gestützt werden muss. Auf dem Netz zwischen den Schnitten \(k\) und \(k+1\):</p>
+<div class="formel">\[\beta_{k,i} = \arctan\frac{\max\bigl(0,\; r_{k+1,i} - r_{k,i}\bigr)}{\Delta z} .\]</div>
+<p>Nur eine wachsende Lamelle hängt über. Wird sie kürzer, liegt jede Schicht auf der vorigen.</p>
+<p><strong>Schwellen.</strong> Bambu Studio setzt Stützen unter Flächen, die flacher als die Schwelle \(\alpha_B\) zur Waagrechten liegen, Standard \(\alpha_B = 30°\). Zur Senkrechten gemessen heißt das \(\beta \gt 90° - \alpha_B = 60°\). Darüber färbt die Ansicht rot. Ab 45° färbt sie orange: Das druckt ohne Stützen, die 0,9 mm dünne Spitze kann aber hängen.</p>
+<p><strong>Begrenzung.</strong> Mit <code>ueberhang.begrenzen</code> wird jede Lamelle von unten nach oben durchgegangen:</p>
+<div class="formel">\[\tilde r_{0,i} = r_{0,i}, \qquad
+\tilde r_{k,i} = \min\bigl(r_{k,i},\;\; \tilde r_{k-1,i} + \Delta z \tan\alpha\bigr) .\]</div>
+<p>Ausgeschrieben ist das</p>
+<div class="formel">\[\tilde r_{k,i} = \min_{j \le k} \bigl(r_{j,i} + (z_k - z_j)\tan\alpha\bigr) .\]</div>
+<p>Das folgt durch Induktion: Der Schritt \(k\) nimmt zum Minimum über \(j \le k-1\) den Term \(j = k\) hinzu.</p>
+<p>\(\tilde r\) ist das größte Profil, das unter \(r\) bleibt und nirgends steiler als \(\alpha\) wächst. Es erfüllt beide Bedingungen selbst. Und jedes Profil \(g\), das sie erfüllt, liegt darunter: Aus \(g_k \le g_j + (z_k - z_j)\tan\alpha\) und \(g_j \le r_j\) folgt \(g_k \le \tilde r_k\). Man schneidet also so wenig wie möglich ab.</p>
+<p>Geometrisch zieht man in der \((z, r)\)-Ebene von jedem Punkt der Kante eine Gerade, die nach oben mit der Steigung \(\tan\alpha\) nach außen läuft. \(\tilde r\) ist die untere Einhüllende dieser Geraden und der Kante. Mathematisch ist das eine Infimalfaltung (Min-Plus-Faltung) von \(r\) mit der einseitigen Rampe \(g(\Delta z) = \Delta z \tan\alpha\) für \(\Delta z \ge 0\).</p>
+<p>Daraus folgt:</p>
+<ul>
+<li>Wo \(r\) langsam genug wächst, ist \(\tilde r = r\).</li>
+<li>Wo \(r\) zu schnell wächst, folgt \(\tilde r\) einer Geraden im Winkel \(\alpha\), bis sie \(r\) wieder trifft. Jede Wölbung bekommt unten eine Fase.</li>
+<li>Fallende Flanken bleiben unverändert, sobald die Gerade sie erreicht hat. Ist ein Höcker schmaler als seine Fase, kappt die Gerade seine Spitze und trifft erst die fallende Flanke. Aus Höckern werden Zähne: unten schräg, oben so steil, wie die Formel es vorgibt.</li>
+<li>\(\tilde r\) hängt höchstens um \(\alpha\) über, auf dem Netz exakt, weil die Begrenzung auf denselben Schnitten rechnet, die gedruckt werden.</li>
+</ul>
+<p><strong>Beispiel.</strong> Bei <code>phyllotaxis</code> ist jeder Höcker in der Höhe eine Gaußglocke mit \(\sigma = 7,\!5\) mm und Amplitude 21,1 mm. Die steilste Stelle einer Gaußglocke liegt bei \(\pm\sigma\) und hat die Steigung \(A / (\sigma\sqrt{e})\) = 1,70, also 59,6°. Wo Höcker überlappen, wird es etwas mehr. Gemessen sind es 61°.</p>
+<h3 id="5-übereinstimmung-von-generator-und-ansicht">5. Übereinstimmung von Generator und Ansicht</h3>
+<p>Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ansicht. Geprüft mit den Startwerten und den Formeln <code>zeta</code>, <code>phyllotaxis</code>, <code>kaemme</code> und <code>turing_flecken</code>, mit und ohne Begrenzung:</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>Prüfung</th>
+<th>Ergebnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zeta</code>, Python gegen Ansicht</td>
+<td>Abweichung \(\lt 10^{-14}\)</td>
+</tr>
+<tr>
+<td>Netzpunkte, Python gegen Ansicht</td>
+<td>Abweichung \(\lt 10^{-12}\) mm</td>
+</tr>
+<tr>
+<td>größter Überhangwinkel</td>
+<td>gleich</td>
+</tr>
+<tr>
+<td>Zahl der roten und orangen Abschnitte</td>
+<td>gleich</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-quellen-zur-geschichte">6. Quellen zur Geschichte</h3>
+<ul>
+<li>J. Fourier: <em>Théorie analytique de la chaleur</em>. Paris 1822.</li>
+<li>J. S. Russell: Report on Waves. <em>Report of the British Association for the Advancement of Science</em>, 1844.</li>
+<li>D. J. Korteweg, G. de Vries: On the change of form of long waves advancing in a rectangular canal, and on a new type of long stationary waves. <em>Philosophical Magazine</em> 39 (1895), 422–443.</li>
+<li>N. J. Zabusky, M. D. Kruskal: Interaction of "solitons" in a collisionless plasma and the recurrence of initial states. <em>Physical Review Letters</em> 15 (1965), 240–243.</li>
+<li>H. Vogel: A better way to construct the sunflower head. <em>Mathematical Biosciences</em> 44 (1979), 179–189.</li>
+<li>J. Swinton u. a.: Novel Fibonacci and non-Fibonacci structure in the sunflower: results of a citizen science experiment. <em>Royal Society Open Science</em> 3 (2016), 160091.</li>
+<li>J. Gielis: A generic geometric transformation that unifies a wide range of natural and abstract shapes. <em>American Journal of Botany</em> 90 (2003), 333–338.</li>
+<li>B. Riemann: Über die Anzahl der Primzahlen unter einer gegebenen Grösse. <em>Monatsberichte der Königlichen Preußischen Akademie der Wissenschaften zu Berlin</em>, November 1859, 671–680.</li>
+<li>A. M. Turing: Some calculations of the Riemann zeta-function. <em>Proceedings of the London Mathematical Society</em> (3) 3 (1953), 99–117.</li>
+<li>A. M. Turing: The chemical basis of morphogenesis. <em>Philosophical Transactions of the Royal Society B</em> 237 (1952), 37–72.</li>
+<li>V. Castets, E. Dulos, J. Boissonade, P. De Kepper: Experimental evidence of a sustained standing Turing-type nonequilibrium chemical pattern. <em>Physical Review Letters</em> 64 (1990), 2953–2956.</li>
+<li>S. Kondo, R. Asai: A reaction–diffusion wave on the skin of the marine angelfish <em>Pomacanthus</em>. <em>Nature</em> 376 (1995), 765–768.</li>
+<li>J. E. Pearson: Complex patterns in a simple system. <em>Science</em> 261 (1993), 189–192.</li>
+<li>E. Catmull, R. Rom: A class of local interpolating splines. In: <em>Computer Aided Geometric Design</em>, Academic Press 1974, 317–326.</li>
+</ul>
+<h2 id="ordner">Ordner</h2>
+<pre><code>├── README.md                 diese Anleitung
+├── LICENSE.md                Lizenz für den Code: PolyForm Noncommercial 1.0.0
+├── LICENSE-CONTENT.txt       Lizenz für Inhalte: CC BY-NC-SA 4.0
+├── CLAUDE.md                 Arbeitsanweisung für den Agenten
+├── docs/
+│   ├── PLAN.md               Form, Formeln, Druckgrenzen, Phasen
+│   └── bilder/               Bilder für diese Anleitung
+├── tools/
+│   ├── vase_feature.py       Formeln und Körper
+│   ├── vase_generator.py     config → STL, HTML, PNG
+│   ├── turing_tabelle.py     schreibt vase/turing.json
+│   ├── web_bauen.py          schreibt den Ordner web/
+│   └── requirements.txt
+└── vase/
+    ├── config.json           Parameter und Startwerte
+    ├── turing.json           Gray-Scott-Muster, aus turing_tabelle.py
+    ├── notizen.md            Stand und Verlauf
+    ├── vorschau.html         3D-Ansicht, generiert
+    ├── vorschau.png          Seitenansicht und Querschnitt, generiert
+    └── vase.stl              Drucknetz, generiert
+web/                          fertige Webseite: 3D-Ansicht und About, generiert
+</code></pre>
+<h2 id="lizenz">Lizenz</h2>
+<p>© 2026 Axel Schmidt. Das Projekt ist frei für nicht-kommerzielle Nutzung. <strong>Kommerzielle Nutzung ist nur mit schriftlicher Genehmigung erlaubt</strong>, das gilt auch für den Verkauf gedruckter Vasen. Anfragen an <a href="mailto:axel@schmidtlab.net">axel@schmidtlab.net</a>.</p>
+<div class="tabelle"><table>
+<thead>
+<tr>
+<th>Teil</th>
+<th>Lizenz</th>
+<th>Datei</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Programmcode in <code>tools/</code> und die 3D-Ansicht <code>vase/vorschau.html</code></td>
+<td><a href="https://polyformproject.org/licenses/noncommercial/1.0.0">PolyForm Noncommercial 1.0.0</a></td>
+<td><a href="LICENSE.md"><code>LICENSE.md</code></a></td>
+</tr>
+<tr>
+<td>Dokumentation, Bilder, 3D-Modelle (STL), Konfigurations- und Datendateien</td>
+<td><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></td>
+<td><a href="LICENSE-CONTENT.txt"><code>LICENSE-CONTENT.txt</code></a></td>
+</tr>
+</tbody>
+</table></div>
+<p>Erlaubt sind ohne Nachfrage zum Beispiel: Vasen für sich selbst drucken, verschenken, den Code lesen, ändern und für eigene Projekte, Unterricht oder Forschung verwenden. Wer Code oder Modelle weitergibt, muss die Lizenz und den Hinweis auf den Urheber mitgeben. Bearbeitete Modelle müssen unter derselben Lizenz stehen.</p>
+<p>Nicht ohne Genehmigung erlaubt sind zum Beispiel: gedruckte Vasen oder STL-Dateien verkaufen, den Generator in einem kommerziellen Produkt oder Dienst einsetzen, ihn im Auftrag eines Unternehmens nutzen.</p>
+<p>Die mathematischen Funktionen selbst sind nicht geschützt. Die Lizenz betrifft diesen Code, diese Texte, Bilder und Dateien.</p>
+</main>
+<footer>© 2026 Axel Schmidt · Text und Bilder CC BY-NC-SA 4.0, Programm PolyForm Noncommercial 1.0.0 ·
+  Kommerzielle Nutzung nur nach Absprache: <a href="mailto:axel@schmidtlab.net">axel@schmidtlab.net</a></footer>
+</body>
+</html>

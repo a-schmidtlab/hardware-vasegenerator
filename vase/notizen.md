@@ -42,3 +42,4 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-21: Einführung im README und Kurzbeschreibungen der Ansicht sachlicher formuliert.
 - 2026-10-21: Kapitel Mathematik um Absätze zur Geschichte jeder Funktion und eine Quellenliste ergänzt.
 - 2026-10-21: Lizenzen: Code unter PolyForm Noncommercial 1.0.0 (`LICENSE.md`), Inhalte unter CC BY-NC-SA 4.0 (`LICENSE-CONTENT.txt`). Hinweis im Kopf der Code-Dateien, in der Ansicht und im STL-Kopf. Kommerzielle Nutzung nur mit schriftlicher Genehmigung von Axel Schmidt.
+- 2026-10-21: Ordner `web/` für den Webserver: `index.html` (Ansicht mit About-Link), `about.html` (README als Webseite, MathJax), Bilder und Lizenzen. Gebaut von `tools/web_bauen.py`. Titelbild ohne schwarzen Rand, Knopfleiste der Ansicht mit deckendem Hintergrund.
