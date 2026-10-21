@@ -6,7 +6,7 @@ Der Generator (`tools/vase_generator.py`) schreibt aus einer Konfigurationsdatei
 
 <p align="center"><img src="docs/bilder/titel.png" width="420" alt="Vase nach der Riemannschen Zetafunktion"></p>
 
-**Inhalt:** [Die Grundform](#die-grundform) · [Die Formen](#die-formen) · [Schnellstart](#schnellstart) · [3D-Ansicht](#3d-ansicht) · [Druck und Überhang](#druck-und-überhang) · [Konfiguration](#konfiguration) · [Mathematik](#mathematik) · [Ordner](#ordner) · [Lizenz](#lizenz)
+**Inhalt:** [Die Grundform](#die-grundform) · [Die Formen](#die-formen) · [Schnellstart](#schnellstart) · [3D-Ansicht](#3d-ansicht) · [Webseite](#webseite) · [Druck und Überhang](#druck-und-überhang) · [Konfiguration](#konfiguration) · [Mathematik](#mathematik) · [Ordner](#ordner) · [Lizenz](#lizenz)
 
 ## Die Grundform
 
@@ -56,7 +56,7 @@ python3 -m venv .venv
 
 Danach `vase/vorschau.html` im Browser öffnen. Daneben liegen `vase/vase.stl` für den Slicer und `vase/vorschau.png` mit Seitenansicht und Querschnitt.
 
-Python 3 reicht, mit den Paketen aus `tools/requirements.txt` (numpy, pillow). Die 3D-Ansicht rechnet im Browser und braucht kein Python.
+Python 3 reicht, mit den Paketen aus `tools/requirements.txt` (numpy, pillow, markdown). Die 3D-Ansicht rechnet im Browser und braucht kein Python.
 
 ## 3D-Ansicht
 
@@ -71,6 +71,25 @@ Python 3 reicht, mit den Paketen aus `tools/requirements.txt` (numpy, pillow). D
 - **STL herunterladen** speichert das gerade gezeigte Modell in Millimetern, bereit für den Slicer. Der Dateiname nennt Formel, Höhe und Innendurchmesser. **Startwerte** setzt alles auf die Werte aus `vase/config.json` zurück.
 
 Die Ansicht folgt dem hellen oder dunklen Modus des Systems.
+
+## Webseite
+
+Der Ordner `web/` ist eine fertige Webseite für einen gewöhnlichen Webserver, zum Beispiel ein Hosting-Paket bei All-Inkl. Auf dem Server braucht es weder Python noch PHP oder eine Datenbank, nur statische Dateien.
+
+| Datei | Inhalt |
+|---|---|
+| `web/index.html` | die 3D-Ansicht, mit Link **About** |
+| `web/about.html` | diese Anleitung als Webseite, Formeln mit MathJax |
+| `web/bilder/` | Bilder der Anleitung |
+| `web/LICENSE.md`, `web/LICENSE-CONTENT.txt` | Lizenztexte |
+
+Neu bauen, zum Beispiel nach einer Änderung an Formeln, Startwerten oder dieser Anleitung:
+
+```bash
+.venv/bin/python tools/web_bauen.py
+```
+
+Danach den Inhalt von `web/` per FTP oder über den Dateimanager in das Verzeichnis der Domain laden. Die About-Seite lädt MathJax 3.2.2 von cdn.jsdelivr.net, alles andere liegt im Ordner selbst. Soll die Seite nicht öffentlich sein, lässt sich das Verzeichnis beim Hoster mit einem Passwort schützen, bei All-Inkl unter „Tools → Verzeichnisschutz“.
 
 ## Druck und Überhang
 
@@ -564,6 +583,7 @@ Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ans
 │   ├── vase_feature.py       Formeln und Körper
 │   ├── vase_generator.py     config → STL, HTML, PNG
 │   ├── turing_tabelle.py     schreibt vase/turing.json
+│   ├── web_bauen.py          schreibt den Ordner web/
 │   └── requirements.txt
 └── vase/
     ├── config.json           Parameter und Startwerte
@@ -572,6 +592,7 @@ Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ans
     ├── vorschau.html         3D-Ansicht, generiert
     ├── vorschau.png          Seitenansicht und Querschnitt, generiert
     └── vase.stl              Drucknetz, generiert
+web/                          fertige Webseite: 3D-Ansicht und About, generiert
 ```
 
 ## Lizenz
