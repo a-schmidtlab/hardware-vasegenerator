@@ -125,7 +125,7 @@ Eine weitere Vase bekommt einen eigenen Ordner neben `vase/` mit eigener `config
 
 ## Mathematik
 
-Dieses Kapitel leitet jede Formel her und nennt die Zahlen, die im Code stehen. Python (`tools/vase_feature.py`) und die Ansicht (`vase/vorschau.html`) rechnen dieselben Formeln.
+Dieses Kapitel leitet jede Formel her und nennt die Zahlen, die im Code stehen. Python (`tools/vase_feature.py`) und die Ansicht (`vase/vorschau.html`) rechnen dieselben Formeln. Zu jeder Funktion gehört ein Absatz **Geschichte**: wer die Mathematik gefunden hat, aus welchem Anlass, und was aus ihr wurde. Die Quellen stehen in [Abschnitt 6](#6-quellen-zur-geschichte).
 
 ### 1. Koordinaten und Grundgleichung
 
@@ -189,6 +189,8 @@ misst den kürzeren Weg um den Kreis.
 
 ### 3. Die Formeln
 
+**Geschichte: Fourier.** Die ersten fünf Formeln sind Kosinus- und Sinuswellen, teils verzerrt. Dass sich mit solchen Wellen fast jede Form beschreiben lässt, behauptete Joseph Fourier 1807 in einer Arbeit über die Wärmeleitung für die Pariser Akademie: Jede Funktion lasse sich als Summe von Sinus- und Kosinuswellen schreiben. Joseph-Louis Lagrange, einer der Gutachter, hielt das für falsch, und die Arbeit blieb lange ungedruckt. Fourier veröffentlichte seine Theorie 1822 in der *Théorie analytique de la chaleur*. Unter welchen Bedingungen seine Reihen tatsächlich konvergieren, klärte Peter Gustav Lejeune Dirichlet 1829. Heute stecken Kosinustransformationen in jeder JPEG- und MP3-Datei.
+
 #### `sinus`
 
 ```math
@@ -231,6 +233,8 @@ Unabhängig von $`\theta`$, also ein Rotationskörper. Ein Bauch auf halber Höh
 
 #### `cnoidal`: die Cnoidalwelle
 
+**Geschichte.** Im August 1834 sah der schottische Ingenieur John Scott Russell am Union Canal bei Edinburgh, wie ein von Pferden gezogener Kahn plötzlich anhielt und eine einzelne, glatte Wasserwelle vor sich herschob. Er folgte ihr zu Pferd über ein bis zwei Meilen. Sie behielt Form und Geschwindigkeit, bis er sie in den Windungen des Kanals verlor. Russell nannte sie „great wave of translation“ und baute Wellenkanäle, um sie zu untersuchen. George Airy und George Stokes, die führenden Fachleute der Zeit, bezweifelten, dass es eine solche Welle dauerhaft geben könne. Erst 1895 leiteten Diederik Korteweg und sein Doktorand Gustav de Vries in Amsterdam die Gleichung her, die sie beschreibt. Neben der Einzelwelle fanden sie periodische Lösungen und nannten sie nach der Funktion cn *cnoidal waves*. 1965 lösten Norman Zabusky und Martin Kruskal die Gleichung am Computer. Sie sahen, wie Einzelwellen durcheinander hindurchlaufen und unbeschadet wieder auftauchen, und prägten dafür das Wort *Soliton*.
+
 Flache Wasserwellen gehorchen der **Korteweg-de-Vries-Gleichung**, in Normalform
 
 ```math
@@ -259,6 +263,8 @@ u = \frac{2K}{\pi}\,\bigl(\theta + 0,\!45\, s\bigr), \qquad w = \mathrm{cn}^2(u 
 
 Ein halber Umlauf, $`\theta \to \theta + \pi`$, verschiebt $`u`$ um $`2K`$, eine volle Periode von $`\mathrm{cn}^2`$. Auf dem Umfang liegen also zwei Kämme. Der Term $`0,\!45\,s`$ dreht sie über die Höhe um 0,45 rad ≈ 26°. $`\mathrm{cn}^2`$ liegt von selbst zwischen 0 und 1.
 
+**Geschichte der Werkzeuge.** Elliptische Integrale tauchten im 18. Jahrhundert bei der Bogenlänge der Ellipse und beim Pendel auf. Am 30. Mai 1799 notierte der 22-jährige Carl Friedrich Gauß in seinem Tagebuch, das arithmetisch-geometrische Mittel von 1 und $`\sqrt2`$ stimme auf elf Stellen mit einer Konstanten der Lemniskate überein. Damit, schrieb er, eröffne sich ein ganz neues Feld der Analysis. Die Landen-Transformation stammt von John Landen (1775), der als Gutsverwalter arbeitete und Mathematik nebenher betrieb. Niels Henrik Abel und Carl Gustav Jacobi kehrten die elliptischen Integrale 1827 bis 1829 unabhängig voneinander um. So entstanden die elliptischen Funktionen, die Jacobi 1829 in den *Fundamenta nova* zusammenfasste. Die Kurzschreibweisen sn, cn und dn führte Christoph Gudermann 1838 ein.
+
 `cn` wird mit der absteigenden Landen-Transformation berechnet (Abramowitz und Stegun, 16.4). Man startet mit $`a_0 = 1`$, $`b_0 = \sqrt{1-m}`$, $`c_0 = \sqrt{m}`$ und iteriert $`a_{n+1} = (a_n + b_n)/2`$, $`b_{n+1} = \sqrt{a_n b_n}`$, $`c_{n+1} = (a_n - b_n)/2`$, bis $`c_N \approx 0`$. Dann setzt man $`\varphi_N = 2^N a_N u`$ und läuft zurück mit
 
 ```math
@@ -266,6 +272,8 @@ Ein halber Umlauf, $`\theta \to \theta + \pi`$, verschiebt $`u`$ um $`2K`$, eine
 ```
 
 #### `logspirale`: die logarithmische Spirale
+
+**Geschichte.** René Descartes beschrieb die Kurve 1638 in einem Brief an Marin Mersenne als die Spirale, die jeden Strahl aus ihrem Zentrum unter demselben Winkel schneidet. Jakob Bernoulli war von ihrer Selbstähnlichkeit so angetan, dass er sie *spira mirabilis* nannte und sie sich für seinen Grabstein wünschte, mit dem Spruch „Eadem mutata resurgo“, verändert erstehe ich als dieselbe. Der Steinmetz im Basler Münster meißelte nach Bernoullis Tod 1705 allerdings eine archimedische Spirale ein, deren Windungen gleich weit voneinander liegen. Sie ist dort bis heute zu sehen.
 
 Die logarithmische Spirale $`r = a\, e^{b\varphi}`$, bei Jakob Bernoulli *spira mirabilis*, ist selbstähnlich. Eine Drehung um $`\Delta\varphi`$ ist dasselbe wie eine Streckung um $`e^{b\,\Delta\varphi}`$. Auf der Vase übernimmt die Höhe die Rolle des Radius. Der Kamm liegt bei
 
@@ -280,6 +288,8 @@ w = \exp\!\left(-\frac12 \left(\frac{\min\bigl(d(\theta, \varphi),\; d(\theta, \
 ```
 
 #### `phyllotaxis`: der goldene Winkel
+
+**Geschichte.** Leonardo von Pisa, genannt Fibonacci, stellte 1202 im *Liber Abaci* eine Aufgabe über die Vermehrung von Kaninchenpaaren. Ihre Lösung ist die Folge 1, 1, 2, 3, 5, 8, 13, …, in der jede Zahl die Summe der beiden vorigen ist. Dass dieselben Zahlen in Pflanzen stecken, beschrieben die Brüder Louis und Auguste Bravais 1837. Sie maßen den Winkel zwischen aufeinanderfolgenden Blättern und fanden immer wieder etwa 137,5°. Helmut Vogel gab 1979 das einfache Modell an, das heute in fast jedem Lehrbuch steht. Auch Alan Turing beschäftigte sich in seinen letzten Lebensjahren mit den Fibonacci-Zahlen der Sonnenblume, die Arbeit blieb unvollendet. Zu seinem hundertsten Geburtstag 2012 ließ das Museum of Science and Industry in Manchester Freiwillige Sonnenblumen ziehen und die Spiralen auszählen. Die meisten Köpfe folgten Fibonacci-Zahlen, etwa jeder fünfte nicht genau.
 
 Mit dem goldenen Schnitt $`\phi = (1 + \sqrt5)/2`$ ist der goldene Winkel
 
@@ -309,6 +319,8 @@ Je größer die Fibonacci-Zahl, desto kleiner der Winkel und desto größer der 
 
 #### `super`: die Superformel
 
+**Geschichte.** Gabriel Lamé untersuchte 1818 die Kurven $`|x/a|^n + |y/b|^n = 1`$, heute Superellipsen genannt. Bekannt wurden sie durch den dänischen Dichter und Designer Piet Hein. Er schlug 1959 für den Platz Sergels torg in Stockholm eine Superellipse mit $`n = 2,\!5`$ vor, als Mittelweg zwischen Kreis und Rechteck, und entwarf später Tische in derselben Form. Der belgische Pflanzenbiologe Johan Gielis verallgemeinerte Lamés Gleichung auf Polarkoordinaten mit mehreren Exponenten und veröffentlichte sie 2003 im *American Journal of Botany* als Superformel, mit Beispielen von Blättern, Blüten und Seesternen.
+
 Johan Gielis hat 2003 die Superellipse von Lamé verallgemeinert:
 
 ```math
@@ -322,6 +334,8 @@ w = \frac{\rho(\theta) - \rho_{\min}}{\rho_{\max} - \rho_{\min}} .
 ```
 
 #### `ketten`: Kettenlinie und Katenoid
+
+**Geschichte.** Galileo Galilei beschrieb die hängende Kette 1638 in den *Discorsi* als annähernd parabelförmig. Dass sie keine Parabel ist, zeigte Joachim Jungius, veröffentlicht 1669 nach seinem Tod. 1690 stellte Jakob Bernoulli in den *Acta Eruditorum* öffentlich die Frage nach der genauen Kurve. Ein Jahr später erschienen drei Lösungen: von Gottfried Wilhelm Leibniz, von Christiaan Huygens und von Jakobs jüngerem Bruder Johann. Johann erinnerte noch Jahrzehnte später daran, dass er in einer Nacht gelöst habe, woran sein Bruder vergeblich gearbeitet hatte. Robert Hooke hatte schon 1675 ein Anagramm veröffentlicht. Entschlüsselt lautet es: Wie das biegsame Seil hängt, so steht umgekehrt der starre Bogen. Eine umgedrehte Kettenlinie trägt nur Druck und keine Biegung. Antoni Gaudí plante danach die Bögen der Krypta der Colònia Güell, mit Hängemodellen aus Schnüren und kleinen Sandsäcken.
 
 Eine Kette mit konstantem Gewicht je Länge hat überall dieselbe waagrechte Zugkraft $`H_0`$. Das Kräftegleichgewicht an einem Stück der Kette ergibt
 
@@ -340,6 +354,8 @@ mit $`a = 0,\!62`$, als Bruchteil der Höhe gemessen. Diese Formel hat keine Hü
 **Kein Katenoid.** Dreht man eine Kettenlinie $`r = c \cosh((z - z_0)/c)`$ um die senkrechte Achse, entsteht das Katenoid (Euler 1744). Es ist neben der Ebene die einzige rotationssymmetrische Minimalfläche, die Form einer Seifenhaut zwischen zwei Ringen. Die Vase ist trotzdem keines. Beim Katenoid ist der Taillenradius $`c`$ zugleich die Längeneinheit im cosh. Hier ist die Taille 59 mm und die Längeneinheit $`0,\!62 \cdot 250 = 155`$ mm, die Kurve ist in $`r`$ gestaucht. Ein echtes Katenoid gäbe es zwischen zwei Ringen mit Radius $`R`$ auch nur, solange ihr Abstand höchstens $`1,\!3255\,R`$ beträgt (Goldschmidt). Bei der Vase sind es $`250 / 80,\!2 = 3,\!1`$, eine Seifenhaut würde reißen. Die Formel übernimmt also die Kurve der hängenden Kette, nicht die Minimalfläche.
 
 #### `zeta`: die Riemannsche Zetafunktion
+
+**Geschichte.** 1735 fand der 28-jährige Leonhard Euler den Wert der Reihe $`1 + \tfrac14 + \tfrac19 + \tfrac1{16} + \dots = \pi^2/6`$. An diesem „Basler Problem“ hatten sich seit Pietro Mengoli 1650 die besten Mathematiker vergeblich versucht. 1737 bewies Euler die Darstellung als Produkt über die Primzahlen. Bernhard Riemann schrieb 1859 zu seiner Aufnahme in die Berliner Akademie eine Arbeit von kaum zehn Seiten, *Über die Anzahl der Primzahlen unter einer gegebenen Grösse*. Darin setzt er $`\zeta`$ auf die komplexe Ebene fort, beweist die Funktionalgleichung und verbindet die Nullstellen mit der Verteilung der Primzahlen. Über die Nullstellen heißt es dort: „Es ist sehr wahrscheinlich, dass alle Wurzeln reell sind. Hiervon wäre allerdings ein strenger Beweis zu wünschen; ich habe indess die Aufsuchung desselben nach einigen flüchtigen vergeblichen Versuchen vorläufig bei Seite gelassen.“ Riemanns Wurzeln sind die Werte $`t`$; reell heißt hier, dass die Nullstellen auf der kritischen Linie liegen. David Hilbert nahm die Vermutung 1900 in seine Liste der 23 Probleme auf, das Clay Mathematics Institute im Jahr 2000 in die Liste der Millennium-Probleme, mit einer Million Dollar Preisgeld. Sie ist bis heute unbewiesen.
 
 Für $`\mathrm{Re}\, s \gt 1`$ ist
 
@@ -390,9 +406,15 @@ mit $`|\zeta|_{\max} = 4,\!574`$, abgetastet auf 81 × 72 Punkten. Was man auf d
 
 mit $`N = 24`$ und den Bernoullizahlen $`B_2, \dots, B_{14}`$ = 1/6, −1/30, 1/42, −1/30, 5/66, −691/2730, 7/6. Gegen `mpmath` geprüft, an Stichproben mit $`\sigma \in \{0,\!05;\, 0,\!5;\, 0,\!95\}`$ und $`t`$ bis 55, ist der Fehler kleiner als $`10^{-7}`$. Die Ansicht rechnet dieselbe Summe mit eigener komplexer Arithmetik, Python und Ansicht stimmen auf $`10^{-14}`$ überein.
 
+**Geschichte der Rechnung.** Riemann hatte offenbar selbst Nullstellen berechnet. Carl Ludwig Siegel fand 1932 in Riemanns Göttinger Nachlass die Formel, mit der er es getan hatte. Sie heißt seitdem Riemann-Siegel-Formel. Alan Turing plante 1939 eine Maschine aus Zahnrädern, um Nullstellen zu berechnen, und prüfte 1950 auf dem Manchester Mark 1 alle Nullstellen bis $`t = 1540`$. Heute sind mehr als $`10^{13}`$ Nullstellen geprüft, alle liegen auf der kritischen Linie. 1972 erzählte Hugh Montgomery beim Nachmittagstee am Institute for Advanced Study in Princeton Freeman Dyson von seiner Formel für die Abstände der Nullstellen. Dyson erkannte darin die Formel für die Abstände der Energieniveaus schwerer Atomkerne aus der Theorie der Zufallsmatrizen. Warum sich die Nullstellen wie ein Quantensystem verhalten, ist bis heute nicht verstanden.
+
+Die Euler-Maclaurin-Summe fanden Euler um 1735 und Colin Maclaurin 1742 unabhängig voneinander. Die Bernoullizahlen darin stammen aus Jakob Bernoullis *Ars Conjectandi* von 1713. Bernoulli rühmte sich, mit ihnen die Summe der zehnten Potenzen der Zahlen 1 bis 1000 in einer halben Viertelstunde ausgerechnet zu haben. 1843 beschrieb Ada Lovelace Schritt für Schritt, wie Charles Babbages Analytical Engine die Bernoullizahlen berechnen könnte. Das gilt als das erste veröffentlichte Computerprogramm.
+
 **Warum $`|\zeta|`$ linear und nicht $`\ln|\zeta|`$.** Der Logarithmus macht die Nullstellen zu tiefen Trichtern und sieht dramatischer aus. In der ersten Fassung, $`\ln|\zeta|`$ mit $`t`$ von 10 bis 50, hingen die Lamellenkanten aber bis 77° über (Abschnitt 4). Mit $`|\zeta|`$ linear und $`t`$ von 12 bis 36 bleibt der Überhang unter 43°.
 
 #### `turing_flecken`, `turing_labyrinth`: Reaktion und Diffusion
+
+**Geschichte.** Alan Turing ist vor allem durch die Turingmaschine (1936) und die Entschlüsselung der Enigma in Bletchley Park bekannt. 1952 veröffentlichte er *The Chemical Basis of Morphogenesis*, seine einzige zu Lebzeiten erschienene biologische Arbeit. Er fragte darin, wie aus einer gleichförmigen Kugel von Zellen ein gegliederter Organismus wird, und rechnete seine Antwort, Reaktion und Diffusion, auf dem Computer in Manchester nach. Turing starb 1954. Experimentell bestätigt wurde der Mechanismus erst 1990: Patrick De Kepper und seine Gruppe in Bordeaux erzeugten in einem Gel mit der CIMA-Reaktion stehende Turing-Muster. 1995 zeigten Shigeru Kondo und Rihito Asai, dass sich die Streifen des Kaiserfischs *Pomacanthus* beim Wachsen so verschieben und verzweigen, wie Turings Gleichungen es vorhersagen. Das Gray-Scott-Modell stammt aus Arbeiten von Peter Gray und Stephen Scott von 1983 bis 1985 über autokatalytische Reaktionen. John Pearson zeigte 1993 in *Complex Patterns in a Simple System*, wie viele Mustertypen dieses kleine Modell hervorbringt.
 
 Alan Turing hat 1952 in *The Chemical Basis of Morphogenesis* gezeigt, dass Diffusion ein Gleichgewicht instabil machen kann, das ohne Diffusion stabil wäre. Zwei Stoffe reagieren miteinander und breiten sich verschieden schnell aus. Ein Band von Wellenlängen wächst dann aus kleinsten Störungen an, alle anderen klingen ab. Was bleibt, ist ein Muster mit einer festen Größe: Flecken, Streifen, Labyrinthe, wie auf dem Fell eines Leoparden oder der Haut eines Kugelfischs.
 
@@ -428,7 +450,7 @@ $`v`$ entsprechend. Das explizite Verfahren ist für die Diffusion stabil, solan
 T(t) = \tfrac12 \Bigl[\, 2p_1 + (p_2 - p_0)\,t + (2p_0 - 5p_1 + 4p_2 - p_3)\,t^2 + (-p_0 + 3p_1 - 3p_2 + p_3)\,t^3 \Bigr] .
 ```
 
-Der Spline geht exakt durch die Tafelwerte, $`T(0) = p_1`$ und $`T(1) = p_2`$. Seine Steigung an jeder Stützstelle ist der zentrale Differenzenquotient $`(p_2 - p_0)/2`$. Damit ist die Kante stetig differenzierbar und hat keine Knicke an den Zeilen. Im Umfang wird linear und periodisch bei $`\theta / 2\pi \cdot 150`$ gemittelt, danach wird auf $`[0, 1]`$ begrenzt. Es ist $`f = \rho + (1-\rho)\,h(s)\,T(s, \theta)`$.
+Der Spline geht exakt durch die Tafelwerte, $`T(0) = p_1`$ und $`T(1) = p_2`$. Seine Steigung an jeder Stützstelle ist der zentrale Differenzenquotient $`(p_2 - p_0)/2`$. Damit ist die Kante stetig differenzierbar und hat keine Knicke an den Zeilen. Edwin Catmull und Raphael Rom stellten diesen Spline 1974 für die Computergrafik vor. Catmull gründete später Pixar mit. Im Umfang wird linear und periodisch bei $`\theta / 2\pi \cdot 150`$ gemittelt, danach wird auf $`[0, 1]`$ begrenzt. Es ist $`f = \rho + (1-\rho)\,h(s)\,T(s, \theta)`$.
 
 **Grenze durch den Druck.** Eine Welle mit Amplitude $`A`$ und Wellenlänge $`\lambda`$, $`\tfrac{A}{2}\,(1 + \sin(2\pi z / \lambda))`$, steigt höchstens mit $`\pi A / \lambda`$. Für höchstens 45° Überhang muss also $`\lambda \ge \pi A`$ sein. Mit $`A = (1 - \rho)\,L_{\max}`$ = 21,1 mm heißt das $`\lambda \ge 66`$ mm. Die Turing-Muster sind mit 27 mm zweieinhalbmal feiner. Gemessen auf dem Netz:
 
@@ -510,6 +532,23 @@ Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ans
 | größter Überhangwinkel | gleich |
 | Zahl der roten und orangen Abschnitte | gleich |
 
+
+### 6. Quellen zur Geschichte
+
+- J. Fourier: *Théorie analytique de la chaleur*. Paris 1822.
+- J. S. Russell: Report on Waves. *Report of the British Association for the Advancement of Science*, 1844.
+- D. J. Korteweg, G. de Vries: On the change of form of long waves advancing in a rectangular canal, and on a new type of long stationary waves. *Philosophical Magazine* 39 (1895), 422–443.
+- N. J. Zabusky, M. D. Kruskal: Interaction of "solitons" in a collisionless plasma and the recurrence of initial states. *Physical Review Letters* 15 (1965), 240–243.
+- H. Vogel: A better way to construct the sunflower head. *Mathematical Biosciences* 44 (1979), 179–189.
+- J. Swinton u. a.: Novel Fibonacci and non-Fibonacci structure in the sunflower: results of a citizen science experiment. *Royal Society Open Science* 3 (2016), 160091.
+- J. Gielis: A generic geometric transformation that unifies a wide range of natural and abstract shapes. *American Journal of Botany* 90 (2003), 333–338.
+- B. Riemann: Über die Anzahl der Primzahlen unter einer gegebenen Grösse. *Monatsberichte der Königlichen Preußischen Akademie der Wissenschaften zu Berlin*, November 1859, 671–680.
+- A. M. Turing: Some calculations of the Riemann zeta-function. *Proceedings of the London Mathematical Society* (3) 3 (1953), 99–117.
+- A. M. Turing: The chemical basis of morphogenesis. *Philosophical Transactions of the Royal Society B* 237 (1952), 37–72.
+- V. Castets, E. Dulos, J. Boissonade, P. De Kepper: Experimental evidence of a sustained standing Turing-type nonequilibrium chemical pattern. *Physical Review Letters* 64 (1990), 2953–2956.
+- S. Kondo, R. Asai: A reaction–diffusion wave on the skin of the marine angelfish *Pomacanthus*. *Nature* 376 (1995), 765–768.
+- J. E. Pearson: Complex patterns in a simple system. *Science* 261 (1993), 189–192.
+- E. Catmull, R. Rom: A class of local interpolating splines. In: *Computer Aided Geometric Design*, Academic Press 1974, 317–326.
 
 ## Ordner
 

@@ -40,3 +40,4 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-21: README neu gegliedert: oben allgemeinverständlich mit Grundform, Zeichnung und Galerie (`docs/bilder/`), unten das Kapitel Mathematik.
 - 2026-10-21: 3D-Ansicht neu gestaltet: Kacheln für die Formen, Kopf mit Idee und Formel, Kennzahlen mit Ampel, Bodenschatten, langsames Drehen, Pinch-Zoom, Dunkelmodus, Handy-Layout. Bedienung und Rechnung unverändert.
 - 2026-10-21: Einführung im README und Kurzbeschreibungen der Ansicht sachlicher formuliert.
+- 2026-10-21: Kapitel Mathematik um Absätze zur Geschichte jeder Funktion und eine Quellenliste ergänzt.
