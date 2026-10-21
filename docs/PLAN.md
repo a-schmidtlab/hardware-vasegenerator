@@ -90,7 +90,7 @@ Was darüber liegt, schreibt der Generator nicht. Die Ansicht zeigt es und melde
 
 ## 5. Druckdatei
 
-`python tools/vase_generator.py vase/config.json` schreibt `vase/vase.stl` aus der Config. In `vase/vorschau.html` schreibt **STL speichern** die aktuelle Reglerstellung. Beide Netze sind geschlossen, Einheiten sind Millimeter.
+`python tools/vase_generator.py vase/config.json` schreibt `vase/vase.stl` aus der Config. In `vase/vorschau.html` schreibt **STL herunterladen** die aktuelle Reglerstellung. Beide Netze sind geschlossen, Einheiten sind Millimeter.
 
 ## 6. Phasen
 
