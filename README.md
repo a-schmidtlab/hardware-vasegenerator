@@ -1,8 +1,8 @@
 # Mathematische Vasen
 
-Vasen für den 3D-Druck, deren Form eine mathematische Funktion ist. Um ein Rohr stehen 120 dünne Rippen, und jede Rippe ist auf jeder Höhe genau so lang, wie eine Formel es vorgibt. So wird aus der Riemannschen Zetafunktion, dem goldenen Winkel einer Sonnenblume oder den Mustern eines Tierfells eine Skulptur, die Wasser hält.
+Parametrischer Generator für 3D-gedruckte Vasen. Die Außenform wird durch eine Funktion $`f(s, \theta)`$ über Höhe und Umfangswinkel beschrieben. Sie legt die Länge von 120 radialen Lamellen fest, die auf einem zylindrischen Kern stehen. Implementiert sind 13 Funktionen, unter anderem die Riemannsche Zetafunktion, eine Anordnung nach dem goldenen Winkel und Reaktions-Diffusions-Muster nach Gray und Scott.
 
-Ein Python-Skript macht daraus eine druckfertige STL-Datei. Eine 3D-Ansicht im Browser zeigt jede Form sofort, mit Schiebereglern für die Maße.
+Der Generator (`tools/vase_generator.py`) schreibt aus einer Konfigurationsdatei ein geschlossenes STL-Netz für den Slicer. Eine 3D-Ansicht im Browser rechnet dieselben Funktionen und erlaubt, Maße und Form interaktiv zu ändern.
 
 <p align="center"><img src="docs/bilder/titel.png" width="420" alt="Vase nach der Riemannschen Zetafunktion"></p>
 
@@ -10,41 +10,41 @@ Ein Python-Skript macht daraus eine druckfertige STL-Datei. Eine 3D-Ansicht im B
 
 ## Die Grundform
 
-Jede Vase hat denselben Aufbau:
+Alle Vasen haben denselben Aufbau aus drei Teilen:
 
-- **Der Kern** ist ein Rohr mit 4 mm Wand und geschlossenem Boden. Er hält das Wasser. Innen ist er 102 mm weit, an der Mündung öffnet er sich auf 106 mm.
-- **Die Lamellen** sind 120 dünne Rippen, je 0,9 mm stark, die alle 3° senkrecht vom Kern abstehen. Sie bilden die äußere Form. Aus der Entfernung wirken sie wie eine geschlossene Fläche, aus der Nähe spielt das Licht in den Zwischenräumen.
-- **Die Formel** legt fest, wie weit jede Lamelle auf jeder Höhe hinausragt: zwischen knapp 4 mm und der größten Länge $`L_{\max}`$, beim Start 25 mm. Die Formel bekommt zwei Zahlen, die Höhe und den Winkel um die Vase, und gibt einen Wert zwischen 0 und 1 zurück. Mal $`L_{\max}`$ genommen ist das die Lamellenlänge.
+- **Kern:** zylindrisches Rohr mit 4 mm Wand und geschlossenem, 2 mm dickem Boden. Der Kern ist das wasserführende Bauteil. Innendurchmesser 102 mm, zur Mündung hin auf 106 mm erweitert.
+- **Lamellen:** 120 radiale Wände von 0,9 mm Dicke im Abstand von 3°. Ihre Außenkanten bilden die sichtbare Form.
+- **Funktion:** $`f(s, \theta) \in [0, 1]`$ mit der relativen Höhe $`s = z/H`$ und dem Winkel $`\theta`$. Die Lamellenlänge ist $`L_{\max} \cdot f`$, mindestens jedoch 15,8 % von $`L_{\max}`$. Bei $`L_{\max} = 25`$ mm liegt sie damit zwischen knapp 4 und 25 mm.
 
 ![Querschnitt und Halbschnitt der Grundform](docs/bilder/grundform.png)
 
-Links sieht man den Querschnitt: innen die Bohrung, darum der Kern, außen die Lamellen. Rechts ist die Vase in der Mitte aufgeschnitten. Die orange Linie ist die Spitze einer einzelnen Lamelle von unten nach oben, so wie die Formel sie vorgibt.
+Links der Querschnitt mit Bohrung, Kern und Lamellen. Rechts ein Halbschnitt durch die Achse. Die orange Linie ist die Außenkante einer Lamelle über die Höhe.
 
-An Fuß und Lippe laufen die meisten Formeln sanft aus, damit die Vase oben und unten ruhig endet. Die Startmaße sind 250 mm Höhe und 160 mm Außendurchmesser. Alle drei Hauptmaße lassen sich frei einstellen: Innendurchmesser, Höhe und größte Lamellenlänge.
+Bei den meisten Funktionen wird die Welle auf den unteren und oberen 16 % der Höhe ausgeblendet, sodass Fuß und Mündung gleichmäßig auslaufen. Einstellbar sind Innendurchmesser, Höhe und $`L_{\max}`$. Die Startwerte ergeben eine Vase von 250 mm Höhe und 160 mm Außendurchmesser.
 
 ## Die Formen
 
 ![Sechs Vasen aus verschiedenen Formeln](docs/bilder/galerie.png)
 
-Es gibt 13 Formeln. Die Spalte „Überhang“ zeigt, wie steil die Lamellenspitzen bei den Startmaßen nach außen wachsen. Bis 45° druckt alles sauber, ab 60° braucht der Drucker Stützen (siehe [Druck und Überhang](#druck-und-überhang)).
+Die Spalte „Überhang“ gibt den größten Winkel an, mit dem eine Lamellenspitze bei den Startwerten nach außen wächst, gemessen zur Senkrechten. Bis 45° ist die Form ohne Stützen druckbar, ab 60° setzt der Slicer Stützen (siehe [Druck und Überhang](#druck-und-überhang)).
 
-| Formel | Idee | Überhang |
+| Formel | Beschreibung | Überhang |
 |---|---|---|
-| `zeta` | Die **Riemannsche Zetafunktion**, eine der berühmtesten Funktionen der Mathematik. Ihre Nullstellen werden zu Kerben, dazwischen winden sich Bänder um die Vase. Startform. | 42° |
-| `cnoidal` | Die Form **flacher Wasserwellen**: breite, runde Kämme und schmale Täler. | 38° |
-| `logspirale` | Ein Band, das sich wie ein **Schneckenhaus** nach oben windet, unten schnell, oben langsam. | 44° |
-| `phyllotaxis` | Höcker im **goldenen Winkel** von 137,5°, so wie die Kerne einer Sonnenblume stehen. | 61° |
-| `super` | Fünf runde Blätter aus der **Superformel**, mit der sich viele Pflanzenformen beschreiben lassen. | 38° |
-| `ketten` | Das Profil einer **hängenden Kette**: schmale Taille, weiter Fuß, weite Lippe. | 19° |
-| `turing_flecken` | **Turing-Muster**: Flecken, wie sie auf einem Tierfell entstehen, wenn zwei Stoffe miteinander reagieren und sich ausbreiten. | 74° |
-| `turing_labyrinth` | Dieselbe Gleichung mit anderen Zahlen: ein **Labyrinth** aus Graten. | 72° |
-| `sinus` | Zwei weiche Bäuche, die sich langsam um die Vase drehen. | 38° |
-| `spirale` | Drei Wellen, die sich um die Vase schrauben. | 40° |
-| `bluete` | Fünf breite, senkrechte Blätter. | 38° |
-| `kaemme` | Zwei breite Kämme, die in der Mitte der Vase eine Vierteldrehung machen. | 69° |
-| `gleich` | Alle Lamellen gleich lang, ein Bauch in der Mitte: die klassische Vasenform. | 14° |
+| `zeta` | Betrag der **Riemannschen Zetafunktion** auf Ellipsen im kritischen Streifen. Nullstellen erscheinen als Einkerbungen, dazwischen verlaufen schräge Bänder. Startform. | 42° |
+| `cnoidal` | **Cnoidalwelle**, die periodische Lösung der Korteweg-de-Vries-Gleichung für Flachwasserwellen: breite Kämme, schmale Täler. | 38° |
+| `logspirale` | Zwei Bänder entlang einer **logarithmischen Spirale**. Unten drehen sie sich schnell um die Achse, nach oben zunehmend langsamer. | 44° |
+| `phyllotaxis` | Erhebungen im **goldenen Winkel** von 137,5° (Phyllotaxis). | 61° |
+| `super` | Fünfzähliger Querschnitt nach der **Superformel** von Gielis. | 38° |
+| `ketten` | Rotationssymmetrisches Profil nach der **Kettenlinie** (cosh), mit Taille in der Mitte. | 19° |
+| `turing_flecken` | **Turing-Muster** aus dem Gray-Scott-Modell, Parameter für Flecken. | 74° |
+| `turing_labyrinth` | Gray-Scott-Modell, Parameter für **labyrinthartige** Streifen. | 72° |
+| `sinus` | Zwei Ausbuchtungen, um 100° über die Höhe verdreht. | 38° |
+| `spirale` | Dreigängige Schraubenwelle. | 40° |
+| `bluete` | Fünf breite Segmente mit steilen Übergängen, ohne Verdrehung. | 38° |
+| `kaemme` | Zwei breite Kämme, die sich zwischen 32 % und 68 % der Höhe um 90° drehen. | 69° |
+| `gleich` | Rotationssymmetrisch, eine Ausbauchung in halber Höhe. | 14° |
 
-Die Formen mit mehr als 45° lassen sich trotzdem ohne Stützen drucken: entweder mit der **Überhangbegrenzung** oder mit kürzeren Lamellen. Bei den Turing-Mustern reichen 10 mm. Wie jede Formel genau aussieht und woher sie kommt, steht im Kapitel [Mathematik](#mathematik).
+Formen über 45° lassen sich mit der **Überhangbegrenzung** oder mit kürzeren Lamellen ohne Stützen drucken. Bei den Turing-Mustern genügen 10 mm. Herleitung und Parameter aller Funktionen stehen im Kapitel [Mathematik](#mathematik).
 
 ## Schnellstart
 
@@ -67,7 +67,7 @@ Python 3 reicht, mit den Paketen aus `tools/requirements.txt` (numpy, pillow). D
 - **Form:** Eine Kachel je Formel. Oben links stehen Name, Idee und Formel der gewählten Form.
 - **Maße:** Schieberegler für Innendurchmesser (40–180 mm), Höhe (80–320 mm) und größte Lamellenlänge (4–70 mm). Die Ansicht rechnet sofort neu.
 - **Druck:** Schalter für die Überhangbegrenzung, dazu Außendurchmesser, größter Überhang mit Ampelfarbe und ob die Vase auf den H2D passt. Zu steile Lamellenspitzen sind in der Vase orange oder rot eingefärbt.
-- **Bewegen:** Die Vase dreht sich langsam, bis man sie anfasst. Ziehen dreht, Mausrad oder zwei Finger zoomen, der Knopf **Drehen** startet die Drehung wieder. Der Rahmen ist der Bauraum des Druckers.
+- **Bewegen:** Die Ansicht rotiert langsam, bis sie bedient wird. Ziehen dreht, Mausrad oder zwei Finger zoomen, der Knopf **Drehen** startet die Drehung wieder. Der Rahmen ist der Bauraum des Druckers.
 - **STL herunterladen** speichert das gerade gezeigte Modell in Millimetern, bereit für den Slicer. Der Dateiname nennt Formel, Höhe und Innendurchmesser. **Startwerte** setzt alles auf die Werte aus `vase/config.json` zurück.
 
 Die Ansicht folgt dem hellen oder dunklen Modus des Systems.

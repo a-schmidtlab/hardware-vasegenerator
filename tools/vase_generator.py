@@ -344,19 +344,19 @@ document.getElementById("formel").value = daten.start.funktion;
 document.getElementById("begrenzen").checked = daten.start.begrenzen;
 document.getElementById("oB").textContent = daten.begrenzungGrad.toFixed(0);
 const FORMEN = {
-  zeta: ["Riemannsche Zetafunktion", "Kerben an den Nullstellen, dazwischen Bänder, die sich um die Vase winden.", "|ζ(σ + it)|,  σ = ½ + 0,45 cos θ,  t = 12 + 24 s + 2,5 sin θ"],
-  cnoidal: ["Cnoidalwelle", "Die Form flacher Wasserwellen: breite, runde Kämme und schmale Täler.", "cn²( 2K/π · (θ + 0,45 s) | m = 0,85 )"],
-  logspirale: ["Logarithmische Spirale", "Ein Band windet sich wie ein Schneckenhaus nach oben, unten schnell, oben langsam.", "φ(s) = 0,9 · ln(s + 0,08)"],
-  phyllotaxis: ["Goldener Winkel", "Höcker im Winkel von 137,5°, so wie die Kerne einer Sonnenblume stehen.", "θₙ = n · 2π/φ²,  sₙ = (n + ½)/42"],
-  super: ["Superformel", "Fünf runde Blätter aus Gielis' Superformel.", "( |cos 5θ/4|^1,5 + |sin 5θ/4|^1,5 )^(−1/0,9)"],
-  ketten: ["Kettenlinie", "Das Profil einer hängenden Kette: schmale Taille, weiter Fuß, weite Lippe.", "cosh( (s − ½) / 0,62 )"],
-  turing_flecken: ["Turing · Flecken", "Flecken wie auf einem Tierfell, entstanden aus Reaktion und Diffusion.", "∂v/∂t = Dᵥ Δv + u v² − (F + k) v,  F = 0,0367,  k = 0,0649"],
-  turing_labyrinth: ["Turing · Labyrinth", "Dieselbe Gleichung mit anderen Zahlen: ein Labyrinth aus Graten.", "∂v/∂t = Dᵥ Δv + u v² − (F + k) v,  F = 0,029,  k = 0,057"],
-  sinus: ["Sinus", "Zwei weiche Bäuche, die sich langsam um die Vase drehen.", "½ + ½ cos 2(θ + 100° · s)"],
-  spirale: ["Spirale", "Drei Wellen, die sich um die Vase schrauben.", "½ + ½ sin(2,5π s + 3θ)"],
-  bluete: ["Blüte", "Fünf breite, senkrechte Blätter.", "sgn(c) |c|^0,45,  c = cos 5θ"],
-  kaemme: ["Kämme", "Zwei breite Kämme mit einer Vierteldrehung in der Mitte.", "cos 2(θ + 90° · S(s)),  Drehung zwischen 32 % und 68 %"],
-  gleich: ["Klassisch", "Alle Lamellen gleich lang, ein Bauch in der Mitte.", "sin(π s)^1,15"],
+  zeta: ["Riemannsche Zetafunktion", "Betrag von ζ auf Ellipsen im kritischen Streifen. Nullstellen erscheinen als Einkerbungen.", "|ζ(σ + it)|,  σ = ½ + 0,45 cos θ,  t = 12 + 24 s + 2,5 sin θ"],
+  cnoidal: ["Cnoidalwelle", "Periodische Lösung der Korteweg-de-Vries-Gleichung: breite Kämme, schmale Täler.", "cn²( 2K/π · (θ + 0,45 s) | m = 0,85 )"],
+  logspirale: ["Logarithmische Spirale", "Zwei Bänder entlang einer logarithmischen Spirale, nach oben langsamer drehend.", "φ(s) = 0,9 · ln(s + 0,08)"],
+  phyllotaxis: ["Goldener Winkel", "Erhebungen im goldenen Winkel von 137,5° (Phyllotaxis).", "θₙ = n · 2π/φ²,  sₙ = (n + ½)/42"],
+  super: ["Superformel", "Fünfzähliger Querschnitt nach der Superformel von Gielis.", "( |cos 5θ/4|^1,5 + |sin 5θ/4|^1,5 )^(−1/0,9)"],
+  ketten: ["Kettenlinie", "Rotationssymmetrisches cosh-Profil mit Taille in der Mitte.", "cosh( (s − ½) / 0,62 )"],
+  turing_flecken: ["Turing · Flecken", "Gray-Scott-Modell, Parameter für Flecken.", "∂v/∂t = Dᵥ Δv + u v² − (F + k) v,  F = 0,0367,  k = 0,0649"],
+  turing_labyrinth: ["Turing · Labyrinth", "Gray-Scott-Modell, Parameter für labyrinthartige Streifen.", "∂v/∂t = Dᵥ Δv + u v² − (F + k) v,  F = 0,029,  k = 0,057"],
+  sinus: ["Sinus", "Zwei Ausbuchtungen, um 100° über die Höhe verdreht.", "½ + ½ cos 2(θ + 100° · s)"],
+  spirale: ["Spirale", "Dreigängige Schraubenwelle.", "½ + ½ sin(2,5π s + 3θ)"],
+  bluete: ["Blüte", "Fünf breite Segmente mit steilen Übergängen, ohne Verdrehung.", "sgn(c) |c|^0,45,  c = cos 5θ"],
+  kaemme: ["Kämme", "Zwei breite Kämme, zwischen 32 % und 68 % der Höhe um 90° gedreht.", "cos 2(θ + 90° · S(s)),  Drehung zwischen 32 % und 68 %"],
+  gleich: ["Klassisch", "Rotationssymmetrisch, eine Ausbauchung in halber Höhe.", "sin(π s)^1,15"],
 };
 const chips = document.getElementById("chips");
 for (const opt of document.getElementById("formel").options) {
