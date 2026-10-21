@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Required Notice: Copyright 2026 Axel Schmidt (axel@schmidtlab.net)
+# PolyForm Noncommercial 1.0.0, siehe LICENSE.md. Kommerzielle Nutzung nur mit schriftlicher Genehmigung.
 """Schreibt vase/turing.json: Gray-Scott-Muster für die Formeln turing_*.
 
     python tools/turing_tabelle.py

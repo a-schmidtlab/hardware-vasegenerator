@@ -25,6 +25,8 @@ python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt
 ```
 ├── CLAUDE.md
 ├── README.md                 Anleitung
+├── LICENSE.md                Code: PolyForm Noncommercial 1.0.0
+├── LICENSE-CONTENT.txt       Inhalte: CC BY-NC-SA 4.0
 ├── docs/PLAN.md              Form, Formeln, Grenzen
 ├── docs/bilder/              Bilder für das README
 ├── tools/
@@ -66,5 +68,6 @@ Rückmeldungen vom Druck in `config.json`, `docs/PLAN.md` und `vase/notizen.md`.
 
 - Geometrie aus `vase_feature.py`, `vase/config.json` und `vase/turing.json`.
 - Den Namen der ursprünglichen Vorlage nicht in Code, Dateinamen oder Dokumentation schreiben.
+- Neue Code-Dateien bekommen oben den Hinweis „Required Notice: Copyright 2026 Axel Schmidt“ und den Verweis auf `LICENSE.md`.
 - Jede Änderung kurz in `vase/notizen.md` festhalten.
 - Antworten kurz: Ergebnis, offene Fragen, nächster Schritt.

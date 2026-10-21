@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Required Notice: Copyright 2026 Axel Schmidt (axel@schmidtlab.net)
+# PolyForm Noncommercial 1.0.0, siehe LICENSE.md. Kommerzielle Nutzung nur mit schriftlicher Genehmigung.
 """Erzeugt aus einer config.json das lokale Vasenmodell.
 
     python tools/vase_generator.py vase/config.json
@@ -22,11 +24,14 @@ from vase_feature import (
 )
 
 
+STL_KOPF = b"Vase, mm. (c) 2026 Axel Schmidt, CC BY-NC-SA 4.0, axel@schmidtlab.net"
+
+
 def stl_schreiben(pfad: Path, netz: dict) -> None:
     dreiecke = netz["dreiecke"]
     punkte = netz["positionen"]
     with pfad.open("wb") as datei:
-        datei.write(b"Vase generiert, Einheiten mm".ljust(80, b"\0"))
+        datei.write(STL_KOPF.ljust(80, b"\0"))
         datei.write(struct.pack("<I", len(dreiecke)))
         for a, b, c in dreiecke:
             pa, pb, pc = punkte[a], punkte[b], punkte[c]
@@ -161,6 +166,12 @@ def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
 
 
 _HTML = """<!DOCTYPE html>
+<!--
+Required Notice: Copyright 2026 Axel Schmidt (axel@schmidtlab.net)
+Programm: PolyForm Noncommercial License 1.0.0, https://polyformproject.org/licenses/noncommercial/1.0.0
+Erzeugte Modelle: CC BY-NC-SA 4.0, https://creativecommons.org/licenses/by-nc-sa/4.0/
+Kommerzielle Nutzung, auch der Verkauf gedruckter Vasen, nur mit schriftlicher Genehmigung.
+-->
 <html lang="de">
 <head>
 <meta charset="utf-8">
@@ -249,6 +260,8 @@ _HTML = """<!DOCTYPE html>
   #ueberhang { margin: 12px 0 0; font-size: 13px; color: var(--text-2); }
   #ueberhang.rot { color: var(--rot); }
   #status { margin: 6px 0 0; font-size: 12px; color: var(--text-3); }
+  .lizenz { margin: 12px 0 0; font-size: 11px; line-height: 1.5; color: var(--text-3); }
+  .lizenz a { color: inherit; }
   .legende { display: flex; gap: 14px; margin: 10px 0 0; padding: 0; list-style: none; font-size: 12px; color: var(--text-3); }
   .legende li { display: flex; align-items: center; gap: 6px; }
   .knoepfe { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; position: sticky; bottom: 0; margin: auto -20px 0;
@@ -327,6 +340,10 @@ _HTML = """<!DOCTYPE html>
     <p id="ueberhang"></p>
     <ul class="legende"><li><i class="punkt warn"></i>über 45°, kann hängen</li><li><i class="punkt rot"></i>über 60°, Stützen</li></ul>
     <p id="status"></p>
+    <p class="lizenz">© 2026 Axel Schmidt · frei für nicht-kommerzielle Nutzung
+      (<a href="https://polyformproject.org/licenses/noncommercial/1.0.0" target="_blank" rel="noopener">Programm</a>,
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">Modelle</a>).
+      Kommerzielle Nutzung nur nach Absprache: <a href="mailto:axel@schmidtlab.net">axel@schmidtlab.net</a></p>
   </section>
   <div class="knoepfe">
     <button id="zurueck" type="button">Startwerte</button>
@@ -830,7 +847,7 @@ function stlSpeichern() {
   const n = dreiecke.length / 3;
   const puff = new ArrayBuffer(84 + n * 50);
   const sicht = new DataView(puff);
-  const kopf = new TextEncoder().encode("vase mm");
+  const kopf = new TextEncoder().encode("Vase, mm. (c) 2026 Axel Schmidt, CC BY-NC-SA 4.0, axel@schmidtlab.net");
   new Uint8Array(puff, 0, 80).set(kopf);
   sicht.setUint32(80, n, true);
   let o = 84;
