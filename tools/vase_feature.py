@@ -1,10 +1,9 @@
-"""Lokale Entsprechung des späteren Onshape-Features „Vase“.
+"""Formeln und Körper der Vase.
 
 Die Vase ist ein Zylinder. Die Form machen radiale Lamellen, deren Länge
-eine Wellenfunktion ist. `profil`, `amplitude` und `welle` beschreiben die
-Spitze jeder Lamelle und können nach FeatureScript wandern:
+eine mathematische Funktion ist:
 
-    spitze = profil(z) + amplitude(z) * welle(theta, z)
+    spitze = kern_aussen + lamelle_max * f(z / hoehe, theta),   0 <= f <= 1
 
 `koerper` baut daraus das Netz: Kernzylinder, Lamellen, Boden, Bohrung.
 Längen sind Millimeter, Winkel in den Parametern Grad.
@@ -123,12 +122,11 @@ class Vase:
 
 
 FUNKTIONEN = (
-    "vorlage", "sinus", "spirale", "bluete", "kaemme", "gleich",
+    "sinus", "spirale", "bluete", "kaemme", "gleich",
     "cnoidal", "logspirale", "phyllotaxis", "super", "ketten", "zeta",
     "turing_flecken", "turing_labyrinth",
 )
 RUNDUNG = 8
-_VORLAGE = json.loads((Path(__file__).resolve().parents[1] / "vase" / "vorlage.json").read_text(encoding="utf-8"))
 _TURING = json.loads((Path(__file__).resolve().parents[1] / "vase" / "turing.json").read_text(encoding="utf-8"))
 
 
@@ -180,7 +178,7 @@ def pruefen(vase: Vase) -> None:
         )
     if vase.funktion not in FUNKTIONEN:
         fehler.append(f"Wellenfunktion muss eine von {', '.join(FUNKTIONEN)} sein.")
-    if vase.funktion not in ("vorlage", "aus"):
+    if vase.funktion != "aus":
         if vase.loben < 2:
             fehler.append("Loben muessen mindestens 2 sein.")
         if vase.potenz <= 0:
@@ -231,23 +229,6 @@ def smoothstep(t: float) -> float:
     return t * t * (3.0 - 2.0 * t)
 
 
-def _stelle(s: float) -> tuple[int, int, float]:
-    achse = _VORLAGE["s"]
-    s = min(1.0, max(0.0, s))
-    oben = 1
-    while oben < len(achse) - 1 and achse[oben] < s:
-        oben += 1
-    unten = oben - 1
-    spanne = achse[oben] - achse[unten]
-    bruch = 0.0 if spanne == 0 else (s - achse[unten]) / spanne
-    return unten, oben, bruch
-
-
-def _lerp_reihe(s: float, werte: list[float]) -> float:
-    unten, oben, bruch = _stelle(s)
-    return werte[unten] * (1.0 - bruch) + werte[oben] * bruch
-
-
 def _catmull(p0: float, p1: float, p2: float, p3: float, t: float) -> float:
     """Glatter Bogen durch p1 und p2. An den Stützstellen liegt er exakt auf."""
     t2 = t * t
@@ -258,29 +239,6 @@ def _catmull(p0: float, p1: float, p2: float, p3: float, t: float) -> float:
         + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t2
         + (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t3
     )
-
-
-def _reihe(index: int, theta: float) -> float:
-    tafel = _VORLAGE["f"]
-    index = max(0, min(len(tafel) - 1, index))
-    anzahl = len(tafel[0])
-    lage = (theta % math.tau) / math.tau * anzahl
-    links = int(lage) % anzahl
-    rechts = (links + 1) % anzahl
-    kante = lage - int(lage)
-    return tafel[index][links] * (1.0 - kante) + tafel[index][rechts] * kante
-
-
-def anteil_vorlage(s: float, theta: float) -> float:
-    """Gemessener Längenanteil. Die Außenkante einer Lamelle ist ein Spline."""
-    unten, oben, bruch = _stelle(s)
-    return max(0.0, _catmull(
-        _reihe(unten - 1, theta),
-        _reihe(unten, theta),
-        _reihe(oben, theta),
-        _reihe(oben + 1, theta),
-        bruch,
-    ))
 
 
 def _normiert(wert: float) -> float:
@@ -459,8 +417,8 @@ def _turing(s: float, theta: float, name: str) -> float:
 def formel_anteil(s: float, theta: float, funktion: str) -> float:
     """Länge als Anteil von L_max. Der Höchstwert jeder Formel ist 1.
 
-    Der kurze Rest an Fuß und Lippe ist derselbe Anteil wie in der Vorlage,
-    damit die Lamellen dort nicht verschwinden.
+    Der kurze Rest von 0,158 · L_max (knapp 4 mm bei 25 mm) bleibt an Fuß
+    und Lippe stehen, damit die Lamellen dort nicht verschwinden.
     """
     rest = 0.158
     huelle = _huelle(s)
@@ -497,8 +455,6 @@ def formel_anteil(s: float, theta: float, funktion: str) -> float:
 def laengenanteil(z: float, theta: float, vase: Vase) -> float:
     """Anteil der maximalen Lamellenlänge. 1 ist die längste Lamelle."""
     s = 0.0 if vase.hoehe <= 0 else z / vase.hoehe
-    if vase.funktion == "vorlage":
-        return anteil_vorlage(s, theta)
     return formel_anteil(s, theta, vase.funktion)
 
 

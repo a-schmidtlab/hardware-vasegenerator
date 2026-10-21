@@ -4,8 +4,7 @@
     python tools/vase_generator.py vase/config.json
 
 Schreibt neben die Config eine STL fuer den Slicer, eine HTML-Datei mit
-drehbarer 3D-Ansicht und eine technische Vorschau. Onshape wird nicht
-aufgerufen.
+drehbarer 3D-Ansicht und eine technische Vorschau.
 """
 
 from __future__ import annotations
@@ -122,14 +121,8 @@ def math_sin(wert: float) -> float:
 
 
 def html_schreiben(pfad: Path, vase: Vase, netz: dict, info: dict) -> None:
-    vorlage = json.loads((pfad.parent / "vorlage.json").read_text(encoding="utf-8"))
     daten = {
         "name": vase.name,
-        "s": vorlage["s"],
-        "f": vorlage["f"],
-        "a": vorlage["a"],
-        "b": vorlage["b"],
-        "alpha": vorlage["alpha"],
         "lamellen": vase.lamellen,
         "dicke": vase.dicke,
         "wand": vase.wand,
@@ -197,7 +190,6 @@ _HTML = """<!DOCTYPE html>
   <label>Lamellenlaenge max <output id="oL"></output> mm<input id="l" type="range" min="4" max="70" step="0.1"></label>
   <label>Wellenformel
     <select id="formel">
-      <option value="vorlage">Vorlage, gemessen</option>
       <option value="sinus">Sinus, zwei Loben</option>
       <option value="spirale">Spirale</option>
       <option value="bluete">Bluete, fuenf Blaetter</option>
@@ -214,7 +206,7 @@ _HTML = """<!DOCTYPE html>
     </select>
   </label>
   <label class="haken"><input id="begrenzen" type="checkbox"> Ueberhang auf <span id="oB"></span> Grad begrenzen</label>
-  <button id="zurueck" type="button">Vorlage</button>
+  <button id="zurueck" type="button">Startwerte</button>
   <button id="stl" type="button">STL speichern</button>
   <p id="status"></p>
   <p id="ueberhang"></p>
@@ -309,36 +301,9 @@ function puffer(ziel, werte, typ) {
   return p;
 }
 const TAU = Math.PI * 2;
-function stelle(s) {
-  const achse = daten.s;
-  s = Math.min(1, Math.max(0, s));
-  let oben = 1;
-  while (oben < achse.length - 1 && achse[oben] < s) oben++;
-  const unten = oben - 1;
-  const spanne = achse[oben] - achse[unten];
-  return [unten, oben, spanne === 0 ? 0 : (s - achse[unten]) / spanne];
-}
-function lerpReihe(s, werte) {
-  const [u, o, b] = stelle(s);
-  return werte[u] * (1 - b) + werte[o] * b;
-}
-function reihe(index, theta) {
-  const tafel = daten.f;
-  index = Math.max(0, Math.min(tafel.length - 1, index));
-  const n = tafel[0].length;
-  const lage = ((theta % TAU) + TAU) % TAU / TAU * n;
-  const links = Math.floor(lage) % n;
-  const rechts = (links + 1) % n;
-  const k = lage - Math.floor(lage);
-  return tafel[index][links] * (1 - k) + tafel[index][rechts] * k;
-}
 function catmull(p0, p1, p2, p3, t) {
   const t2 = t * t, t3 = t2 * t;
   return 0.5 * (2 * p1 + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3);
-}
-function anteilVorlage(s, theta) {
-  const [u, o, b] = stelle(s);
-  return Math.max(0, catmull(reihe(u - 1, theta), reihe(u, theta), reihe(o, theta), reihe(o + 1, theta), b));
 }
 function normiert(x) { return 0.5 * (Math.max(-1, Math.min(1, x)) + 1); }
 function huelle(s) {
@@ -482,7 +447,6 @@ function turing(s, theta, name) {
 }
 function laengenanteil(z, theta, p) {
   const s = z / p.hoehe;
-  if (p.funktion === "vorlage") return anteilVorlage(s, theta);
   return formelAnteil(s, theta, p.funktion);
 }
 function netzAus(p) {
@@ -676,7 +640,7 @@ document.getElementById("zurueck").addEventListener("click", () => {
   document.getElementById("d").value = daten.start.innendurchmesser;
   document.getElementById("h").value = daten.start.hoehe;
   document.getElementById("l").value = daten.start.lamelleMax;
-  document.getElementById("formel").value = "vorlage";
+  document.getElementById("formel").value = daten.start.funktion;
   document.getElementById("begrenzen").checked = daten.start.begrenzen;
   zeige(parameter());
 });
