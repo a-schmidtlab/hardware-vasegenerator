@@ -60,19 +60,17 @@ Python 3 reicht, mit den Paketen aus `tools/requirements.txt` (numpy, pillow). D
 
 ## 3D-Ansicht
 
-`vase/vorschau.html` zeigt die Vase drehbar im Browser. Ziehen dreht, das Mausrad zoomt. Der Rahmen ist der nutzbare Bauraum des Druckers.
+`vase/vorschau.html` zeigt die Vase im Browser, auf dem Rechner wie auf dem Handy. Die Datei braucht keinen Server und kein Internet, ein Doppelklick genügt.
 
-| Regler | Bereich | Start |
-|---|---|---|
-| Innendurchmesser | 40–180 mm | 102 mm |
-| Höhe | 80–320 mm | 250 mm |
-| Lamellenlänge max | 4–70 mm | 25 mm |
-| Wellenformel | 13 Formeln | Riemannsche Zetafunktion |
-| Überhang auf 45° begrenzen | an/aus | aus |
+![3D-Ansicht im Browser](docs/bilder/ansicht.png)
 
-Die Regler ändern die Ansicht sofort. Der Knopf **Startwerte** setzt alle Regler zurück. Unter den Reglern stehen Lamellenzahl, Dicke, Kernwand, der Außendurchmesser, ob das Teil auf den Drucker passt, und der größte Überhang.
+- **Form:** Eine Kachel je Formel. Oben links stehen Name, Idee und Formel der gewählten Form.
+- **Maße:** Schieberegler für Innendurchmesser (40–180 mm), Höhe (80–320 mm) und größte Lamellenlänge (4–70 mm). Die Ansicht rechnet sofort neu.
+- **Druck:** Schalter für die Überhangbegrenzung, dazu Außendurchmesser, größter Überhang mit Ampelfarbe und ob die Vase auf den H2D passt. Zu steile Lamellenspitzen sind in der Vase orange oder rot eingefärbt.
+- **Bewegen:** Die Vase dreht sich langsam, bis man sie anfasst. Ziehen dreht, Mausrad oder zwei Finger zoomen, der Knopf **Drehen** startet die Drehung wieder. Der Rahmen ist der Bauraum des Druckers.
+- **STL herunterladen** speichert das gerade gezeigte Modell in Millimetern, bereit für den Slicer. Der Dateiname nennt Formel, Höhe und Innendurchmesser. **Startwerte** setzt alles auf die Werte aus `vase/config.json` zurück.
 
-**STL speichern** lädt das gerade gezeigte Modell herunter, in Millimetern und bereit für den Slicer. Der Dateiname nennt Formel, Höhe und Innendurchmesser.
+Die Ansicht folgt dem hellen oder dunklen Modus des Systems.
 
 ## Druck und Überhang
 

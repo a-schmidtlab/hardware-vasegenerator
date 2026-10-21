@@ -38,3 +38,4 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-20: README-Formeln für GitHub angepasst: `\operatorname` (von GitHub gesperrt) durch `\mathrm` ersetzt, Dezimalkomma als `0,\!55`, `<` und `>` als `\lt` und `\gt`.
 - 2026-10-21: Referenz entfernt: `references/referenz.stl`, `tools/analyse_referenz.py`, `docs/analyse-referenz.png`, die Formel `vorlage` und `vase/vorlage.json`. Startform ist `zeta`, `L_max` 25 mm statt 25,221 mm. Ohne den Vorlage-Spline stimmen Python und Ansicht auf 1e-13 mm überein.
 - 2026-10-21: README neu gegliedert: oben allgemeinverständlich mit Grundform, Zeichnung und Galerie (`docs/bilder/`), unten das Kapitel Mathematik.
+- 2026-10-21: 3D-Ansicht neu gestaltet: Kacheln für die Formen, Kopf mit Idee und Formel, Kennzahlen mit Ampel, Bodenschatten, langsames Drehen, Pinch-Zoom, Dunkelmodus, Handy-Layout. Bedienung und Rechnung unverändert.
