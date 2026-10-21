@@ -1,30 +1,23 @@
 # Plan: Parametrischer Vasengenerator
 
-Stand: 20. Oktober 2026. Die Form ist lokal vermessen. Die Druckdatei ist eine STL.
+Stand: 21. Oktober 2026. Die Form kommt allein aus mathematischen Formeln. Die Druckdatei ist eine STL.
 
-Eine Vase entsteht als Zylinder mit radialen Lamellen. Die Länge der Lamellen ist eine Wellenformel. Innenraum, Höhe und die größte Länge sind Parameter. Die Rechnung läuft in `tools/vase_feature.py` und, mit denselben Formeln, in `vase/vorschau.html`. Der Generator schreibt `vase/vase.stl`. Die Ansicht lädt die gerade gezeigte Stellung als STL herunter.
+Eine Vase entsteht als Zylinder mit radialen Lamellen. Die Länge der Lamellen ist eine Wellenformel. Innenraum, Höhe und die größte Länge sind Parameter. Die Rechnung läuft in `tools/vase_feature.py` und, mit denselben Formeln, in `vase/vorschau.html`. Der Generator schreibt `vase/vase.stl`. Die Ansicht lädt die gerade gezeigte Stellung als STL herunter. Herleitungen stehen im README, Kapitel Mathematik.
 
-Die Referenz ist `references/referenz.stl`.
+## 1. Grundform
 
-## 1. Gemessene Referenz
-
-Das Netz hat 1,44 Millionen Dreiecke und steht auf der Z-Achse. Für das Modell zählt die Form.
-
-| Größe | Messung |
+| Teil | Startwert |
 |---|---|
 | Höhe | 250 mm |
-| Bohrung | Ø 102 mm, zylindrisch, an der Mündung etwa Ø 106 mm |
-| Kern außen | Ø 110 mm, Wand 4 mm |
+| Bohrung | Ø 102 mm, zylindrisch, an der Mündung Ø 106 mm |
+| Kern | Wand 4 mm, außen Ø 110 mm |
+| Boden | 2 mm, geschlossen |
 | Lamellen | 120 Stück, 0,9 mm dick, Teilung 3° |
-| Kürzeste Lamelle | etwa 4 mm, an Fuß und Lippe |
-| Längste Lamelle | 25,2 mm |
+| Kürzeste Lamelle | 0,158 · L_max, knapp 4 mm |
+| Längste Lamelle | L_max = 25 mm |
 | Außendurchmesser | 160 mm |
-| Boden der Referenz | 2 mm, mit einer Öffnung von Radius 16,7 mm |
-| Boden im Modell | 2 mm, geschlossen |
 
-Die Silhouette machen die Lamellen. Der Kern ist ein Rohr und hält das Wasser. Die Referenz öffnet den Boden. Das Modell schließt ihn.
-
-![Schnitte durch die Referenz](analyse-referenz.png)
+Die Silhouette machen die Lamellen. Der Kern ist ein Rohr und hält das Wasser.
 
 ## 2. Formel
 
@@ -36,13 +29,10 @@ Spitze = Innenradius + Kernwand + länge
 
 `f` liegt zwischen 0 und 1. Der Höchstwert ist 1, damit `L_max` die längste Lamelle ist.
 
-**Vorlage.** `f` steht in `vase/vorlage.json`: 120 Lamellen, Stützstellen alle 0,5 mm. Dazwischen interpoliert ein Catmull-Rom-Spline, die Kante geht glatt durch die Messpunkte. Wellen kürzer als etwa 15 mm sind als Dreiecksrauschen entfernt. Fuß und Lippe bleiben bei etwa 4 mm. An den Stützstellen liegt die Kante auf der Messung.
-
-**Übrige Formeln.** Dieselbe Hülle: auf den ersten und letzten 16 % der Höhe läuft die Welle ein und aus. Ein Restanteil von 0,158 bleibt immer, das sind bei `L_max` = 25,2 mm etwa 4 mm.
+Fast alle Formeln haben dieselbe Hülle: auf den ersten und letzten 16 % der Höhe läuft die Welle ein und aus. Ausnahmen sind `gleich` und `ketten`. Ein Restanteil von 0,158 bleibt immer, das sind bei `L_max` = 25 mm knapp 4 mm.
 
 | `welle.funktion` | Verlauf |
 |---|---|
-| `vorlage` | gemessene Kante |
 | `sinus` | zwei Loben, Drehung 100° über die ganze Höhe |
 | `spirale` | `sin(2π·1,25·s + 3θ)`, laufende Welle |
 | `bluete` | fünf Blätter, `\|cos(5θ)\|^0,45`, ohne Drehung |
@@ -52,7 +42,7 @@ Spitze = Innenradius + Kernwand + länge
 | `logspirale` | zwei Arme `φ = 0,9·ln(s+0,08)`, seitlich eine Gaußglocke |
 | `phyllotaxis` | Höcker auf dem Gitter des goldenen Winkels `2π/φ²` |
 | `super` | Superformel von Gielis, fünf Blätter, `m = 5` |
-| `ketten` | Katenoid `cosh((s−½)/a)`, eng in der Taille, weit an den Ringen |
+| `ketten` | Kettenlinie `cosh((s−½)/a)`, eng in der Taille, weit an Fuß und Lippe |
 | `zeta` | `\|ζ(σ+it)\|` auf Ellipsen `σ = ½ + 0,45 cos θ`, `t = 12 + 24s + 2,5 sin θ` |
 | `turing_flecken` | Gray-Scott, `F = 0,0367`, `k = 0,0649`, Tabelle `vase/turing.json` |
 | `turing_labyrinth` | Gray-Scott, `F = 0,029`, `k = 0,057`, Tabelle `vase/turing.json` |
@@ -67,8 +57,8 @@ Die drei Proportionen und die Formel sind die Regler der Ansicht und die Startwe
 |---|---|---|
 | `proportion.innendurchmesser_mm` | 102 | Bohrung |
 | `proportion.hoehe_mm` | 250 | Gesamthöhe, die Welle skaliert mit |
-| `proportion.lamelle_max_mm` | 25,221 | längste Lamelle |
-| `welle.funktion` | `vorlage` | eine der Formeln aus Abschnitt 2 |
+| `proportion.lamelle_max_mm` | 25 | längste Lamelle |
+| `welle.funktion` | `zeta` | eine der Formeln aus Abschnitt 2 |
 | `ueberhang.begrenzen` | `false` | Lamellen wachsen höchstens im Grenzwinkel |
 | `ueberhang.winkel_grad` | 45 | Grenzwinkel |
 | `drucker.ueberhang_warnung_grad` | 45 | Ansicht orange |
@@ -104,7 +94,7 @@ Was darüber liegt, schreibt der Generator nicht. Die Ansicht zeigt es und melde
 
 ## 6. Phasen
 
-**Phase 1, Form klären.** Erledigt. Die Referenz ist ein Kern mit 120 Lamellen.
+**Phase 1, Form klären.** Erledigt. Die Vase ist ein Kern mit 120 Lamellen, deren Länge eine Formel ist.
 
 **Phase 2, lokale Vorschau und STL.** Erledigt als prüfbare Ansicht und Druckdatei. STL, HTML und PNG erzeugt `tools/vase_generator.py`.
 
@@ -114,5 +104,6 @@ Was darüber liegt, schreibt der Generator nicht. Die Ansicht zeigt es und melde
 
 - Boden geschlossen.
 - Drucker H2D, eine Düse, Grenzen wie in Abschnitt 4.
-- Ausgangsform ist die gemessene Kante, nicht eine nachträglich erfundene Hülle.
-- Namen der Referenzdatei stehen nicht im Projekt. Die Datei heißt `references/referenz.stl`.
+- Startform ist die Formel `zeta`.
+- Jede Form kommt aus einer Formel oder einer gerechneten Tabelle (`vase/turing.json`), nicht aus einer Messung.
+- Der Name der ursprünglichen Vorlage, nach der die Grundform entstand, steht nicht im Projekt.

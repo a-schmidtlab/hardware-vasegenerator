@@ -1,6 +1,5 @@
 {
   "name": "vase",
-  "referenz": "references/referenz.stl",
   "fs_version": null,
   "onshape": {
     "url": "https://cad.onshape.com/documents/fc5d7bf85de49888a0286a88/w/73e14840134df70a3d37bbf5/e/e28b7ed0523b5e766cbadb1d",
@@ -23,7 +22,7 @@
   "proportion": {
     "innendurchmesser_mm": 102,
     "hoehe_mm": 250,
-    "lamelle_max_mm": 25.221
+    "lamelle_max_mm": 25
   },
   "kern": {
     "wand_mm": 4
@@ -39,7 +38,7 @@
     "bodenloch_radius_mm": 0
   },
   "welle": {
-    "funktion": "vorlage",
+    "funktion": "zeta",
     "loben": 2,
     "amplitude_mm": 21,
     "drehung_grad": 90,

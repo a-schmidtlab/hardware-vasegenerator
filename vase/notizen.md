@@ -1,6 +1,6 @@
 # Notizen
 
-Stand: 20. Oktober 2026. Druckdatei ist die STL. Onshape wird nicht verwendet.
+Stand: 21. Oktober 2026. Druckdatei ist die STL. Onshape wird nicht verwendet.
 
 ## Onshape
 
@@ -12,7 +12,8 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 
 - Boden geschlossen (`bodenloch_radius_mm` = 0).
 - Drucker H2D, eine Düse. Grenze 310 mm Durchmesser, 320 mm Höhe.
-- Ausgangsform: Innen Ø 102 mm, Höhe 250 mm, längste Lamelle 25,2 mm, 120 Lamellen à 0,9 mm, Kernwand 4 mm.
+- Startform: Formel `zeta`, innen Ø 102 mm, Höhe 250 mm, längste Lamelle 25 mm, 120 Lamellen à 0,9 mm, Kernwand 4 mm.
+- Erster Probedruck läuft (21. Oktober 2026).
 
 ## Verlauf
 
@@ -35,3 +36,5 @@ Kein API-Aufruf, solange die Form lokal nicht freigegeben ist.
 - 2026-10-20: README um das Kapitel Mathematik erweitert: Geometrie, gemeinsame Bausteine, Herleitung jeder Formel, Numerik von ζ, cn und Gray-Scott, Überhang und Begrenzung. Lage der Zeta-Kerben korrigiert: jede Nullstelle erscheint zweimal, 7 Kerben im Körper.
 - 2026-10-20: Mathematik im README nachgeprüft. Korrigiert: Überhang auf dem Netz gemessen (`kaemme` 69° statt 75°, erste `zeta`-Fassung 77° statt 79°), Turing-Wellenlänge 27 mm statt 20 mm, `ketten` ist das Profil der Kettenlinie und kein Katenoid, Formen von `bluete` und der Vorzeichenpotenz, Periode der Superformel, Kappengeometrie beim Überhang, Begrenzung kappt schmale Höcker, Mündung Ø 106 mm.
 - 2026-10-20: README-Formeln für GitHub angepasst: `\operatorname` (von GitHub gesperrt) durch `\mathrm` ersetzt, Dezimalkomma als `0,\!55`, `<` und `>` als `\lt` und `\gt`.
+- 2026-10-21: Referenz entfernt: `references/referenz.stl`, `tools/analyse_referenz.py`, `docs/analyse-referenz.png`, die Formel `vorlage` und `vase/vorlage.json`. Startform ist `zeta`, `L_max` 25 mm statt 25,221 mm. Ohne den Vorlage-Spline stimmen Python und Ansicht auf 1e-13 mm überein.
+- 2026-10-21: README neu gegliedert: oben allgemeinverständlich mit Grundform, Zeichnung und Galerie (`docs/bilder/`), unten das Kapitel Mathematik.

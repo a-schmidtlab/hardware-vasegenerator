@@ -1,37 +1,50 @@
-# Vasengenerator
+# Mathematische Vasen
 
-Parametrische Vase für den 3D-Druck. Ein zylindrischer Kern trägt 120 radiale Lamellen. Die Länge jeder Lamelle folgt einer Wellenformel. Innenraum, Höhe und die größte Lamellenlänge sind Schieberegler. Die Druckdatei ist eine STL, direkt aus dem Generator oder aus der 3D-Ansicht.
+Vasen für den 3D-Druck, deren Form eine mathematische Funktion ist. Um ein Rohr stehen 120 dünne Rippen, und jede Rippe ist auf jeder Höhe genau so lang, wie eine Formel es vorgibt. So wird aus der Riemannschen Zetafunktion, dem goldenen Winkel einer Sonnenblume oder den Mustern eines Tierfells eine Skulptur, die Wasser hält.
 
-Die Ausgangsform ist aus `references/referenz.stl` vermessen. Sie ist 250 mm hoch, der Innendurchmesser ist 102 mm, die längste Lamelle misst 25,2 mm. Der Außendurchmesser liegt dann bei 160 mm.
+Ein Python-Skript macht daraus eine druckfertige STL-Datei. Eine 3D-Ansicht im Browser zeigt jede Form sofort, mit Schiebereglern für die Maße.
 
-![Seitenansicht und Querschnitt](vase/vorschau.png)
+<p align="center"><img src="docs/bilder/titel.png" width="420" alt="Vase nach der Riemannschen Zetafunktion"></p>
 
-**Inhalt:** [Aufbau](#aufbau) · [Schnellstart](#schnellstart) · [3D-Ansicht](#3d-ansicht) · [Überhang](#überhang) · [Wellenformeln](#wellenformeln) · [Konfiguration](#konfiguration) · [Druck](#druck) · [Mathematik](#mathematik) · [Ordner](#ordner)
+**Inhalt:** [Die Grundform](#die-grundform) · [Die Formen](#die-formen) · [Schnellstart](#schnellstart) · [3D-Ansicht](#3d-ansicht) · [Druck und Überhang](#druck-und-überhang) · [Konfiguration](#konfiguration) · [Mathematik](#mathematik) · [Ordner](#ordner)
 
-## Aufbau
+## Die Grundform
 
-Wasser hält der Kern. Die Lamellen sind die äußere Form und bleiben außen am Kern.
+Jede Vase hat denselben Aufbau:
 
-| Teil | Ausgangswert | Bedeutung |
+- **Der Kern** ist ein Rohr mit 4 mm Wand und geschlossenem Boden. Er hält das Wasser. Innen ist er 102 mm weit, an der Mündung öffnet er sich auf 106 mm.
+- **Die Lamellen** sind 120 dünne Rippen, je 0,9 mm stark, die alle 3° senkrecht vom Kern abstehen. Sie bilden die äußere Form. Aus der Entfernung wirken sie wie eine geschlossene Fläche, aus der Nähe spielt das Licht in den Zwischenräumen.
+- **Die Formel** legt fest, wie weit jede Lamelle auf jeder Höhe hinausragt: zwischen knapp 4 mm und der größten Länge $`L_{\max}`$, beim Start 25 mm. Die Formel bekommt zwei Zahlen, die Höhe und den Winkel um die Vase, und gibt einen Wert zwischen 0 und 1 zurück. Mal $`L_{\max}`$ genommen ist das die Lamellenlänge.
+
+![Querschnitt und Halbschnitt der Grundform](docs/bilder/grundform.png)
+
+Links sieht man den Querschnitt: innen die Bohrung, darum der Kern, außen die Lamellen. Rechts ist die Vase in der Mitte aufgeschnitten. Die orange Linie ist die Spitze einer einzelnen Lamelle von unten nach oben, so wie die Formel sie vorgibt.
+
+An Fuß und Lippe laufen die meisten Formeln sanft aus, damit die Vase oben und unten ruhig endet. Die Startmaße sind 250 mm Höhe und 160 mm Außendurchmesser. Alle drei Hauptmaße lassen sich frei einstellen: Innendurchmesser, Höhe und größte Lamellenlänge.
+
+## Die Formen
+
+![Sechs Vasen aus verschiedenen Formeln](docs/bilder/galerie.png)
+
+Es gibt 13 Formeln. Die Spalte „Überhang“ zeigt, wie steil die Lamellenspitzen bei den Startmaßen nach außen wachsen. Bis 45° druckt alles sauber, ab 60° braucht der Drucker Stützen (siehe [Druck und Überhang](#druck-und-überhang)).
+
+| Formel | Idee | Überhang |
 |---|---|---|
-| Bohrung | Ø 102 mm | zylindrisch, an der Mündung Ø 106 mm (Radius 2 mm größer) |
-| Kernwand | 4 mm | Außenradius des Kerns = Innenradius + 4 mm |
-| Boden | 2 mm, geschlossen | die Referenz hatte ein Loch, das Modell nicht |
-| Lamellen | 120 Stück, 0,9 mm dick | Teilung 3°, Spitze ein Halbkreis |
-| Kürzeste Lamelle | etwa 4 mm | Fuß und Lippe, Anteil 0,158 von `L_max` |
-| Längste Lamelle | 25,2 mm | die großen Wellen der Referenz |
+| `zeta` | Die **Riemannsche Zetafunktion**, eine der berühmtesten Funktionen der Mathematik. Ihre Nullstellen werden zu Kerben, dazwischen winden sich Bänder um die Vase. Startform. | 42° |
+| `cnoidal` | Die Form **flacher Wasserwellen**: breite, runde Kämme und schmale Täler. | 38° |
+| `logspirale` | Ein Band, das sich wie ein **Schneckenhaus** nach oben windet, unten schnell, oben langsam. | 44° |
+| `phyllotaxis` | Höcker im **goldenen Winkel** von 137,5°, so wie die Kerne einer Sonnenblume stehen. | 61° |
+| `super` | Fünf runde Blätter aus der **Superformel**, mit der sich viele Pflanzenformen beschreiben lassen. | 38° |
+| `ketten` | Das Profil einer **hängenden Kette**: schmale Taille, weiter Fuß, weite Lippe. | 19° |
+| `turing_flecken` | **Turing-Muster**: Flecken, wie sie auf einem Tierfell entstehen, wenn zwei Stoffe miteinander reagieren und sich ausbreiten. | 74° |
+| `turing_labyrinth` | Dieselbe Gleichung mit anderen Zahlen: ein **Labyrinth** aus Graten. | 72° |
+| `sinus` | Zwei weiche Bäuche, die sich langsam um die Vase drehen. | 38° |
+| `spirale` | Drei Wellen, die sich um die Vase schrauben. | 40° |
+| `bluete` | Fünf breite, senkrechte Blätter. | 38° |
+| `kaemme` | Zwei breite Kämme, die in der Mitte der Vase eine Vierteldrehung machen. | 69° |
+| `gleich` | Alle Lamellen gleich lang, ein Bauch in der Mitte: die klassische Vasenform. | 14° |
 
-Die Länge an der Stelle `(z, θ)` ist
-
-```
-s = z / Höhe
-länge = L_max · f(s, θ)
-Spitze = Innenradius + Kernwand + länge
-```
-
-Die vollständige Geometrie steht im Kapitel [Mathematik](#mathematik).
-
-`f` liegt zwischen 0 und 1. Für die Formel `vorlage` ist `f` die gemessene Kante aus `vase/vorlage.json`: alle 0,5 mm eine Stützstelle je Lamelle, dazwischen ein Spline. Kurze Zacken aus dem Dreiecksnetz der Referenz sind herausgefiltert, die großen Wellen bleiben. Der Höchstwert von `f` ist 1, damit `L_max` die längste Lamelle ist.
+Die Formen mit mehr als 45° lassen sich trotzdem ohne Stützen drucken: entweder mit der **Überhangbegrenzung** oder mit kürzeren Lamellen. Bei den Turing-Mustern reichen 10 mm. Wie jede Formel genau aussieht und woher sie kommt, steht im Kapitel [Mathematik](#mathematik).
 
 ## Schnellstart
 
@@ -41,86 +54,68 @@ python3 -m venv .venv
 .venv/bin/python tools/vase_generator.py vase/config.json
 ```
 
-Danach `vase/vorschau.html` im Browser öffnen. Daneben liegen `vase/vase.stl` für den Slicer und `vase/vorschau.png`.
+Danach `vase/vorschau.html` im Browser öffnen. Daneben liegen `vase/vase.stl` für den Slicer und `vase/vorschau.png` mit Seitenansicht und Querschnitt.
 
-Python 3 reicht mit den Paketen aus `tools/requirements.txt` (numpy, pillow). Die Vorschau rechnet im Browser und braucht dafür kein Python.
+Python 3 reicht, mit den Paketen aus `tools/requirements.txt` (numpy, pillow). Die 3D-Ansicht rechnet im Browser und braucht kein Python.
 
 ## 3D-Ansicht
 
-Ziehen dreht, das Mausrad zoomt. Der Rahmen ist der nutzbare Bauraum des Druckers.
+`vase/vorschau.html` zeigt die Vase drehbar im Browser. Ziehen dreht, das Mausrad zoomt. Der Rahmen ist der nutzbare Bauraum des Druckers.
 
 | Regler | Bereich | Start |
 |---|---|---|
 | Innendurchmesser | 40–180 mm | 102 mm |
 | Höhe | 80–320 mm | 250 mm |
-| Lamellenlänge max | 4–70 mm | 25,2 mm |
-| Wellenformel | siehe unten | Vorlage, gemessen |
+| Lamellenlänge max | 4–70 mm | 25 mm |
+| Wellenformel | 13 Formeln | Riemannsche Zetafunktion |
 | Überhang auf 45° begrenzen | an/aus | aus |
 
-Der Knopf **Vorlage** setzt alle Regler auf diese Startwerte zurück. Unter den Reglern stehen Lamellenzahl, Dicke, Kernwand, der errechnete Außendurchmesser und ob das Teil auf den Drucker passt.
+Die Regler ändern die Ansicht sofort. Der Knopf **Startwerte** setzt alle Regler zurück. Unter den Reglern stehen Lamellenzahl, Dicke, Kernwand, der Außendurchmesser, ob das Teil auf den Drucker passt, und der größte Überhang.
 
-Die Regler ändern die Ansicht sofort. **STL speichern** lädt das gerade gezeigte Modell herunter, in Millimetern, bereit für den Slicer. Der Dateiname nennt Formel, Höhe und Innendurchmesser.
+**STL speichern** lädt das gerade gezeigte Modell herunter, in Millimetern und bereit für den Slicer. Der Dateiname nennt Formel, Höhe und Innendurchmesser.
 
-Dieselbe Ausgangsform schreibt der Generator als `vase/vase.stl`, wenn `vase/config.json` die Startwerte enthält.
+## Druck und Überhang
 
-## Überhang
+Drucker ist ein Bambu Lab H2D mit einer 0,4-mm-Düse, gedruckt wird mit einer Düse. Sie erreicht 325 × 320 mm in der Fläche, die linke Düse 320 mm in der Höhe, die rechte 325 mm. Der Generator nimmt den kleineren Wert, damit das Teil auf beiden Düsen liegt: höchstens 310 mm Durchmesser (320 mm Bettiefe abzüglich 5 mm Rand) und 320 mm Höhe. Ist die Vase größer, schreibt der Generator keine Dateien, und die Ansicht meldet es. Die Kernwand muss mindestens 1,2 mm haben, der Boden mindestens 0,8 mm. Quellen: [Technische Daten des H2D](https://bambulab.com/en/h2d/tech-specs), [Druckbereich der beiden Düsen](https://wiki.bambulab.com/en/h2/manual/printable-range-for-dual-nozzles).
 
-Kern und Lamellenseiten stehen senkrecht. Überhängen kann nur die Spitze einer Lamelle, und zwar dort, wo die Lamelle nach oben länger wird. Der Winkel zur Senkrechten zwischen zwei Höhenschnitten ist `atan(Δr / Δz)`. Wird die Lamelle nach oben kürzer, hängt nichts über.
+Die STL in den Slicer laden und aufrecht stellen. Der Boden ist geschlossen.
 
-Die Ansicht färbt die Spitzen:
+**Überhang.** Kern und Lamellenseiten stehen senkrecht. Überhängen kann nur die Spitze einer Lamelle, und zwar dort, wo die Lamelle nach oben länger wird. Dann muss jede neue Schicht etwas weiter hinausragen als die darunter. Wird die Lamelle nach oben kürzer, liegt jede Schicht sicher auf der vorigen.
 
-| Farbe | Überhang | Bedeutung |
+Die Ansicht färbt zu steile Lamellenspitzen ein:
+
+| Farbe | Überhang zur Senkrechten | Bedeutung |
 |---|---|---|
-| orange | über 45° | druckt ohne Stützen, die Kante kann bei PETG hängen oder rau werden |
+| orange | über 45° | druckt ohne Stützen, die dünne Kante kann bei PETG aber hängen oder rau werden |
 | rot | über 60° | Bambu Studio setzt hier mit der Standardschwelle von 30° zur Waagrechten Stützen |
 
-Unter den Reglern steht der größte Winkel und wie viele Abschnitte rot und orange sind. Der Generator schreibt dieselbe Meldung in die Konsole und färbt die Meridiane in `vorschau.png` genauso. Die Schwellen stehen in `drucker.ueberhang_warnung_grad` und `drucker.stuetze_ab_grad`. Wer in Bambu Studio eine andere Schwelle einstellt, trägt hier `90° − Schwelle` ein. Quelle: [Bambu Studio, Stützeinstellungen](https://all3dp.com/2/bambu-studio-support-settings-simply-explained/).
+Der Generator schreibt dieselbe Meldung in die Konsole und färbt die Linien in `vorschau.png` genauso. Die Schwellen stehen in `drucker.ueberhang_warnung_grad` und `drucker.stuetze_ab_grad`. Wer in Bambu Studio eine andere Schwelle einstellt, trägt hier 90° minus diese Schwelle ein. Quelle: [Bambu Studio, Stützeinstellungen](https://all3dp.com/2/bambu-studio-support-settings-simply-explained/).
 
-Der Haken **Überhang auf 45° begrenzen** schaltet die Begrenzung ein, in der Config `ueberhang.begrenzen`. Von Schnitt zu Schnitt darf eine Lamelle dann höchstens um `tan(45°) · Δz` länger werden. Kürzer werden darf sie beliebig schnell. Jede Wölbung bekommt dadurch unten eine 45°-Fase, die fallende Flanke oben bleibt, wie die Formel sie vorgibt. Ist ein Höcker zu schmal, kappt die Fase seine Spitze. Die Begrenzung rechnet auf den Schnitten des Netzes, also genau auf dem, was gedruckt wird. Herleitung: [Mathematik, Überhang](#4-überhang).
-
-## Wellenformeln
-
-Alle Formeln außer `vorlage`, `gleich` und `ketten` teilen sich dieselbe Hülle: auf den ersten und letzten 16 % der Höhe läuft die Welle ein und aus. Der kurze Rest an Fuß und Lippe bleibt, die Lamellen verschwinden dort nicht. Der Höchstwert jeder Formel ist 1. Herleitung und genaue Formeln stehen im Kapitel [Mathematik](#mathematik).
-
-| Wert | In der Ansicht | Form |
-|---|---|---|
-| `vorlage` | Vorlage, gemessen | die Kante aus der Referenz |
-| `sinus` | Sinus, zwei Loben | zwei weiche Bäuche, 100° Drehung über die ganze Höhe |
-| `spirale` | Spirale | laufende Welle, 1,25 Perioden in der Höhe, drei Perioden im Umfang |
-| `bluete` | Blüte, fünf Blätter | fünf breite Blätter, ohne Drehung |
-| `kaemme` | Breite Kämme | zwei breite Kämme, 90° Drehung zwischen 32 % und 68 % der Höhe |
-| `gleich` | Gleich lang | alle Lamellen gleich, nur ein Bauch über die Höhe |
-| `cnoidal` | Cnoidalwelle | breite Wasserwellen-Kämme, schmale Täler |
-| `logspirale` | Logarithmische Spirale | zwei Bänder, die sich selbstähnlich nach oben winden |
-| `phyllotaxis` | Goldener Winkel | versetzte Höcker wie bei einer Sonnenblume |
-| `super` | Superformel | fünf gerundete Blätter aus einer einzigen Formel |
-| `ketten` | Kettenlinie | enge Taille, weite Ringe, Profil einer hängenden Kette |
-| `zeta` | Riemannsche Zetafunktion | schräge Bänder, Kerben an den Nullstellen, eine ruhige und eine bewegte Seite |
-| `turing_flecken` | Turing, Flecken | Noppenraster aus einer Reaktion-Diffusion |
-| `turing_labyrinth` | Turing, Labyrinth | mäandernde Grate aus derselben Gleichung |
+**Überhangbegrenzung.** Der Haken **Überhang auf 45° begrenzen**, in der Config `ueberhang.begrenzen`, lässt jede Lamelle nach oben höchstens im 45°-Winkel wachsen. Kürzer werden darf sie beliebig schnell. Jede Wölbung bekommt dadurch unten eine schräge Fase, die fallende Flanke oben bleibt, wie die Formel sie vorgibt. Ist ein Höcker schmaler als seine Fase, wird seine Spitze gekappt. Die Höcker der Phyllotaxis- und Turing-Vasen werden so zu Zähnen, siehe Galerie. Die Begrenzung rechnet auf denselben Schnitten, aus denen die STL entsteht, also genau auf dem, was gedruckt wird. Herleitung: [Mathematik, Überhang](#4-überhang).
 
 ## Konfiguration
 
-`vase/config.json` ist die Quelle für STL und für die Startwerte der Ansicht.
+`vase/config.json` ist die Quelle für die STL und für die Startwerte der Ansicht.
 
 ```json
 "proportion": {
   "innendurchmesser_mm": 102,
   "hoehe_mm": 250,
-  "lamelle_max_mm": 25.221
-}
+  "lamelle_max_mm": 25
+},
+"welle": { "funktion": "zeta" }
 ```
 
-Weitere feste Werte:
+Weitere Werte:
 
 | Schlüssel | Wert | Wirkung |
 |---|---|---|
-| `kern.wand_mm` | 4 | Wandstärke des wasserführenden Kerns |
+| `kern.wand_mm` | 4 | Wandstärke des Kerns |
 | `lamellen.anzahl` | 120 | Zahl der Lamellen |
 | `lamellen.dicke_mm` | 0,9 | Dicke, die Spitze ist ein Halbkreis dieser Dicke |
 | `hohlraum.boden_dicke_mm` | 2 | geschlossener Boden |
 | `hohlraum.muendung_zugabe_mm` | 2 | die Bohrung öffnet sich an der Lippe um diesen Betrag im Radius |
-| `welle.funktion` | `vorlage` | eine der Formeln oben |
+| `welle.funktion` | `zeta` | eine der 13 Formeln |
 | `ueberhang.begrenzen` | `false` | Lamellen wachsen nach oben höchstens im Grenzwinkel |
 | `ueberhang.winkel_grad` | 45 | Grenzwinkel zur Senkrechten |
 | `drucker.ueberhang_warnung_grad` | 45 | ab hier orange |
@@ -128,15 +123,7 @@ Weitere feste Werte:
 | `aufloesung.schnitte` | 200 | Höhenschnitte des Netzes |
 | `aufloesung.punkte_je_schnitt` | 2 | Zwischenpunkte auf dem Kern zwischen zwei Lamellen |
 
-Liegt die Höhe über 320 mm oder der Außendurchmesser über 310 mm, bricht der Generator ab und schreibt keine Dateien. In der Ansicht bleibt das Modell sichtbar, der Statustext meldet, dass es nicht auf den Drucker passt.
-
-## Druck
-
-Drucker ist ein Bambu Lab H2D mit einer Düse 0,4 mm. Eine Düse erreicht 325 × 320 mm in der Fläche. Die linke Düse druckt 320 mm hoch, die rechte 325 mm. Der Generator nimmt den kleineren Wert, damit das Teil auf beiden Düsen liegt: höchstens 310 mm Durchmesser (320 mm Bettiefe abzüglich 5 mm Rand) und 320 mm Höhe. Die Kernwand muss mindestens 1,2 mm bleiben, der Boden mindestens 0,8 mm. Die Lamellen der Ausgangsform sind 0,9 mm dick.
-
-Quellen: [Technische Daten des H2D](https://bambulab.com/en/h2d/tech-specs), [Druckbereich der beiden Düsen](https://wiki.bambulab.com/en/h2/manual/printable-range-for-dual-nozzles).
-
-Die STL in den Slicer laden und aufrecht stellen. Der Boden ist geschlossen, Stützen sind für die Ausgangsform nicht vorgesehen. Meldet der Generator rote Abschnitte, braucht die Form Stützen oder die Überhangbegrenzung.
+Eine weitere Vase bekommt einen eigenen Ordner neben `vase/` mit eigener `config.json`, zum Beispiel `phyllotaxis/config.json`. Der Generator schreibt STL, Ansicht und Bild in diesen Ordner.
 
 ## Mathematik
 
@@ -156,7 +143,7 @@ also alle 3°. Der Kern hat den Außenradius $`r_K = D_i/2 + w`$ mit dem Innendu
 r_i(z) = r_K + L_{\max}\, f(s, \theta_i), \qquad 0 \le f \le 1, \quad \max f = 1 .
 ```
 
-`f` ist die Wellenformel. Weil ihr Höchstwert 1 ist, ist $`L_{\max}`$ genau die längste Lamelle. Mit den Startwerten ist $`r_K = 51 + 4 = 55`$ mm und der größte Radius $`55 + 25,\!221 = 80,\!2`$ mm, Durchmesser 160,4 mm.
+`f` ist die Wellenformel. Weil ihr Höchstwert 1 ist, ist $`L_{\max}`$ genau die längste Lamelle. Mit den Startwerten ist $`r_K = 51 + 4 = 55`$ mm und der größte Radius $`55 + 25 = 80`$ mm, Durchmesser 160 mm.
 
 **Querschnitt.** Eine Lamelle ist ein Streifen der Dicke $`d = 0,\!9`$ mm entlang ihres Strahls. Die Spitze ist ein Halbkreis mit Radius $`\kappa = \min(d/2,\; r_i - r_K)`$ um den Punkt bei $`r_i - \kappa`$, der Bogen endet also genau auf $`r_i`$ und steht nicht darüber. Zwischen zwei Lamellen läuft der Kern als Kreisbogen mit `punkte_je_schnitt` Zwischenpunkten.
 
@@ -186,13 +173,13 @@ h(s) = S\!\left(\frac{s}{0,\!16}\right) \cdot S\!\left(\frac{1-s}{0,\!16}\right)
 
 $`h`$ ist 0 am Boden und an der Lippe und 1 zwischen 16 % und 84 % der Höhe. Bei 250 mm sind das je 40 mm Ein- und Ausblendung.
 
-**Rest.** Die kürzeste Lamelle der Referenz misst etwa 4 mm. Als Anteil von $`L_{\max}`$ ist das $`\rho = 0,\!158`$ (3,98 mm). Fast alle Formeln haben deshalb die Form
+**Rest.** Auch wo die Welle null ist, sollen die Lamellen nicht ganz verschwinden. Ein Rest von $`\rho = 0,\!158`$ bleibt immer stehen, bei $`L_{\max} = 25`$ mm sind das knapp 4 mm. Fast alle Formeln haben deshalb die Form
 
 ```math
 f(s, \theta) = \rho + (1 - \rho)\, h(s)\, w(s, \theta), \qquad w \in [0, 1] .
 ```
 
-$`w`$ ist die eigentliche Welle. Ausnahmen sind `vorlage` (Messung), `gleich` und `ketten` (ohne Hülle).
+$`w`$ ist die eigentliche Welle. Ausnahmen sind `gleich` und `ketten`, sie haben keine Hülle.
 
 **Hilfsfunktionen.** $`N(x) = \tfrac12\,(\mathrm{clamp}(x, -1, 1) + 1)`$ bildet $`[-1, 1]`$ auf $`[0, 1]`$ ab. Die Vorzeichenpotenz $`\mathrm{sgn}(c)\,|c|^p`$ ändert die Form einer Kosinuswelle, ohne ihre Nullstellen zu verschieben. Mit $`p \lt 1`$ werden Kämme und Täler breit und flach, die Übergänge steil, die Welle nähert sich einer Rechteckwelle. Bei $`c = 0`$ hat $`|c|^p`$ dann eine senkrechte Tangente. Mit $`p \gt 1`$ werden Kämme und Täler spitz. Der Winkelabstand
 
@@ -203,18 +190,6 @@ d(\theta, \varphi) = \bigl|\, ((\theta - \varphi + \pi) \bmod 2\pi) - \pi \,\big
 misst den kürzeren Weg um den Kreis.
 
 ### 3. Die Formeln
-
-#### `vorlage`: die gemessene Kante
-
-Die Kante der Referenz ist als Tafel $`F_{j,i}`$ in `vase/vorlage.json` gespeichert: 502 Höhen $`s_j`$ im Abstand 0,002 (0,5 mm, nur das erste Intervall ist halb so lang) und 120 Spalten, eine je Lamelle. Die Messung ist tiefpassgefiltert. Wellen kürzer als etwa 15 mm waren Dreiecksrauschen des Netzes und sind entfernt. Die Werte liegen zwischen 0,136 und 1.
-
-Im Umfang wird linear zwischen zwei Spalten gemittelt. Auf den Lamellen selbst trifft $`\theta_i`$ genau eine Spalte. In der Höhe läuft ein **Catmull-Rom-Spline** durch die Stützstellen. Zwischen $`s_j`$ und $`s_{j+1}`$, mit $`t \in [0, 1]`$ und den Werten $`p_0, \dots, p_3`$ an $`j-1, \dots, j+2`$:
-
-```math
-f(t) = \tfrac12 \Bigl[\, 2p_1 + (p_2 - p_0)\,t + (2p_0 - 5p_1 + 4p_2 - p_3)\,t^2 + (-p_0 + 3p_1 - 3p_2 + p_3)\,t^3 \Bigr] .
-```
-
-Der Spline geht exakt durch die Messpunkte, $`f(0) = p_1`$ und $`f(1) = p_2`$. Seine Steigung an jeder Stützstelle ist der zentrale Differenzenquotient $`(p_2 - p_0)/2`$. Damit ist die Kante stetig differenzierbar, ohne Knicke zwischen den Stützstellen. Ein Überschwinger unter null wird abgeschnitten. Über 1 schwingt der Spline höchstens um $`10^{-6}`$.
 
 #### `sinus`
 
@@ -449,14 +424,20 @@ $`v`$ entsprechend. Das explizite Verfahren ist für die Diffusion stabil, solan
 
 **Maßstab.** Das Gitter liegt auf dem abgewickelten Kern. 150 Zellen im Umfang $`2\pi \cdot 55`$ mm ergeben 2,30 mm je Zelle. $`\mathrm{round}(150 \cdot 250 / 345,\!6) = 109`$ Zeilen machen die Zellen bei den Startwerten quadratisch, das Muster ist nicht verzerrt. Die stärkste Wellenlänge im Fourierspektrum liegt bei etwa 12 Zellen, rund 27 mm, bei beiden Mustern. Höhe und Durchmesser in der Ansicht strecken die feste Tafel mit.
 
-**Abtastung.** Wie bei der Vorlage: in der Höhe Catmull-Rom über die Zeilen an der Stelle $`s \cdot 108`$, im Umfang linear und periodisch an der Stelle $`\theta / 2\pi \cdot 150`$, dann auf $`[0, 1]`$ begrenzt. Es ist $`f = \rho + (1-\rho)\,h(s)\,T(s, \theta)`$.
+**Abtastung.** Die Tafel hat nur 109 Zeilen, das Netz 200 Schnitte. Zwischen den Zeilen läuft deshalb in der Höhe ein **Catmull-Rom-Spline**. Die Stelle $`s`$ liegt bei Zeile $`s \cdot 108`$. Zwischen den Zeilen $`j`$ und $`j+1`$, mit $`t \in [0, 1]`$ und den Werten $`p_0, \dots, p_3`$ der Zeilen $`j-1, \dots, j+2`$, ist
 
-**Grenze durch den Druck.** Eine Welle mit Amplitude $`A`$ und Wellenlänge $`\lambda`$, $`\tfrac{A}{2}\,(1 + \sin(2\pi z / \lambda))`$, steigt höchstens mit $`\pi A / \lambda`$. Für höchstens 45° Überhang muss also $`\lambda \ge \pi A`$ sein. Mit $`A = (1 - \rho)\,L_{\max}`$ = 21,2 mm heißt das $`\lambda \ge 67`$ mm. Die Turing-Muster sind mit 27 mm zweieinhalbmal feiner. Gemessen auf dem Netz:
+```math
+T(t) = \tfrac12 \Bigl[\, 2p_1 + (p_2 - p_0)\,t + (2p_0 - 5p_1 + 4p_2 - p_3)\,t^2 + (-p_0 + 3p_1 - 3p_2 + p_3)\,t^3 \Bigr] .
+```
 
-| Formel | $`L_{\max}`$ 25,2 mm | $`L_{\max}`$ 10 mm |
+Der Spline geht exakt durch die Tafelwerte, $`T(0) = p_1`$ und $`T(1) = p_2`$. Seine Steigung an jeder Stützstelle ist der zentrale Differenzenquotient $`(p_2 - p_0)/2`$. Damit ist die Kante stetig differenzierbar und hat keine Knicke an den Zeilen. Im Umfang wird linear und periodisch bei $`\theta / 2\pi \cdot 150`$ gemittelt, danach wird auf $`[0, 1]`$ begrenzt. Es ist $`f = \rho + (1-\rho)\,h(s)\,T(s, \theta)`$.
+
+**Grenze durch den Druck.** Eine Welle mit Amplitude $`A`$ und Wellenlänge $`\lambda`$, $`\tfrac{A}{2}\,(1 + \sin(2\pi z / \lambda))`$, steigt höchstens mit $`\pi A / \lambda`$. Für höchstens 45° Überhang muss also $`\lambda \ge \pi A`$ sein. Mit $`A = (1 - \rho)\,L_{\max}`$ = 21,1 mm heißt das $`\lambda \ge 66`$ mm. Die Turing-Muster sind mit 27 mm zweieinhalbmal feiner. Gemessen auf dem Netz:
+
+| Formel | $`L_{\max}`$ 25 mm | $`L_{\max}`$ 10 mm |
 |---|---|---|
-| `turing_flecken` | bis 74°, 1412 Abschnitte rot | bis 54°, keiner rot |
-| `turing_labyrinth` | bis 72°, 1267 Abschnitte rot | bis 50°, keiner rot |
+| `turing_flecken` | bis 74°, 1392 Abschnitte rot | bis 54°, keiner rot |
+| `turing_labyrinth` | bis 72°, 1234 Abschnitte rot | bis 50°, keiner rot |
 
 Zwei Auswege: die Überhangbegrenzung einschalten oder $`L_{\max}`$ auf etwa 10 mm senken.
 
@@ -518,18 +499,18 @@ Daraus folgt:
 - Fallende Flanken bleiben unverändert, sobald die Gerade sie erreicht hat. Ist ein Höcker schmaler als seine Fase, kappt die Gerade seine Spitze und trifft erst die fallende Flanke. Aus Höckern werden Zähne: unten schräg, oben so steil, wie die Formel es vorgibt.
 - $`\tilde r`$ hängt höchstens um $`\alpha`$ über, auf dem Netz exakt, weil die Begrenzung auf denselben Schnitten rechnet, die gedruckt werden.
 
-**Beispiel.** Bei `phyllotaxis` ist jeder Höcker in der Höhe eine Gaußglocke mit $`\sigma = 7,\!5`$ mm und Amplitude 21,2 mm. Die steilste Stelle einer Gaußglocke liegt bei $`\pm\sigma`$ und hat die Steigung $`A / (\sigma\sqrt{e})`$ = 1,72, also 59,8°. Wo Höcker überlappen, wird es etwas mehr. Gemessen sind es 62°.
+**Beispiel.** Bei `phyllotaxis` ist jeder Höcker in der Höhe eine Gaußglocke mit $`\sigma = 7,\!5`$ mm und Amplitude 21,1 mm. Die steilste Stelle einer Gaußglocke liegt bei $`\pm\sigma`$ und hat die Steigung $`A / (\sigma\sqrt{e})`$ = 1,70, also 59,6°. Wo Höcker überlappen, wird es etwas mehr. Gemessen sind es 61°.
 
 ### 5. Übereinstimmung von Generator und Ansicht
 
-Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ansicht. Geprüft mit den Startwerten und den Formeln `vorlage`, `zeta`, `phyllotaxis` und `turing_flecken`, mit und ohne Begrenzung:
+Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ansicht. Geprüft mit den Startwerten und den Formeln `zeta`, `phyllotaxis`, `kaemme` und `turing_flecken`, mit und ohne Begrenzung:
 
 | Prüfung | Ergebnis |
 |---|---|
 | `zeta`, Python gegen Ansicht | Abweichung $`\lt 10^{-14}`$ |
-| Netzpunkte, Python gegen Ansicht | höchstens 0,02 mm |
-| größter Überhangwinkel | gleich auf 0,02° |
-| Zahl der roten Abschnitte | gleich |
+| Netzpunkte, Python gegen Ansicht | Abweichung $`\lt 10^{-12}`$ mm |
+| größter Überhangwinkel | gleich |
+| Zahl der roten und orangen Abschnitte | gleich |
 
 
 ## Ordner
@@ -539,33 +520,17 @@ Jede Formel steht zweimal: in Python für die STL und in JavaScript für die Ans
 ├── CLAUDE.md                 Arbeitsanweisung für den Agenten
 ├── docs/
 │   ├── PLAN.md               Form, Formeln, Druckgrenzen, Phasen
-│   └── analyse-referenz.png  Schnitte durch die Referenz
-├── references/
-│   └── referenz.stl          vermessenes Netz, wird nicht verändert
+│   └── bilder/               Bilder für diese Anleitung
 ├── tools/
-│   ├── vase_feature.py       Formel und Körper
+│   ├── vase_feature.py       Formeln und Körper
 │   ├── vase_generator.py     config → STL, HTML, PNG
 │   ├── turing_tabelle.py     schreibt vase/turing.json
-│   ├── analyse_referenz.py   schreibt das Schnittbild neu
 │   └── requirements.txt
 └── vase/
     ├── config.json           Parameter und Startwerte
-    ├── vorlage.json          gemessene Lamellenkante
     ├── turing.json           Gray-Scott-Muster, aus turing_tabelle.py
     ├── notizen.md            Stand und Verlauf
     ├── vorschau.html         3D-Ansicht, generiert
     ├── vorschau.png          Seitenansicht und Querschnitt, generiert
     └── vase.stl              Drucknetz, generiert
 ```
-
-Eine weitere Variante bekommt einen eigenen Ordner neben `vase/` mit eigener `config.json`. Die Formel bleibt in `tools/vase_feature.py`. Die gemessene Kante liegt in `vase/vorlage.json` und gilt für die Formel `vorlage`.
-
-## Referenz neu vermessen
-
-`tools/analyse_referenz.py` liest `references/referenz.stl` und schreibt `docs/analyse-referenz.png` neu: vier Meridiane und vier Querschnitte. Die Lamellenkante in `vase/vorlage.json` entsteht nicht aus diesem Skript. Sie ist die bereits gefilterte Messung, aus der der Generator liest.
-
-```bash
-.venv/bin/python tools/analyse_referenz.py
-```
-
-Der fachliche Stand steht in `docs/PLAN.md`. Die Druckdatei kommt aus diesem Ordner, ein CAD-System ist dafür nicht nötig.
